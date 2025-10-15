@@ -37,7 +37,7 @@ export const FilterModal = ({
   setCurrentPage,
 }: FilterModalProps) => {
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 md:hidden">
+  <div className="fixed inset-0 z-50 bg-[#423F3B]/50 md:hidden">
       <div className="absolute top-0 right-0 h-full w-80 overflow-y-auto bg-white p-6">
         <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-bold">Filters</h3>
@@ -65,7 +65,7 @@ export const FilterModal = ({
           />
           <button
             onClick={() => setIsFilterMenuOpen(false)}
-            className="w-full rounded-md bg-black py-3 text-black hover:bg-gray-800"
+            className="w-full rounded-md bg-[#423F3B] py-3 text-[#423F3B] hover:bg-gray-800"
           >
             Apply Filters
           </button>

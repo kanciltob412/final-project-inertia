@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { useEffect, useState } from 'react';
 import { Icon } from '@/components/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,6 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
-import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
@@ -47,6 +47,16 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    // Scroll state for logo swap
+    const [isScrolled, setIsScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+            console.log('isScrolled:', window.scrollY > 10);
+        };
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
     return (
         <>
             <div className="border-b border-sidebar-border/80">
@@ -62,7 +72,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             <SheetContent side="left" className="flex h-full w-64 flex-col items-stretch justify-between bg-sidebar">
                                 <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
                                 <SheetHeader className="flex justify-start text-left">
-                                    <AppLogoIcon className="h-6 w-6 fill-current text-black dark:text-white" />
+                                    <AppLogoIcon className="h-6 w-6 fill-current text-[#423F3B] dark:text-white" />
                                 </SheetHeader>
                                 <div className="flex h-full flex-1 flex-col space-y-4 p-4">
                                     <div className="flex h-full flex-col justify-between text-sm">
@@ -96,7 +106,12 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
 
                     <Link href={dashboard()} prefetch className="flex items-center space-x-2">
-                        <AppLogo />
+                        {/* Logo changes on scroll: white when static, black when scrolled */}
+                        <img
+                            src={isScrolled ? "/LAVANYA_LOGO_BLACK.png" : "/LAVANYA_LOGO_WHITE.png"}
+                            alt="Lavanya Ceramics Logo"
+                            className="h-8 w-auto transition-all duration-300 border border-red-500"
+                        />
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -117,7 +132,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             {item.title}
                                         </Link>
                                         {page.url === item.href && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
+                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-[#423F3B] dark:bg-white"></div>
                                         )}
                                     </NavigationMenuItem>
                                 ))}

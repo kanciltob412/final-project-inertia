@@ -40,12 +40,12 @@ export const FilterSidebar = ({
                         setSearchQuery(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="w-full rounded-lg border bg-white py-2 pr-4 pl-10 focus:ring-2 focus:ring-black focus:outline-none text-black"
+                    className="w-full rounded-lg border bg-white py-2 pr-4 pl-10 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
                 />
                 <Search className="absolute top-2.5 left-3 h-5 w-5 text-gray-400" />
             </div>
             <div>
-                <h3 className="mb-3 font-semibold text-black">Categories</h3>
+                <h3 className="mb-3 font-semibold text-[#423F3B]">Categories</h3>
                 <div className="space-y-2">
                     {categories.map((category) => (
                         <button
@@ -55,7 +55,7 @@ export const FilterSidebar = ({
                                 setCurrentPage(1);
                             }}
                             className={`block w-full rounded-md px-3 py-2 text-left transition-colors ${
-                                selectedCategory === category ? 'bg-black text-white' : 'text-black hover:bg-gray-100'
+                                selectedCategory === category ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
                             }`}
                         >
                             {category}
@@ -64,7 +64,7 @@ export const FilterSidebar = ({
                 </div>
             </div>
             <div>
-                <h3 className="mb-3 font-semibold text-black">Price Range</h3>
+                <h3 className="mb-3 font-semibold text-[#423F3B]">Price Range</h3>
                 <div className="flex gap-2">
                     <input
                         type="number"
@@ -77,7 +77,7 @@ export const FilterSidebar = ({
                             });
                             setCurrentPage(1);
                         }}
-                        className="w-full rounded-md border border-black bg-white px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none text-black"
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
                     />
 
                     <input
@@ -91,19 +91,19 @@ export const FilterSidebar = ({
                             });
                             setCurrentPage(1);
                         }}
-                        className="w-full rounded-md border border-black bg-white px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none text-black"
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
                     />
                 </div>
             </div>
             <div>
-                <h3 className="mb-3 font-semibold text-black">Sort By</h3>
+                <h3 className="mb-3 font-semibold text-[#423F3B]">Sort By</h3>
                 <select
                     value={sortBy}
                     onChange={(e) => {
                         setSortBy(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="w-full rounded-md border border-black bg-white px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none text-black"
+                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
                 >
                     <option value="featured">Featured</option>
                     <option value="price-asc">Price: Low to High</option>
@@ -114,7 +114,7 @@ export const FilterSidebar = ({
             </div>
             <button
                 onClick={clearFilters}
-                className="w-full rounded-md px-4 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
+                className="w-full rounded-md px-4 py-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#423F3B]"
                 aria-label="Clear all filters"
             >
                 Clear All Filters

@@ -13,13 +13,13 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     </div>
                     <div className="flex flex-1 flex-col justify-between p-6">
                         <div>
-                            <h3 className="mb-2 text-xl font-semibold text-black">{product.name}</h3>
+                            <h3 className="mb-2 text-xl font-semibold text-[#423F3B]">{product.name}</h3>
                             <p className="mb-4 text-gray-600">{formatPrice(product.price)}</p>
                             <p className="text-gray-500">{product.description}</p>
                         </div>
                         <Link
                             href={`/products/${product.id}`}
-                            className="inline-flex w-fit items-center gap-2 rounded-md bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
+                            className="inline-flex w-fit items-center gap-2 rounded-md bg-[#423F3B] px-6 py-2 text-white transition-colors hover:bg-gray-800"
                         >
                             <Eye className="h-4 w-4" />
                             View Details
@@ -38,10 +38,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     alt={product.name}
                     className="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 transition-all duration-300">
+                <div className="absolute inset-0 flex items-center justify-center bg-[#423F3B]/50 transition-all duration-300">
                     <Link
                         href={`/products/${product.id}`}
-                        className="flex translate-y-4 transform items-center gap-2 rounded-md bg-white px-6 py-2 text-black opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+                        className="flex translate-y-4 transform items-center gap-2 rounded-md bg-white px-6 py-2 text-[#423F3B] opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
                     >
                         <Eye className="h-4 w-4" />
                         View Details
@@ -49,7 +49,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                 </div>
             </div>
             <div className="p-4">
-                <h3 className="text-lg font-semibold text-black">{product.name}</h3>
+                <h3 className="text-lg font-semibold text-[#423F3B]">{product.name}</h3>
                 <p className="mt-1 text-gray-600">{formatPrice(product.price)}</p>
                 <p className="mt-2 text-sm text-gray-500">{product.description}</p>
             </div>

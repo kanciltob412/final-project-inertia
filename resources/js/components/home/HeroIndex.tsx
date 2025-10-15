@@ -6,8 +6,8 @@ function HeroIndex() {
     return (
         <div className="relative h-[60vh] overflow-hidden">
             <img
-                src="https://img.freepik.com/free-photo/view-hawaiian-shirt-with-floral-print-hanger-belt_23-2149366089.jpg?t=st=1738212195~exp=1738215795~hmac=74cb62fe35e7ee08fe4aa7c2b9276d98bd7d15ac8c0ec9bc7501941077b589e2&w=1800"
-                alt=""
+                src="/hero.jpg"
+                alt="Hero"
             />
             <div className="absolute inset-0 bg-black/50" />
             <motion.div
@@ -23,7 +23,7 @@ function HeroIndex() {
                         transition={{ delay: 0.2, duration: 0.8 }}
                         className="mb-6 text-6xl font-bold"
                     >
-                        Elevate Your Style
+                        Elevate Your Spaces
                     </motion.h1>
                     <motion.p
                         initial={{ y: 30, opacity: 0 }}
@@ -31,7 +31,7 @@ function HeroIndex() {
                         transition={{ delay: 1, duration: 0.8 }}
                         className="mb-8 text-xl opacity-90"
                     >
-                        Discover our curated collection of premium apparel that combines comfort, style, and sustainability.
+                        Discover our curated collection of premium ceramics that blend timeless elegance, artisanal craftsmanship, and modern design.
                     </motion.p>
                     <motion.div
                         initial={{ y: 30, opacity: 0 }}

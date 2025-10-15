@@ -24,26 +24,33 @@ export default function Navbar() {
             <div className="mx-auto max-w-7xl px-4">
                 <div className="flex h-16 justify-between">
                     <div className="flex items-center">
-                        <Link href="/" className={`text-xl font-bold transition-colors ${isScrolled ? 'text-black' : 'text-white'}`}>
-                            LOGO
+                        <Link href="/" className="flex items-center">
+                            <img
+                                src={isScrolled ? "/LAVANYA_LOGO_BLACK.png" : "/LAVANYA_LOGO_WHITE.png"}
+                                alt="Lavanya Ceramics Logo"
+                                className="h-8 w-auto transition-all duration-300"
+                            />
                         </Link>
                     </div>
 
                     {/* Desktop Menu */}
                     <div className="hidden items-center space-x-8 md:flex">
-                        <Link href="/" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                        <Link href="/" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
                             Home
                         </Link>
-                        <Link href="/products" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
-                            Products
-                        </Link>
-                        <Link href="/about" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                        <Link href="/about" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
                             About
                         </Link>
-                        <Link href="/contact" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                            Craftsmanship
+                        </Link>
+                        <Link href="/products" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                            Products
+                        </Link>
+                        <Link href="/contact" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
                             Contact
                         </Link>
-                        <Link href="/articles" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                        <Link href="/articles" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
                             Articles
                         </Link>
                         <Link href="/cart" className="relative">
@@ -54,8 +61,7 @@ export default function Navbar() {
                                 </span>
                             )}
                         </Link>
-
-                        <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                        <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
                             <>Login</>
                         </Link>
                     </div>
@@ -75,11 +81,14 @@ export default function Navbar() {
                             <Link href="/" className="text-black hover:opacity-75">
                                 Home
                             </Link>
-                            <Link href="/products" className="text-black hover:opacity-75">
-                                Products
-                            </Link>
                             <Link href="/about" className="text-black hover:opacity-75">
                                 About
+                            </Link>
+                            <Link href="/craftsmanship" className="text-black hover:opacity-75">
+                                Craftsmanship
+                            </Link>
+                            <Link href="/products" className="text-black hover:opacity-75">
+                                Products
                             </Link>
                             <Link href="/contact" className="text-black hover:opacity-75">
                                 Contact
@@ -90,6 +99,9 @@ export default function Navbar() {
                             <Link href="/cart" className="flex items-center text-black hover:opacity-75">
                                 <ShoppingCart className="mr-2 h-6 w-6" />
                                 <span>Cart ({totalItems})</span>
+                            </Link>
+                            <Link href="/login" className="text-black hover:opacity-75">
+                                Login
                             </Link>
                         </div>
                     </div>

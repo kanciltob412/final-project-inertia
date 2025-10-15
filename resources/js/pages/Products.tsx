@@ -75,11 +75,11 @@ export default function Products() {
                 <div className="mx-auto max-w-7xl px-4 py-16">
                     {/* Header and Search */}
                     <div className="mb-8 flex flex-col items-center justify-between md:flex-row">
-                        <h1 className="mb-4 text-3xl font-bold text-black md:mb-0">Our Products</h1>
+                        <h1 className="mb-4 text-3xl font-bold text-[#423F3B] md:mb-0">Our Products</h1>
                         <div className="flex w-full gap-4 md:w-auto">
                             <button
                                 onClick={() => handleViewModeChange('grid')}
-                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-black transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-black md:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-[#423F3B] transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-[#423F3B] md:flex"
                                 aria-label="Grid view"
                                 type="button"
                             >
@@ -87,7 +87,7 @@ export default function Products() {
                             </button>
                             <button
                                 onClick={() => handleViewModeChange('list')}
-                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-black transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-black md:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-[#423F3B] transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-[#423F3B] md:flex"
                                 aria-label="List view"
                                 type="button"
                             >
@@ -95,7 +95,7 @@ export default function Products() {
                             </button>
                             <button
                                 onClick={handleOpenFilterMenu}
-                                className="rounded-lg bg-black p-2 text-white md:hidden"
+                                className="rounded-lg bg-[#423F3B] p-2 text-white md:hidden"
                                 aria-label="Open filters"
                                 type="button"
                             >
@@ -148,7 +148,7 @@ export default function Products() {
                                     <p className="text-xl text-gray-600">No products found matching your criteria.</p>
                                     <button
                                         onClick={clearFilters}
-                                        className="mt-4 text-black hover:underline"
+                                        className="mt-4 text-[#423F3B] hover:underline"
                                         aria-label="Clear all filters"
                                         type="button"
                                     >
@@ -171,7 +171,7 @@ export default function Products() {
                                             <button
                                                 onClick={handlePreviousPage}
                                                 disabled={currentPage === 1}
-                                                className="rounded-full p-2 text-black hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                className="rounded-full p-2 text-[#423F3B] hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                                                 aria-label="Previous page"
                                                 type="button"
                                             >
@@ -186,7 +186,7 @@ export default function Products() {
                                                             key={pageNumber}
                                                             onClick={() => handlePageClick(pageNumber)}
                                                             className={`h-8 w-8 rounded-full ${
-                                                                currentPage === pageNumber ? 'bg-black text-white' : 'text-black hover:bg-gray-100'
+                                                                currentPage === pageNumber ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
                                                             }`}
                                                             aria-label={`Go to page ${pageNumber}`}
                                                             type="button"
@@ -200,7 +200,7 @@ export default function Products() {
                                             <button
                                                 onClick={handleNextPage}
                                                 disabled={currentPage === totalPages}
-                                                className="rounded-full p-2 text-black hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+                                                className="rounded-full p-2 text-[#423F3B] hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
                                                 aria-label="Next page"
                                                 type="button"
                                             >
