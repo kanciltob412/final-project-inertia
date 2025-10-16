@@ -15,6 +15,17 @@ export default function About() {
         }
 
         function syncHeights() {
+            // Only apply matching on medium+ screens to avoid layout issues on mobile
+            if (window.innerWidth < 768) {
+                // reset any previously set heights
+                document.querySelectorAll('.match-image').forEach((m) => {
+                    (m as HTMLElement).style.height = '';
+                    const img = m.querySelector('img') as HTMLImageElement | null;
+                    if (img) img.style.height = '';
+                });
+                return;
+            }
+
             document.querySelectorAll('.match-height').forEach((container) => {
                 const text = container.querySelector('.match-text') as HTMLElement | null;
                 const imgWrapper = container.querySelector('.match-image') as HTMLElement | null;
