@@ -24,9 +24,12 @@ export default function About() {
                     imgWrapper.style.height = 'auto';
                     imgEl.style.height = 'auto';
 
-                    // use getBoundingClientRect for a more stable measurement
+                    // use getBoundingClientRect for a more stable measurement and include margins
                     const rect = text.getBoundingClientRect();
-                    const textH = Math.round(rect.height);
+                    const computed = window.getComputedStyle(text);
+                    const marginTop = parseFloat(computed.marginTop || '0');
+                    const marginBottom = parseFloat(computed.marginBottom || '0');
+                    const textH = Math.round(rect.height + marginTop + marginBottom);
 
                     if (textH > 0) {
                         // set wrapper to text height and make image fill it
