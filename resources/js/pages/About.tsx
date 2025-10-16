@@ -5,6 +5,15 @@ import { useEffect } from 'react';
 
 export default function About() {
     useEffect(() => {
+        // small debounce to avoid repeated layout thrashing
+        function debounce(fn: () => void, wait = 100) {
+            let t: number | undefined;
+            return () => {
+                if (t) window.clearTimeout(t);
+                t = window.setTimeout(() => fn(), wait);
+            };
+        }
+
         function syncHeights() {
             document.querySelectorAll('.match-height').forEach((container) => {
                 const text = container.querySelector('.match-text') as HTMLElement | null;
@@ -15,7 +24,10 @@ export default function About() {
                     imgWrapper.style.height = 'auto';
                     imgEl.style.height = 'auto';
 
-                    const textH = text.offsetHeight;
+                    // use getBoundingClientRect for a more stable measurement
+                    const rect = text.getBoundingClientRect();
+                    const textH = Math.round(rect.height);
+
                     if (textH > 0) {
                         // set wrapper to text height and make image fill it
                         imgWrapper.style.height = `${textH}px`;
@@ -26,16 +38,50 @@ export default function About() {
             });
         }
 
-        // run on mount and when resizing
+        const debouncedSync = debounce(syncHeights, 120);
+
+        // Run initially and after a short delay to let fonts and images settle
         syncHeights();
-        window.addEventListener('resize', syncHeights);
-        // also observe font load / DOM changes (MutationObserver)
-        const mo = new MutationObserver(syncHeights);
+        const initialTimer = window.setTimeout(syncHeights, 150);
+
+        // Re-run when window resizes
+        window.addEventListener('resize', debouncedSync);
+
+        // Also run after the full page load (images/fonts)
+        window.addEventListener('load', syncHeights);
+
+        // If any image inside the matching containers is still loading, listen for its load event
+        const imgs = Array.from(document.querySelectorAll('.match-height img')) as HTMLImageElement[];
+        const onImgLoad = () => syncHeights();
+        imgs.forEach((img) => {
+            if (!img.complete) img.addEventListener('load', onImgLoad);
+        });
+
+        // Use ResizeObserver to detect changes to the text block size (more reliable than MutationObserver for layout changes)
+        const win = window as unknown as { ResizeObserver?: typeof ResizeObserver };
+        const ro = win.ResizeObserver ? new win.ResizeObserver(debouncedSync) : null;
+        if (ro) {
+            document.querySelectorAll('.match-text').forEach((el) => ro.observe(el));
+        }
+
+        // Keep a MutationObserver as a fallback for DOM changes (e.g., content injected dynamically)
+        const mo = new MutationObserver(debouncedSync);
         mo.observe(document.body, { childList: true, subtree: true });
 
         return () => {
-            window.removeEventListener('resize', syncHeights);
+            window.removeEventListener('resize', debouncedSync);
+            window.removeEventListener('load', syncHeights);
+            imgs.forEach((img) => img.removeEventListener('load', onImgLoad));
+            if (ro) {
+                try {
+                    document.querySelectorAll('.match-text').forEach((el) => ro.unobserve(el));
+                    ro.disconnect();
+                } catch {
+                    // ignore
+                }
+            }
             mo.disconnect();
+            window.clearTimeout(initialTimer);
         };
     }, []);
 
