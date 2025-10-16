@@ -93,8 +93,8 @@ export default function About() {
             <Navbar />
 
             {/* Simple banner image with centered title (not the Home hero) */}
-            <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                <img src="/hero.jpg" alt="About banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                <img src="/images/about/about-us-banner.jpg" alt="About banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
                         <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">ABOUT US</h1>
@@ -118,13 +118,13 @@ export default function About() {
                     </div>
 
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/history-plates.jpg" alt="Porcelain plates" className="w-full h-full object-cover block" />
+                        <img src="/images/about/brand-history-1.jpg" alt="Porcelain plates" className="w-full h-full object-cover block" />
                     </div>
                 </section>
 
                 <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/history-hands.jpg" alt="Hands crafting" className="w-full h-full object-cover block" />
+                        <img src="/images/about/brand-history-1.jpg" alt="Hands crafting" className="w-full h-full object-cover block" />
                     </div>
                     <div className="h-full flex flex-col justify-start match-text">
                         <p className="mb-4 text-gray-700 leading-relaxed">
@@ -142,19 +142,19 @@ export default function About() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-4">
-                            <img src="/inspire-1.jpg" alt="Vision" className="w-full h-40 object-cover rounded-lg" />
+                            <img src="/images/about/our-vision-hand.jpg" alt="Vision" className="w-full h-40 object-cover rounded-lg" />
                             <h4 className="font-semibold">Our vision</h4>
                             <p className="text-gray-700">To build a lasting atelier that reflects the spirit of Bali — creating ceramics that embody timeless design, thoughtful craftsmanship, and a quiet sense of beauty.</p>
                         </div>
 
                         <div className="space-y-4">
-                            <img src="/inspire-2.jpg" alt="Mission" className="w-full h-40 object-cover rounded-lg" />
+                            <img src="/images/about/our-mission-bowl.jpg" alt="Mission" className="w-full h-40 object-cover rounded-lg" />
                             <h4 className="font-semibold">Our mission</h4>
                             <p className="text-gray-700">To craft pieces that enrich everyday life through authenticity and purpose. Each creation is guided by care for detail, respect for tradition, and a commitment to quality that endures. We aim to bring warmth and harmony to every table, connecting people through the simple act of sharing.</p>
                         </div>
 
                         <div className="space-y-4">
-                            <img src="/inspire-3.jpg" alt="Nature" className="w-full h-40 object-cover rounded-lg" />
+                            <img src="/images/about/respect-raw-materials.jpg" alt="Nature" className="w-full h-40 object-cover rounded-lg" />
                             <h4 className="font-semibold">The respect to nature</h4>
                             <p className="text-gray-700">Nature is at the heart of everything we do. Our materials are of natural origin, responsibly sourced, and free from synthetic components. Each process is designed to minimize environmental impact while preserving the purity of the earth that gives our ceramics life. For us, sustainability means creating with integrity — in balance with the land, the craft, and the people who shape it.</p>
                         </div>
@@ -178,7 +178,7 @@ export default function About() {
                     </div>
 
                     <div className="w-full md:w-1/3 h-full match-image overflow-hidden rounded-lg">
-                        <img src="/craft-1.jpg" alt="Craft workshop" className="w-full h-full object-cover block" />
+                        <img src="/images/about/handmade.jpg" alt="Craft workshop" className="w-full h-full object-cover block" />
                     </div>
                 </section>
             </main>
