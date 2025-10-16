@@ -7,7 +7,7 @@ export default function Craftsmanship() {
         <div>
             <Navbar />
 
-            <div className="relative h-[360px] overflow-hidden">
+            <div className="relative h-[400px] md:h-[420px] overflow-hidden">
                 <img src="/images/craftmanship/craftmanship_banner.jpg" alt="Craftsmanship banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 text-white">
