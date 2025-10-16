@@ -112,7 +112,7 @@ export default function Craftsmanship() {
             </div>
 
             <main className="max-w-6xl mx-auto py-16 px-4">
-                <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start match-height">
+                <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="match-text">
                         <h2 className="text-xl font-semibold mb-3">GIVING FORM TO AN IDEA</h2>
                         <p className="text-gray-700 leading-relaxed mb-4">At Lavanya Ceramics we are fascinated by the possibility of being able to represent an idea with our own hands. The origin of each piece is born in our imagination as well as from the desire to listen to the demands of a constantly evolving market where creativity is an essential pillar.</p>
@@ -124,7 +124,7 @@ export default function Craftsmanship() {
                     </div>
                 </section>
 
-                <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start match-height">
+                <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="match-image overflow-hidden rounded-lg">
                         <img src="/images/craftmanship/craftmanship_02.jpg" alt="Materials" className="w-full h-full object-cover rounded-lg block" />
                     </div>
@@ -135,7 +135,7 @@ export default function Craftsmanship() {
                     </div>
                 </section>
 
-                <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start match-height">
+                <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="match-text">
                         <h3 className="text-xl font-semibold mb-3">HANDMADE PROCESS</h3>
                         <p className="text-gray-700 leading-relaxed mb-3">Our designers and modellers work together in close cooperation to construct the models. Once they have been shaped to satisfaction, they are used to make the master moulds that will be used to turn to make the negative casting moulds. After that, the items are shaped in porcelain or glass and the manufacturing process begins.</p>
@@ -146,7 +146,7 @@ export default function Craftsmanship() {
                     </div>
                 </section>
 
-                <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start match-height">
+                <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="match-image overflow-hidden rounded-lg">
                         <img src="/images/craftmanship/craftmanship_04.jpg" alt="Finishing" className="w-full h-full object-cover rounded-lg block" />
                     </div>
