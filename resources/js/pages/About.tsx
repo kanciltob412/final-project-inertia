@@ -124,7 +124,7 @@ export default function About() {
 
                 <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/images/about/brand-history-1.jpg" alt="Hands crafting" className="w-full h-full object-cover block" />
+                        <img src="/images/about/brand-history-2.jpg" alt="Hands crafting" className="w-full h-full object-cover block" />
                     </div>
                     <div className="h-full flex flex-col justify-start match-text">
                         <p className="mb-4 text-gray-700 leading-relaxed">
