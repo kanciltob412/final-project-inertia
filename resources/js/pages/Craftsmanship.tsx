@@ -64,8 +64,15 @@ export default function Craftsmanship() {
 
                 <section className="py-12">
                     <div className="aspect-w-16 aspect-h-9">
-                        <iframe className="w-full h-96 rounded-lg" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Lavanya Ceramics - Craftsmanship" frameBorder="0" allowFullScreen></iframe>
-                    </div>
+                            <iframe
+                                className="w-full h-96 rounded-lg"
+                                src="https://www.youtube.com/embed/NTEEiJ6Huy0"
+                                title="Lavanya Ceramics - Craftsmanship"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
                 </section>
             </main>
 
