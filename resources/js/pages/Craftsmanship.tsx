@@ -8,7 +8,7 @@ export default function Craftsmanship() {
             <Navbar />
 
             <div className="relative h-[360px] overflow-hidden">
-                <img src="/images/about/about-us-banner.jpg" alt="Craftsmanship banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                <img src="/images/craftmanship/craftmanship_banner.jpg" alt="Craftsmanship banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 text-white">
                         <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">CRAFTMANSHIP</h1>
@@ -25,13 +25,13 @@ export default function Craftsmanship() {
                     </div>
 
                     <div>
-                        <img src="/images/about/brand-history-1.jpg" alt="Giving form" className="w-full h-48 object-cover rounded-lg" />
+                        <img src="/images/craftmanship/craftmanship-01.jpg" alt="Giving form" className="w-full h-48 object-cover rounded-lg" />
                     </div>
                 </section>
 
                 <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     <div>
-                        <img src="/images/about/respect-raw-materials.jpg" alt="Materials" className="w-full h-72 object-cover rounded-lg" />
+                        <img src="/images/craftmanship/craftmanship_02.jpg" alt="Materials" className="w-full h-72 object-cover rounded-lg" />
                     </div>
                     <div>
                         <h3 className="text-xl font-semibold mb-3">NOBLE MATERIALS</h3>
@@ -47,13 +47,13 @@ export default function Craftsmanship() {
                         <p className="text-gray-700 leading-relaxed">All our fine porcelain and glass creations are crafted, fired and polished by hand with an emphasis on detail and quality.</p>
                     </div>
                     <div>
-                        <img src="/images/about/handmade.jpg" alt="Handmade" className="w-full h-48 object-cover rounded-lg" />
+                        <img src="/images/craftmanship/craftmanship_03.jpg" alt="Handmade" className="w-full h-48 object-cover rounded-lg" />
                     </div>
                 </section>
 
                 <section className="py-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
                     <div>
-                        <img src="/images/about/our-mission-bowl.jpg" alt="Finishing" className="w-full h-48 object-cover rounded-lg" />
+                        <img src="/images/craftmanship/craftmanship_04.jpg" alt="Finishing" className="w-full h-48 object-cover rounded-lg" />
                     </div>
                     <div>
                         <h3 className="text-xl font-semibold mb-3">FINISHING</h3>
