@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 function HeroIndex() {
     return (
-    <div className="relative h-[800px] overflow-hidden">
+    <div className="relative h-[400px] sm:h-[600px] md:h-[800px] overflow-hidden">
             <img
                 src="/hero.jpg"
                 alt="Hero"
