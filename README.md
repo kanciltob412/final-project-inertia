@@ -77,3 +77,29 @@ Troubleshooting
 
 - If you open port 5173 and see a starter page, switch to port 8000 to view the actual Inertia app.
 - If port 8000 is not reachable, make sure `php artisan serve` is running and not blocked by firewall rules.
+
+Development (Makefile)
+
+- Recommended one-command start (creates hot file, starts both servers, and waits until ready):
+
+```bash
+make start-wait
+```
+
+- Quick checks and helpers:
+
+```bash
+make doctor       # Validate public/hot, ports and /@vite/client
+make stop         # Verbose stop (shows what it kills)
+make stop-silent  # Quietly stop servers on ports 8000 and 5173
+make create-hot   # (re)write public/hot with canonical Vite URL
+```
+
+- If you prefer manual startup, open two terminals and run:
+
+```bash
+php artisan serve --host=0.0.0.0 --port=8000
+npm run dev        # or npm run dev:frontend
+```
+
+These Makefile helpers make it easy to start/stop and diagnose the dev environment.
