@@ -6,6 +6,16 @@ export default function Contact() {
         <div>
             <Navbar />
 
+            {/* Banner (matching About/Craftmanship) */}
+            <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                <img src="/images/about/about-us-banner.jpg" alt="Contact banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                <div className="absolute inset-0 flex items-center">
+                    <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
+                        <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">CONTACT US</h1>
+                    </div>
+                </div>
+            </div>
+
             {/* Full-width map */}
             <div className="w-full">
                 <iframe
@@ -23,10 +33,9 @@ export default function Contact() {
             <main className="max-w-4xl mx-auto py-12 px-4 text-center">
                 <h2 className="text-xl tracking-widest mb-4">MANUFACTURE, OFFICES & SHOWROOM</h2>
                 <address className="not-italic text-gray-700 leading-relaxed">
-                    <div>C-66, Km 5.5 · St. Climent de Peralta</div>
-                    <div>La Bisbal d'Empordà, Girona (ES)</div>
-                    <div className="mt-2">(+34) 972 634 175</div>
-                    <div className="mt-2">pordamsa@pordamsa.com</div>
+                    <div>Jl. Sunset road No.22, Seminyak, Bali 80361</div>
+                    <div className="mt-2">(+62) 811-129-775</div>
+                    <div className="mt-2">info@lavanya.com</div>
                 </address>
             </main>
 
