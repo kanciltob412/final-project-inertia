@@ -54,9 +54,8 @@ export const FilterSidebar = ({
                                 setSelectedCategory(category);
                                 setCurrentPage(1);
                             }}
-                            className={`block w-full rounded-md px-3 py-2 text-left transition-colors ${
-                                selectedCategory === category ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
-                            }`}
+                            className={`block w-full rounded-md px-3 py-2 text-left transition-colors ${selectedCategory === category ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
+                                }`}
                         >
                             {category}
                         </button>

@@ -185,9 +185,8 @@ export default function Products() {
                                                         <button
                                                             key={pageNumber}
                                                             onClick={() => handlePageClick(pageNumber)}
-                                                            className={`h-8 w-8 rounded-full ${
-                                                                currentPage === pageNumber ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
-                                                            }`}
+                                                            className={`h-8 w-8 rounded-full ${currentPage === pageNumber ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
+                                                                }`}
                                                             aria-label={`Go to page ${pageNumber}`}
                                                             type="button"
                                                         >

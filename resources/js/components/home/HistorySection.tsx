@@ -2,8 +2,8 @@ import { Link } from '@inertiajs/react';
 
 export default function HistorySection() {
     return (
-            <section className="w-full bg-white py-16">
-                <div className="mx-auto max-w-7xl px-4 flex flex-col md:flex-row gap-8 items-center">
+        <section className="w-full bg-white py-16">
+            <div className="mx-auto max-w-7xl px-4 flex flex-col md:flex-row gap-8 items-center">
                 {/* Left: Text */}
                 <div className="flex-1 text-center md:text-left">
                     <h2 className="text-5xl font-light mb-8">OUR STORY</h2>

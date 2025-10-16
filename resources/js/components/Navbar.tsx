@@ -35,22 +35,22 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden items-center space-x-8 md:flex">
-                        <Link href="/" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             Home
                         </Link>
-                        <Link href="/about" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/about" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             About
                         </Link>
-                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             Craftsmanship
                         </Link>
-                        <Link href="/products" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/products" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             Products
                         </Link>
-                        <Link href="/contact" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/contact" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             Contact
                         </Link>
-                        <Link href="/articles" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/articles" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             Articles
                         </Link>
                         <Link href="/cart" className="relative">
@@ -61,7 +61,7 @@ export default function Navbar() {
                                 </span>
                             )}
                         </Link>
-                        <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}> 
+                        <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
                             <>Login</>
                         </Link>
                     </div>

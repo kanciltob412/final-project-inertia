@@ -37,7 +37,7 @@ export const FilterModal = ({
   setCurrentPage,
 }: FilterModalProps) => {
   return (
-  <div className="fixed inset-0 z-50 bg-[#423F3B]/50 md:hidden">
+    <div className="fixed inset-0 z-50 bg-[#423F3B]/50 md:hidden">
       <div className="absolute top-0 right-0 h-full w-80 overflow-y-auto bg-white p-6">
         <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-bold">Filters</h3>
