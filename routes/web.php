@@ -25,6 +25,10 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
+Route::get('/craftsmanship', function () {
+    return Inertia::render('Craftsmanship');
+})->name('craftsmanship');
+
 Route::get('/cart', function () {
     return Inertia::render('Cart');
 })->name('cart');
