@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "vercel-build": "vite build",
+        "vercel-build": "VITE_SKIP_LARAVEL=true vite build --config vite.vercel.config.ts",
         "build:ssr": "vite build && vite build --ssr",
         "dev": "vite",
         "dev:frontend": "vite --host 0.0.0.0",
