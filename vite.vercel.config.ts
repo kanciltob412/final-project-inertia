@@ -14,7 +14,7 @@ export default defineConfig({
         manifest: true,
         rollupOptions: {
             input: {
-                app: resolve(__dirname, 'resources/js/app.tsx'),
+                app: resolve(__dirname, 'resources/js/app-static.tsx'),
             },
         },
     },
@@ -25,5 +25,9 @@ export default defineConfig({
     },
     esbuild: {
         jsx: 'automatic',
+    },
+    define: {
+        // Define global variables for static build
+        'process.env.NODE_ENV': '"production"',
     },
 });
