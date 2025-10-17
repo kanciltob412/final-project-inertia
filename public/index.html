@@ -197,26 +197,20 @@
                 const categoryItems = document.querySelectorAll('.category-item');
                 categoryItems.forEach(item => {
                     item.addEventListener('click', function() {
-                        alert('You clicked on: ' + this.textContent);
+                        alert('You clicked on: ' + this.textContent + ' - Coming Soon!');
                     });
                 });
                 
-                // Animate elements on scroll
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateY(0)';
-                        }
-                    });
-                });
-                
+                // Simple fade-in animation that doesn't hide content initially
                 const features = document.querySelectorAll('.feature-card');
-                features.forEach(feature => {
-                    feature.style.opacity = '0';
-                    feature.style.transform = 'translateY(20px)';
-                    feature.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                    observer.observe(feature);
+                features.forEach((feature, index) => {
+                    feature.style.transition = 'transform 0.3s ease';
+                    feature.addEventListener('mouseenter', function() {
+                        this.style.transform = 'translateY(-5px)';
+                    });
+                    feature.addEventListener('mouseleave', function() {
+                        this.style.transform = 'translateY(0)';
+                    });
                 });
             });
         </script>
