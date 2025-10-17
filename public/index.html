@@ -14,13 +14,23 @@
         
         <style>
             html {
-                background-color: oklch(1 0 0);
+                background-color: white;
+            }
+            body {
+                margin: 0;
+                font-family: 'Instrument Sans', sans-serif;
+            }
+            #app {
+                min-height: 100vh;
             }
         </style>
     </head>
-    <body class="font-sans antialiased">
-        <div id="app"></div>
+    <body>
+        <div id="app">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 18px;">
+                Loading Lavanya Ceramics...
+            </div>
+        </div>
         <script type="module" src="/build/app.js"></script>
-        <link rel="stylesheet" href="/build/app.css">
     </body>
 </html>
