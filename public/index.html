@@ -5,32 +5,220 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Lavanya Ceramics</title>
         
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-        
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
         
         <style>
-            html {
-                background-color: white;
-            }
-            body {
+            * {
                 margin: 0;
-                font-family: 'Instrument Sans', sans-serif;
+                padding: 0;
+                box-sizing: border-box;
             }
-            #app {
-                min-height: 100vh;
+            
+            body {
+                font-family: 'Instrument Sans', Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+            }
+            
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+            
+            .header {
+                background: linear-gradient(rgba(66, 63, 59, 0.8), rgba(66, 63, 59, 0.8)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200');
+                background-size: cover;
+                background-position: center;
+                height: 500px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                color: white;
+            }
+            
+            .header h1 {
+                font-size: 4rem;
+                font-weight: 600;
+                letter-spacing: 0.1em;
+                margin-bottom: 1rem;
+            }
+            
+            .header p {
+                font-size: 1.2rem;
+                max-width: 600px;
+                opacity: 0.9;
+            }
+            
+            .main-content {
+                padding: 4rem 0;
+                background: #f8f8f8;
+            }
+            
+            .features {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 2rem;
+                margin-top: 3rem;
+            }
+            
+            .feature-card {
+                background: white;
+                padding: 2rem;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                text-align: center;
+            }
+            
+            .feature-card h3 {
+                color: #423F3B;
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .feature-card p {
+                color: #666;
+                line-height: 1.6;
+            }
+            
+            .categories {
+                padding: 4rem 0;
+                background: white;
+            }
+            
+            .categories h2 {
+                text-align: center;
+                font-size: 2.5rem;
+                color: #423F3B;
+                margin-bottom: 3rem;
+            }
+            
+            .category-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+                margin-top: 2rem;
+            }
+            
+            .category-item {
+                background: #423F3B;
+                color: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: 500;
+                transition: transform 0.3s ease;
+            }
+            
+            .category-item:hover {
+                transform: translateY(-5px);
+            }
+            
+            .footer {
+                background: #423F3B;
+                color: white;
+                text-align: center;
+                padding: 2rem 0;
+            }
+            
+            @media (max-width: 768px) {
+                .header h1 {
+                    font-size: 2.5rem;
+                }
+                
+                .header p {
+                    font-size: 1rem;
+                }
+                
+                .features {
+                    grid-template-columns: 1fr;
+                }
             }
         </style>
     </head>
     <body>
-        <div id="app">
-            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 18px;">
-                Loading Lavanya Ceramics...
+        <header class="header">
+            <div class="container">
+                <h1>LAVANYA CERAMICS</h1>
+                <p>Discover our curated collection of premium ceramics that blend timeless elegance, artisanal craftsmanship, and modern design.</p>
             </div>
-        </div>
-        <script type="module" src="/resources/js/app-static.tsx"></script>
+        </header>
+        
+        <main class="main-content">
+            <div class="container">
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>Premium Quality</h3>
+                        <p>Handcrafted ceramics made with the finest materials and traditional techniques passed down through generations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Timeless Design</h3>
+                        <p>Beautiful pieces that complement any space, from modern minimalist to classic traditional interiors.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Artisan Crafted</h3>
+                        <p>Each piece is carefully crafted by skilled artisans who bring passion and expertise to every creation.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <section class="categories">
+            <div class="container">
+                <h2>Our Product Categories</h2>
+                <div class="category-grid">
+                    <div class="category-item">Plates</div>
+                    <div class="category-item">Bowls</div>
+                    <div class="category-item">Mugs</div>
+                    <div class="category-item">Cups</div>
+                    <div class="category-item">Pots</div>
+                    <div class="category-item">Dispenser Bottles</div>
+                    <div class="category-item">Jugs</div>
+                    <div class="category-item">Tea Sets</div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Lavanya Ceramics. Crafted with passion for beautiful living.</p>
+                <p style="margin-top: 1rem; opacity: 0.8;">✨ Successfully deployed on Vercel ✨</p>
+            </div>
+        </footer>
+        
+        <script>
+            // Simple interaction to verify JavaScript is working
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('Lavanya Ceramics website loaded successfully!');
+                
+                // Add hover effects to category items
+                const categoryItems = document.querySelectorAll('.category-item');
+                categoryItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        alert('You clicked on: ' + this.textContent);
+                    });
+                });
+                
+                // Animate elements on scroll
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }
+                    });
+                });
+                
+                const features = document.querySelectorAll('.feature-card');
+                features.forEach(feature => {
+                    feature.style.opacity = '0';
+                    feature.style.transform = 'translateY(20px)';
+                    feature.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    observer.observe(feature);
+                });
+            });
+        </script>
     </body>
 </html>
