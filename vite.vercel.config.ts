@@ -10,11 +10,11 @@ export default defineConfig({
         tailwindcss(),
     ],
     build: {
-        outDir: 'public/build',
-        manifest: true,
+        outDir: 'dist',
+        assetsDir: 'assets',
         rollupOptions: {
             input: {
-                app: resolve(__dirname, 'resources/js/app-static.tsx'),
+                main: resolve(__dirname, 'public/index.html'),
             },
         },
     },
