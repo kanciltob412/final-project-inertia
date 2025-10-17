@@ -96,7 +96,7 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center">
                                 <Mail className="mr-2 h-5 w-5" />
-                                <span className="text-white">info@lavanya.com</span>
+                                <span className="text-white">info@lavanyaceramics.com</span>
                             </li>
                         </ul>
                     </div>
@@ -104,7 +104,7 @@ export default function Footer() {
 
                 <div className="mt-12 border-t border-white pt-8">
                     <div className="flex flex-col items-center justify-between md:flex-row">
-                        <p className="text-sm text-white">© 2025 LAVANYA. All rights reserved.</p>
+                        <p className="text-sm text-white">© 2025 LAVANYA CERAMICS. All rights reserved.</p>
                         <div className="mt-4 flex space-x-6 md:mt-0">
                             <a href="#" className="text-sm text-white hover:text-gray-400">
                                 Privacy Policy

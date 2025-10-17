@@ -2,7 +2,6 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Link } from '@inertiajs/react';
 import { Calendar, ChevronRight, Clock } from 'lucide-react';
-import Hero from '../components/Hero';
 import { articles } from '../data/products';
 
 export default function Articles() {
@@ -13,13 +12,20 @@ export default function Articles() {
         <div>
             <Navbar></Navbar>{' '}
             <div>
-                <Hero
-                    title={'Fashion Articles'}
-                    description={'Read our latest fashion articles'}
-                    image={
-                        'https://img.freepik.com/premium-vector/businessman-reading-daily-news-articles-tablet-screen-online-newspaper-press-mass-media-concept-desk-top-angle-view-horizontal_48369-29756.jpg?w=1800'
-                    }
-                />
+                {/* Banner (matching About/Craftsmanship/Contact/Products/ProductDetail) */}
+                <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                    <img 
+                        src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=1200" 
+                        alt="Articles banner" 
+                        className="absolute w-full h-full object-cover" 
+                        style={{ filter: 'brightness(0.6)' }} 
+                    />
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
+                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">ARTICLES</h1>
+                        </div>
+                    </div>
+                </div>
                 <div className="mx-auto max-w-7xl px-4 py-16">
                     {/* Featured Article */}
                     {featuredArticle && (

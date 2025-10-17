@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight, Grid, List, SlidersHorizontal } from 'lucide
 import { useEffect, useState } from 'react';
 import { FilterModal } from '../components/FilterModal';
 import { FilterSidebar } from '../components/FilterSidebar';
-import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
 import { useFilter } from '../context/FilterContext';
 
@@ -66,11 +65,15 @@ export default function Products() {
         <div>
             <Navbar />
             <div>
-                <Hero
-                    title="Our Products"
-                    description="Check out our latest collection of fashion products."
-                    image="https://img.freepik.com/free-photo/arrangement-different-traveling-elements_23-2148884922.jpg?t=st=1738137007~exp=1738140607~hmac=b4a9afa17b0eb4c59bf04222b0190ca142248d140a30d8a2ee4d5b6922b8e34a&w=996"
-                />
+                {/* Banner (matching About/Craftsmanship/Contact) */}
+                <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                    <img src="/inspire-8.jpg" alt="Products banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
+                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">OUR PRODUCTS</h1>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="mx-auto max-w-7xl px-4 py-16">
                     {/* Header and Search */}

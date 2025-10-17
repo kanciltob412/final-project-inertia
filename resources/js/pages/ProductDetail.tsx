@@ -4,7 +4,6 @@ import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from 'react-use-cart';
-import Hero from '../components/Hero';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -68,7 +67,15 @@ export default function ProductDetail() {
         <div>
             <Navbar />
             <div className="text-black">
-                <Hero title="Product Detail" description="Check out our latest products" image={product.image} />
+                {/* Banner (matching About/Craftsmanship/Contact/Products) */}
+                <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                    <img src={product.image} alt="Product detail banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
+                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">PRODUCT DETAIL</h1>
+                        </div>
+                    </div>
+                </div>
                 <div className="mx-auto max-w-7xl px-4 py-16">
                     <div className="mb-8">
                         <Link href="/products" className="inline-flex items-center gap-2 text-gray-600 hover:text-black">

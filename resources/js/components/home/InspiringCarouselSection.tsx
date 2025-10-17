@@ -21,9 +21,9 @@ export default function InspiringCarouselSection() {
     return (
         <section className="w-full bg-white py-16">
             <div className="mx-auto max-w-7xl px-4 text-center">
-                <h2 className="text-5xl font-light mb-8">INSPIRING</h2>
+                <h2 className="text-5xl font-light mb-8">INSPIRING PRODUCTS</h2>
                 <Link href="/products" className="inline-block border-2 border-black px-8 py-3 text-lg mb-8 hover:bg-black hover:text-white transition-colors">
-                    SEE INSPIRING
+                    SEE COLLECTION
                 </Link>
                 <div className="flex justify-center gap-8 mb-8 mt-8">
                     {slides[current].map((img, idx) => (
