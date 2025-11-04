@@ -6,6 +6,7 @@ import InspiringCarouselSection from '@/components/home/InspiringCarouselSection
 import VisitUsSection from '@/components/home/VisitUsSection';
 import Navbar from '@/components/Navbar';
 import { motion } from 'framer-motion';
+import { Head } from '@inertiajs/react';
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -24,6 +25,11 @@ const staggerContainer = {
 export default function Home() {
     return (
         <div>
+            <Head title="Lavanya Ceramics - Luxury Ceramics for Hotels and Restaurants">
+                <meta name="description" content="Discover Lavanya Ceramics, offering luxury ceramics for hotels and restaurants. Elevate your space with our exquisite designs." />
+                <meta name="keywords" content="Lavanya Ceramics, luxury ceramics, hotel ceramics, restaurant ceramics, ceramic designs, high-end ceramics, bespoke ceramics, ceramic tableware, ceramic decor" />
+            </Head>
+
             <Navbar></Navbar>
             <div className="bg-gray-50">
                 {/* Hero Section with Video Background */}

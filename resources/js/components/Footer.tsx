@@ -10,7 +10,7 @@ export default function Footer() {
                     <div>
                         <h3 className="mb-4 flex items-center gap-2 text-left text-xl font-bold">
                             {/* Logo before the brand name. Adjust src/alt/size as needed. */}
-                            <img src="/LAVANYA_LOGO_WHITE.png" alt="Lavanya Ceramics White Logo" className="h-8 w-auto" />
+                            <img src="/LAVANYA_LOGO_WHITE.svg" alt="Lavanya Ceramics White Logo" className="h-10 w-auto" />
                         </h3>
                         <p className="mb-4 text-white">
                             Premium ceramics brand offering high-quality tableware and decorative pieces for the modern lifestyle.

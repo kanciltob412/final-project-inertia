@@ -14,11 +14,11 @@ export default function Articles() {
             <div>
                 {/* Banner (matching About/Craftsmanship/Contact/Products/ProductDetail) */}
                 <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                    <img 
-                        src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=1200" 
-                        alt="Articles banner" 
-                        className="absolute w-full h-full object-cover" 
-                        style={{ filter: 'brightness(0.6)' }} 
+                    <img
+                        src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=1200"
+                        alt="Articles banner"
+                        className="absolute w-full h-full object-cover"
+                        style={{ filter: 'brightness(0.6)' }}
                     />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">

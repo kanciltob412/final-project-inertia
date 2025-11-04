@@ -1,9 +1,13 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Menu, ShoppingCart, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
+import { SharedData } from '../types';
+import { usePage } from '@inertiajs/react';
+import { logout } from '../routes';
 
 export default function Navbar() {
+    const user = usePage<SharedData>().props.auth.user;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
     const { items } = useCart();
@@ -19,6 +23,10 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    const handleLogout = () => {
+        router.post(logout())
+    };
+
     return (
         <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md' : 'bg-transparent'}`}>
             <div className="mx-auto max-w-7xl px-4">
@@ -26,9 +34,9 @@ export default function Navbar() {
                     <div className="flex items-center">
                         <Link href="/" className="flex items-center">
                             <img
-                                src={isScrolled ? "/LAVANYA_LOGO_BLACK.png" : "/LAVANYA_LOGO_WHITE.png"}
+                                src={isScrolled ? "/LAVANYA_LOGO_BLACK.svg" : "/LAVANYA_LOGO_WHITE.svg"}
                                 alt="Lavanya Ceramics Logo"
-                                className="h-8 w-auto transition-all duration-300"
+                                className="h-10 w-auto transition-all duration-300"
                             />
                         </Link>
                     </div>
@@ -61,9 +69,20 @@ export default function Navbar() {
                                 </span>
                             )}
                         </Link>
-                        <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
-                            <>Login</>
-                        </Link>
+                        {user ? (
+                            <>
+                                <a href={user.role === 'ADMIN' ? '/admin/dashboard' : '/cart'} className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                                    Hello, {user.name}
+                                </a>
+                                <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                                    Logout
+                                </div>
+                            </>
+                        ) : (
+                            <Link href="/login" className={`transition-colors hover:opacity-75 ${isScrolled ? 'text-black' : 'text-white'}`}>
+                                Login
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}

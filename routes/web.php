@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\GetInTouchController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -47,11 +52,30 @@ Route::get('/articles/{id}', function ($id) {
     ]);
 })->name('article.detail');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('articles', ArticleController::class);
 });
+
+Route::get('/user', [UserController::class, 'index']);
+Route::get('/user/{id}', [UserController::class, 'show']);
+Route::get('/get-in-touch', GetInTouchController::class);
+
+
+
+
+
+if (file_exists(__DIR__ . '/settings.php')) {
+    require __DIR__ . '/settings.php';
+}
+if (file_exists(__DIR__ . '/auth.php')) {
+    require __DIR__ . '/auth.php';
+}
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

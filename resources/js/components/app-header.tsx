@@ -108,9 +108,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <Link href={dashboard()} prefetch className="flex items-center space-x-2">
                         {/* Logo changes on scroll: white when static, black when scrolled */}
                         <img
-                            src={isScrolled ? "/LAVANYA_LOGO_BLACK.png" : "/LAVANYA_LOGO_WHITE.png"}
+                            src={isScrolled ? "/LAVANYA_LOGO_BLACK.svg" : "/LAVANYA_LOGO_WHITE.svg"}
                             alt="Lavanya Ceramics Logo"
-                            className="h-8 w-auto transition-all duration-300 border border-red-500"
+                            className="h-10 w-auto transition-all duration-300 border border-red-500"
                         />
                     </Link>
 
@@ -143,7 +143,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <div className="ml-auto flex items-center space-x-2">
                         <div className="relative flex items-center space-x-1">
                             <Button variant="ghost" size="icon" className="group h-9 w-9 cursor-pointer">
-                                <Search className="!size-5 opacity-80 group-hover:opacity-100" />
+                                <Search className="size-5! opacity-80 group-hover:opacity-100" />
                             </Button>
                             <div className="hidden lg:flex">
                                 {rightNavItems.map((item) => (

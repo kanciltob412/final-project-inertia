@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 757 240.44">
+  <defs>
+    <style>
+      .cls-1 {
+        letter-spacing: .1em;
+      }
+
+      .cls-2 {
+        letter-spacing: .1em;
+      }
+
+      .cls-3 {
+        letter-spacing: .05em;
+      }
+
+      .cls-4 {
+        letter-spacing: .05em;
+      }
+
+      .cls-5 {
+        font-family: Optima-Bold, Optima;
+        font-size: 142.29px;
+        font-weight: 700;
+      }
+
+      .cls-5, .cls-6 {
+        fill: #231f20;
+      }
+
+      .cls-6 {
+        font-family: Optima-Regular, Optima;
+        font-size: 81.11px;
+        letter-spacing: .5em;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <text class="cls-5" transform="translate(0 119.88)"><tspan class="cls-1" x="0" y="0">L</tspan><tspan class="cls-3" x="85.38" y="0">AV</tspan><tspan class="cls-2" x="288" y="0">AN</tspan><tspan class="cls-4" x="522.07" y="0">Y</tspan><tspan class="cls-1" x="615.42" y="0">A</tspan></text>
+    <text class="cls-6" transform="translate(11.53 218.7) scale(1.05 1)"><tspan x="0" y="0">CERAMICS</tspan></text>
+  </g>
+</svg>
