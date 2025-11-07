@@ -50,7 +50,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
             </div>
             <div className="p-4">
                 <h3 className="text-lg font-semibold text-black">
-                    <Link 
+                    <Link
                         href={`/products/${product.id}`}
                         className="hover:text-gray-600 transition-colors duration-200"
                     >
