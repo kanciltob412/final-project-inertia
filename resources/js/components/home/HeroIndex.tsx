@@ -4,13 +4,13 @@ import { ArrowRight } from 'lucide-react';
 
 function HeroIndex() {
     return (
-    <div className="relative h-[500px] sm:h-[650px] md:h-[750px] lg:h-[879px] overflow-hidden">
+        <div className="relative h-[500px] sm:h-[650px] md:h-[750px] lg:h-[879px] overflow-hidden">
             <img
                 src="/hero.jpg"
                 alt="Hero"
                 className="absolute w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 bg-black/30" />
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

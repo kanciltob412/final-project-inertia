@@ -20,18 +20,18 @@ import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { Product } from "@/types";
-import products from "../../routes/products";
+import { Order } from "@/types";
+import orders from "../../routes/orders";
 
-function ActionsCell({ product }: { product: Product }) {
+function ActionsCell({ order }: { order: Order }) {
     const [open, setOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(products.edit(product.id));
+        router.visit(orders.edit(order.id));
     };
 
     const handleDelete = () => {
-        router.delete(products.destroy(product.id));
+        router.delete(orders.destroy(order.id));
         setOpen(false);
     };
 
@@ -63,7 +63,7 @@ function ActionsCell({ product }: { product: Product }) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will delete <strong>{product.name}</strong> permanently.
+                            This will delete <strong>{order.id}</strong> permanently.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -76,7 +76,7 @@ function ActionsCell({ product }: { product: Product }) {
     );
 }
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Order>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -104,37 +104,87 @@ export const columns: ColumnDef<Product>[] = [
         header: "ID",
     },
     {
-        accessorKey: "category.name",
-        header: "Category",
+        accessorKey: "user.name",
+        header: "Customer Name",
+    },
+    {        accessorKey: "phone",
+        header: "Phone",
     },
     {
-        accessorKey: "name",
-        header: "Product Name",
+        accessorKey: "address",
+        header: "Address",
     },
     {
-        accessorKey: "description",
+        accessorKey: "city",
+        header: "City",
     },
     {
-        accessorKey: "color",
-        header: "Color",
+        accessorKey: "country",
+        header: "Country",
     },
     {
-        accessorKey: "price",
-        header: "Price",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.price)}</span>,
+        accessorKey: "postal_code",
+        header: "Postal Code",
     },
     {
-        accessorKey: "stock",
-        header: "Stock",
+        accessorKey: "items",
+        header: "Items",
+        cell: ({ row }) => {
+            const order = row.original; 
+            if (!order.items || order.items.length === 0) {
+                return <div>No items</div>;
+            }
+            return ( 
+            <div>
+                {order.items.map((item) => {
+                    return (
+                        <div key={item.id}>
+                            {item.product?.name} X {item.quantity}
+                        </div>
+                    );
+                })}
+            </div>
+            );
+        },
     },
     {
-        accessorKey: "image",
-        header: "Image",
-        cell: ({ row }) => <img src={`../../storage/${row.original.image}`} alt={row.original.name} className="h-12 w-12 object-cover" />,
+        accessorKey: "total",
+        header: "Total",
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.total)}</span>,  
+    },
+    {
+        accessorKey: "items",
+        header: "Items",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (!order.items || order.items.length === 0) {
+                return <div>No items</div>;
+            }
+            return (
+                <div>
+                    {order.items.map((item) => {
+                        return (
+                            <div key={item.id}>
+                                {item.product?.name} X {item.quantity}
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "total",
+        header: "Total",
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.total)}</span>,  
+    },
+    {
+        accessorKey: "status",
+        header: "Status",
     },
     {
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => <ActionsCell product={row.original} />,
+        cell: ({ row }) => <ActionsCell order={row.original} />,
     },
 ];

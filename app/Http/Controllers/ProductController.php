@@ -96,7 +96,9 @@ class ProductController extends Controller
             }
             $validated['image'] = $request->file('image')->store('products', 'public');
         }
-
+        else {
+            $validated['image'] = $product->image;
+        }
         $product->update($validated);
 
         return redirect()->route("products.index")->with("success", "Product updated successfully.");

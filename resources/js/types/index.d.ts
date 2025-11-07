@@ -59,7 +59,11 @@ export interface Product {
     price: number;
     created_at: string;
     updated_at: string;
+    
+    // Relation to Category
+    category: Category;
 }
+
 export interface Article {
     id: number;
     title: string;  
@@ -76,4 +80,40 @@ export interface Article {
     status: 'draft' | 'published';
     created_at: string;
     updated_at: string;
+}
+
+export interface Order {
+    id: number;
+    user_id: number;
+    phone: string;
+    address: string;
+    city: string;
+    country: string;
+    postal_code: string;
+    status: 'pending' | 'completed' | 'cancelled';
+    url: string;
+    total: number;
+    payment_method: string;
+    payment_channel: string;
+    created_at: string;
+    updated_at: string;
+
+    
+    // Relation to User
+    user: User;
+    // Relation to Order Items
+    items: OrderItem[];
+
+}
+export interface OrderItem {
+    id: number;
+    order_id: number;
+    product_id: number;
+    quantity: number;
+    price: number;
+    created_at: string;
+    updated_at: string;
+    
+    // Relation to Product
+    product: Product;
 }

@@ -9,6 +9,7 @@ import AppLogo from './app-logo';
 import categories from '../routes/categories';
 import products from '../routes/products';
 import articles from '../routes/articles';
+import orders from '../routes/orders';
 
 
 const mainNavItems: NavItem[] = [
@@ -30,6 +31,11 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Articles',
         href: articles.index().url,
+        icon: Box,
+    },
+    {
+        title: 'Orders',
+        href: orders.index().url,
         icon: Box,
     },
 ];

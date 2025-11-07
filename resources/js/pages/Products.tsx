@@ -1,15 +1,16 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import { Product } from '@/types/types';
 import { ChevronLeft, ChevronRight, Grid, List, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { FilterModal } from '../components/FilterModal';
 import { FilterSidebar } from '../components/FilterSidebar';
 import ProductCard from '../components/ProductCard';
-import { useFilter } from '../context/FilterContext';
+import { FilterProvider, useFilter } from '../context/FilterContext';
+import { Product } from '@/types';
 
-export default function Products() {
-    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState<boolean>(false);
+// Extracted inner component so it can use useFilter()
+function ProductsContent() {
+    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
     const {
         selectedCategory,
         setSelectedCategory,
@@ -29,43 +30,23 @@ export default function Products() {
         setViewMode,
     } = useFilter();
 
-    // Close modal when screen width changes to desktop
     useEffect(() => {
-        const handleResize = (): void => {
-            if (window.innerWidth >= 768) {
-                setIsFilterMenuOpen(false);
-            }
+        const handleResize = () => {
+            if (window.innerWidth >= 768) setIsFilterMenuOpen(false);
         };
-
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const handlePreviousPage = (): void => {
-        setCurrentPage(Math.max(currentPage - 1, 1));
-    };
-
-    const handleNextPage = (): void => {
-        setCurrentPage(Math.min(currentPage + 1, totalPages));
-    };
-
-    const handlePageClick = (page: number): void => {
-        setCurrentPage(page);
-    };
-
-    const handleViewModeChange = (mode: 'grid' | 'list'): void => {
-        setViewMode(mode);
-    };
-
-    const handleOpenFilterMenu = (): void => {
-        setIsFilterMenuOpen(true);
-    };
+    const handlePreviousPage = () => setCurrentPage(Math.max(currentPage - 1, 1));
+    const handleNextPage = () => setCurrentPage(Math.min(currentPage + 1, totalPages));
+    const handlePageClick = (page: number) => setCurrentPage(page);
+    const handleViewModeChange = (mode: 'grid' | 'list') => setViewMode(mode);
 
     return (
-        <div>
+        <>
             <Navbar />
             <div>
-                {/* Banner (matching About/Craftsmanship/Contact) */}
                 <div className="relative h-[400px] md:h-[420px] overflow-hidden">
                     <img src="/inspire-8.jpg" alt="Products banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
                     <div className="absolute inset-0 flex items-center">
@@ -76,13 +57,13 @@ export default function Products() {
                 </div>
 
                 <div className="mx-auto max-w-7xl px-4 py-16">
-                    {/* Header and Search */}
+                    {/* Header */}
                     <div className="mb-8 flex flex-col items-center justify-between md:flex-row">
-                        <h1 className="mb-4 text-3xl font-bold text-[#423F3B] md:mb-0">Our Products</h1>
+                        <h1 className="mb-4 text-3xl font-bold text-black md:mb-0">Our Products</h1>
                         <div className="flex w-full gap-4 md:w-auto">
                             <button
                                 onClick={() => handleViewModeChange('grid')}
-                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-[#423F3B] transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-[#423F3B] md:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-black hover:bg-gray-100 md:flex"
                                 aria-label="Grid view"
                                 type="button"
                             >
@@ -90,15 +71,15 @@ export default function Products() {
                             </button>
                             <button
                                 onClick={() => handleViewModeChange('list')}
-                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-[#423F3B] transition-colors duration-300 ease-in-out hover:bg-gray-100 hover:text-[#423F3B] md:flex"
+                                className="hidden h-10 w-10 items-center justify-center rounded-md border text-black hover:bg-gray-100 md:flex"
                                 aria-label="List view"
                                 type="button"
                             >
                                 <List className="h-5 w-5" />
                             </button>
                             <button
-                                onClick={handleOpenFilterMenu}
-                                className="rounded-lg bg-[#423F3B] p-2 text-white md:hidden"
+                                onClick={() => setIsFilterMenuOpen(true)}
+                                className="rounded-lg bg-black p-2 text-white md:hidden"
                                 aria-label="Open filters"
                                 type="button"
                             >
@@ -108,7 +89,7 @@ export default function Products() {
                     </div>
 
                     <div className="flex flex-col gap-8 md:flex-row">
-                        {/* Filters Sidebar - Desktop */}
+                        {/* Sidebar (Desktop) */}
                         <div className="hidden md:block">
                             <FilterSidebar
                                 searchQuery={searchQuery}
@@ -125,7 +106,7 @@ export default function Products() {
                             />
                         </div>
 
-                        {/* Filters Modal - Mobile */}
+                        {/* Modal (Mobile) */}
                         {isFilterMenuOpen && (
                             <FilterModal
                                 isFilterMenuOpen={isFilterMenuOpen}
@@ -144,14 +125,16 @@ export default function Products() {
                             />
                         )}
 
-                        {/* Products Grid and Pagination */}
+                        {/* Products */}
                         <div className="flex-1">
                             {paginatedProducts.length === 0 ? (
                                 <div className="py-12 text-center">
-                                    <p className="text-xl text-gray-600">No products found matching your criteria.</p>
+                                    <p className="text-xl text-gray-600">
+                                        No products found matching your criteria.
+                                    </p>
                                     <button
                                         onClick={clearFilters}
-                                        className="mt-4 text-[#423F3B] hover:underline"
+                                        className="mt-4 text-black hover:underline"
                                         aria-label="Clear all filters"
                                         type="button"
                                     >
@@ -161,50 +144,47 @@ export default function Products() {
                             ) : (
                                 <>
                                     <div
-                                        className={viewMode === 'grid' ? 'grid grid-cols-1 gap-8 md:grid-cols-3' : 'flex flex-col gap-8 md:flex-col'}
+                                        className={
+                                            viewMode === 'grid'
+                                                ? 'grid grid-cols-1 gap-8 md:grid-cols-3'
+                                                : 'flex flex-col gap-8'
+                                        }
                                     >
-                                        {paginatedProducts.map((product: Product) => (
+                                        {paginatedProducts.map((product) => (
                                             <ProductCard key={product.id} product={product} viewMode={viewMode} />
                                         ))}
                                     </div>
 
-                                    {/* Pagination Controls */}
+                                    {/* Pagination */}
                                     {totalPages > 1 && (
                                         <div className="mt-12 flex items-center justify-center gap-4">
                                             <button
                                                 onClick={handlePreviousPage}
                                                 disabled={currentPage === 1}
-                                                className="rounded-full p-2 text-[#423F3B] hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-                                                aria-label="Previous page"
-                                                type="button"
+                                                className="rounded-full p-2 text-black hover:bg-gray-100 disabled:opacity-50"
                                             >
                                                 <ChevronLeft className="h-5 w-5" />
                                             </button>
 
                                             <div className="flex gap-2">
-                                                {Array.from({ length: totalPages }, (_, index) => {
-                                                    const pageNumber = index + 1;
-                                                    return (
-                                                        <button
-                                                            key={pageNumber}
-                                                            onClick={() => handlePageClick(pageNumber)}
-                                                            className={`h-8 w-8 rounded-full ${currentPage === pageNumber ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
-                                                                }`}
-                                                            aria-label={`Go to page ${pageNumber}`}
-                                                            type="button"
-                                                        >
-                                                            {pageNumber}
-                                                        </button>
-                                                    );
-                                                })}
+                                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                                    <button
+                                                        key={page}
+                                                        onClick={() => handlePageClick(page)}
+                                                        className={`h-8 w-8 rounded-full ${currentPage === page
+                                                            ? 'bg-black text-white'
+                                                            : 'text-black hover:bg-gray-100'
+                                                            }`}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                ))}
                                             </div>
 
                                             <button
                                                 onClick={handleNextPage}
                                                 disabled={currentPage === totalPages}
-                                                className="rounded-full p-2 text-[#423F3B] hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
-                                                aria-label="Next page"
-                                                type="button"
+                                                className="rounded-full p-2 text-black hover:bg-gray-100 disabled:opacity-50"
                                             >
                                                 <ChevronRight className="h-5 w-5" />
                                             </button>
@@ -217,6 +197,15 @@ export default function Products() {
                 </div>
             </div>
             <Footer />
-        </div>
+        </>
+    );
+}
+
+// Wrap the page with FilterProvider
+export default function Products({ products }: { products: Product[] }) {
+    return (
+        <FilterProvider products={products}>
+            <ProductsContent />
+        </FilterProvider>
     );
 }

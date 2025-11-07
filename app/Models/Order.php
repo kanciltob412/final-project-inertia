@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 class Order extends Model
 {
     use HasFactory;
@@ -14,11 +15,16 @@ class Order extends Model
     protected $table = 'order';
     protected $fillable = [
         'user_id',
+        'phone',
         'address',
+        'city',
+        'country',
+        'postal_code',
+        'total',
+        'status',
+        'url',
         'payment_method',
         'payment_channel',
-        'country',
-        'status',
     ];
 
     public function user(): BelongsTo

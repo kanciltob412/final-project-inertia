@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('order', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('phone');
             $table->string('address');
-            $table->string('payment_method');
-            $table->string('payment_channel');
+            $table->string('city');
             $table->string('country');
-            $table->string('status')->default('pending');
+            $table->string('postal_code');
+            $table->enum('status', ['PENDING', 'CANCELLED', 'PAID'])->default('PENDING');
+            $table->string('url')->nullable();
+            $table->float('total')->default(0);
+            $table->string('payment_method')->nullable();
+            $table->string('payment_channel')->nullable();
             $table->timestamps();
         });
     }

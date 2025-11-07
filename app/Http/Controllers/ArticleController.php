@@ -42,7 +42,7 @@ class ArticleController extends Controller
             'seo_keywords' => 'nullable|string|max:255',
             'excerpt' => 'nullable|string',
             'content' => 'nullable|string',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'featured_image' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'category' => 'nullable|string|max:255',
             'tags' => 'nullable|string|max:255',
             'author_name' => 'nullable|string|max:255',
@@ -71,22 +71,54 @@ class ArticleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+        return Inertia::render("Article/form", [
+            "article" => $article,
+            "categories" => Category::all()
+        ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:articles,slug,' . $article->id,
+            'seo_keywords' => 'nullable|string|max:255',
+            'excerpt' => 'nullable|string',
+            'content' => 'nullable|string',
+            'featured_image' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'category' => 'nullable|string|max:255',
+            'tags' => 'nullable|string|max:255',
+            'author_name' => 'nullable|string|max:255',
+            'reading_time' => 'nullable|integer',
+            'is_featured' => 'boolean',
+            'status' => 'nullable|in:draft,published',
+        ]);
+
+        if ($request->hasFile('featured_image')) {
+            // Delete old image if exists
+            if ($article->featured_image) {
+                Storage::disk('public')->delete($article->featured_image);
+            }
+            $validated['featured_image'] = $request->file('featured_image')->store('articles', 'public');
+        } else {
+            $validated['featured_image'] = $article->featured_image;
+        }
+        $article->update($validated);
+        return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+        $article = Article::findOrFail($id);
+        // Delete featured image if exists
+        if ($article->featured_image) {
+            Storage::disk('public')->delete($article->featured_image);
+        }
+        $article->delete();
+        return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
     }
 }

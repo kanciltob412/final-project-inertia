@@ -1,35 +1,18 @@
-import { products } from '@/data/products';
 import { formatPrice } from '@/utils/helper';
-import { Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { ArrowLeft, Minus, Plus, ShoppingBag, ZoomIn, X } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from 'react-use-cart';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { Product } from '@/types';
 
-type PageProps = {
-    product?: {
-        id: number;
-        name: string;
-        price: number;
-        image: string;
-        description: string;
-    };
-    id?: number; // dikirim dari controller
-};
-
-export default function ProductDetail() {
-    const { props } = usePage<PageProps>();
+export default function ProductDetail({ product }: { product: Product }) {
     const { addItem, items, updateItemQuantity } = useCart();
     const [quantity, setQuantity] = useState(1);
-
-    const resolvedId = props.product?.id ?? (typeof props.id === 'number' ? props.id : undefined);
-
-    const product = props.product ?? (resolvedId !== undefined ? products.find((p) => p.id === resolvedId) : undefined);
-
-    console.log('props', props);
-    console.log('resolvedId', resolvedId);
-    console.log('product', product);
+    const [isZoomed, setIsZoomed] = useState(false);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [isHovering, setIsHovering] = useState(false);
 
     if (!product) {
         return (
@@ -63,13 +46,23 @@ export default function ProductDetail() {
         setQuantity(1);
     };
 
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setMousePosition({ x, y });
+    };
+
+    const toggleZoom = () => {
+        setIsZoomed(!isZoomed);
+    };
+
     return (
-        <div>
+        <>
             <Navbar />
             <div className="text-black">
-                {/* Banner (matching About/Craftsmanship/Contact/Products) */}
                 <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                    <img src={product.image} alt="Product detail banner" className="absolute w-full h-full object-cover" style={{ filter: 'brightness(0.6)' }} />
+                    <img src="/inspire-8.jpg" alt="Product Detail banner" className="absolute w-full h-full object-cover object-center" style={{ filter: 'brightness(0.6)' }} />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
                             <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">PRODUCT DETAIL</h1>
@@ -85,8 +78,55 @@ export default function ProductDetail() {
                     </div>
 
                     <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-                        <div className="aspect-square overflow-hidden rounded-lg">
-                            <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
+                        <div className="relative">
+                            {/* Zoom Modal */}
+                            {isZoomed && (
+                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+                                    <div className="relative max-w-4xl max-h-screen p-4">
+                                        <button
+                                            onClick={toggleZoom}
+                                            className="absolute top-2 right-2 z-10 rounded-full bg-white p-2 text-black hover:bg-gray-100"
+                                        >
+                                            <X className="h-6 w-6" />
+                                        </button>
+                                        <img
+                                            src={`/storage/${product.image}`}
+                                            alt={product.name}
+                                            className="max-w-full max-h-full object-contain"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Main Image with Hover Zoom */}
+                            <div
+                                className="relative aspect-square overflow-hidden rounded-lg cursor-zoom-in"
+                                onClick={toggleZoom}
+                                onMouseMove={handleMouseMove}
+                                onMouseEnter={() => setIsHovering(true)}
+                                onMouseLeave={() => {
+                                    setMousePosition({ x: 50, y: 50 });
+                                    setIsHovering(false);
+                                }}
+                            >
+                                {/* Zoomable Image */}
+                                <img
+                                    src={`/storage/${product.image}`}
+                                    alt={product.name}
+                                    className={`h-full w-full object-cover transition-all duration-200 ease-out ${isHovering ? 'scale-150' : 'scale-100'
+                                        }`}
+                                    style={{
+                                        transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`
+                                    }}
+                                />
+
+                                {/* Click to zoom indicator */}
+                                <div className="absolute top-4 right-4 opacity-70">
+                                    <div className="rounded-full bg-black bg-opacity-50 p-2 text-white">
+                                        <ZoomIn className="h-5 w-5" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div>
@@ -126,6 +166,6 @@ export default function ProductDetail() {
                 </div>
             </div>
             <Footer />
-        </div>
+        </>
     );
 }
