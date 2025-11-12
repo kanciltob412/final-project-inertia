@@ -23,4 +23,9 @@ class Article extends Model
         'is_featured',
         'status',
     ];
+
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'reading_time' => 'integer',
+    ];
 }

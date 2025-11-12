@@ -83,6 +83,17 @@ class ArticleController extends Controller
     public function update(Request $request, string $id)
     {
         $article = Article::findOrFail($id);
+        
+        // Check if it's a bulk status update (only status field)
+        if ($request->has('status') && count($request->all()) === 1) {
+            $validated = $request->validate([
+                'status' => 'required|in:draft,published',
+            ]);
+            $article->update($validated);
+            return redirect()->route('articles.index')->with('success', 'Article status updated successfully.');
+        }
+        
+        // Full form update
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:articles,slug,' . $article->id,
@@ -120,5 +131,53 @@ class ArticleController extends Controller
         }
         $article->delete();
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
+    }
+
+    /**
+     * Bulk update article status.
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:articles,id',
+            'status' => 'required|in:draft,published'
+        ]);
+
+        Article::whereIn('id', $validated['ids'])
+            ->update(['status' => $validated['status']]);
+
+        $message = "Articles status updated to {$validated['status']} successfully.";
+        
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Duplicate an article.
+     */
+    public function duplicate(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:articles,id',
+        ]);
+
+        $originalArticle = Article::findOrFail($validated['id']);
+        
+        Article::create([
+            'title' => $originalArticle->title . ' (Copy)',
+            'slug' => $originalArticle->slug . '-copy-' . time(),
+            'seo_keywords' => $originalArticle->seo_keywords,
+            'excerpt' => $originalArticle->excerpt,
+            'content' => $originalArticle->content,
+            'featured_image' => $originalArticle->featured_image, // Note: This copies the same image reference
+            'category' => $originalArticle->category,
+            'tags' => $originalArticle->tags,
+            'author_name' => $originalArticle->author_name,
+            'reading_time' => $originalArticle->reading_time,
+            'is_featured' => false, // Set as not featured by default
+            'status' => 'draft', // Set as draft by default
+        ]);
+
+        return back()->with('success', 'Article duplicated successfully.');
     }
 }

@@ -16,11 +16,12 @@ class CheckAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->role !== 'ADMIN') {
-            Auth::guard('web')->logout();
-
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        if (!$request->user() || $request->user()->role !== 'ADMIN') {
+            if ($request->user()) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            }
 
             return redirect()->route('login')->with('error', 'You do not have permission to access this page.');
         }

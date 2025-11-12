@@ -33,13 +33,9 @@ export default function Home() {
             <Navbar></Navbar>
             <div className="bg-gray-50">
                 {/* Hero Section with Video Background */}
-
-
                 <HeroIndex />
                 <HistorySection />
-
                 <CraftsmanshipSection />
-
                 <InspiringCarouselSection />
                 <VisitUsSection />
 
@@ -49,11 +45,11 @@ export default function Home() {
                         initial="initial"
                         whileInView="animate"
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-2xl bg-[#423F3B] p-12 text-center text-white"
+                        className="relative overflow-hidden rounded-2xl bg-black p-12 text-center text-white"
                     >
                         <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}>
-                            <h2 className="mb-4 text-3xl font-bold">Join Our Newsletter</h2>
-                            <p className="mb-8 opacity-90">Subscribe to get special offers, free giveaways, and updates.</p>
+                            <h2 className="mb-4 text-3xl font-bold">Welcome to Lavanya Ceramics</h2>
+                            <p className="mb-8 opacity-90">Subscribe to our newsletter to stay updated on our latest collections and exclusive offers.</p>
                             <form className="mx-auto flex max-w-md gap-4">
                                 <input type="email" placeholder="Enter your email" className="flex-1 rounded-md bg-white px-4 py-3 text-black" />
                                 <motion.button

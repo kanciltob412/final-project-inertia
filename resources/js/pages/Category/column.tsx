@@ -16,7 +16,6 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import categories from "@/routes/categories";
 import { Category } from "@/types";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
@@ -27,11 +26,11 @@ function ActionsCell({ category }: { category: Category }) {
     const [open, setOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(categories.edit(category.id));
+        router.visit(`/admin/categories/${category.id}/edit`);
     };
 
     const handleDelete = () => {
-        router.delete(categories.destroy(category.id));
+        router.delete(`/admin/categories/${category.id}`);
         setOpen(false);
     };
 

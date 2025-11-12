@@ -1,7 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Order } from "@/types";
 import { Head, Link } from "@inertiajs/react";
-import { DataTable } from "@/components/ui/data-table";
+import { OrderDataTable } from "./OrderDataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { columns } from "./column";
@@ -22,13 +22,13 @@ interface Props {
 export default function Index({ data }: Props) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Products List" />
+            <Head title="Orders List" />
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
                     <HeadingSmall
-                        title="Products List"
-                        description="Manage your products here"
+                        title="Orders List"
+                        description="Manage your orders here"
                     />
                     <Button asChild>
                         <Link href={orders.create().url}>
@@ -38,7 +38,7 @@ export default function Index({ data }: Props) {
                     </Button>
                 </div>
 
-                <DataTable columns={columns} data={data} />
+                <OrderDataTable columns={columns} data={data} />
             </div>
 
         </AppLayout>

@@ -1,22 +1,37 @@
 export type Product = {
     id: number;
     name: string;
-    price: number;
+    category_id: number;
     description: string;
+    price: number;
+    stock: number;
+    color: string;
     image: string;
-    category: string;
+    is_active: boolean;
+    created_at?: string;
+    updated_at?: string;
+    category?: {
+        id: number;
+        name: string;
+    };
 };
 
 export type Article = {
     id: number;
     title: string;
-    excerpt: string;
+    slug: string;
+    seo_keywords?: string;
+    excerpt?: string;
     content: string;
-    image: string;
-    date: string;
-    author: string;
-    readTime: string;
-    featured: boolean;
+    featured_image?: string;
+    category?: string;
+    tags?: string;
+    author_name?: string;
+    reading_time?: number;
+    is_featured: boolean;
+    status: 'draft' | 'published';
+    created_at: string;
+    updated_at: string;
 };
 export type Animation = {
     initial: { opacity: number; y?: number; x?: number; scale?: number };
@@ -28,7 +43,7 @@ export type Animation = {
 };
 
 export type AnimationContainer = {
-    initial: {};
+    initial: object;
     whileInView?: {
         transition: {
             staggerChildren: number;

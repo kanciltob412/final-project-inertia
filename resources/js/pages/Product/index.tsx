@@ -1,7 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Product } from "@/types";
 import { Head, Link } from "@inertiajs/react";
-import { DataTable } from "@/components/ui/data-table";
+import { ProductDataTable } from "./ProductDataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { columns } from "./column";
@@ -38,7 +38,7 @@ export default function Index({ data }: Props) {
                     </Button>
                 </div>
 
-                <DataTable columns={columns} data={data} />
+                <ProductDataTable columns={columns} data={data} />
             </div>
 
         </AppLayout>

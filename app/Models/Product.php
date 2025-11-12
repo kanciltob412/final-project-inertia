@@ -14,11 +14,17 @@ class Product extends Model
         'name',
         'category_id',
         'description',
-        'company',
         'price',
         'stock',
         'color',
         'image',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'price' => 'decimal:2',
+        'stock' => 'integer',
     ];
 
     public function category(): BelongsTo

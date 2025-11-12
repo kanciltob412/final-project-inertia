@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -96,5 +97,40 @@ class CategoryController extends Controller
         });
 
         return redirect()->route("categories.index");
+    }
+
+    /**
+     * Bulk delete categories.
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:categories,id',
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            Category::whereIn('id', $validated['ids'])->delete();
+        });
+
+        return back()->with('success', 'Categories deleted successfully.');
+    }
+
+    /**
+     * Duplicate a category.
+     */
+    public function duplicate(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:categories,id',
+        ]);
+
+        $originalCategory = Category::findOrFail($validated['id']);
+        
+        $newCategory = $originalCategory->replicate();
+        $newCategory->name = $originalCategory->name . ' (Copy)';
+        $newCategory->save();
+
+        return redirect()->route('categories.index');
     }
 }

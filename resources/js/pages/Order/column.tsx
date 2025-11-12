@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Copy } from "lucide-react";
 import { useState } from "react";
 import { Order } from "@/types";
 import orders from "../../routes/orders";
@@ -28,6 +28,17 @@ function ActionsCell({ order }: { order: Order }) {
 
     const handleEdit = () => {
         router.visit(orders.edit(order.id));
+    };
+
+    const handleDuplicate = () => {
+        router.post('/admin/orders/duplicate', {
+            id: order.id
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Optionally show a success message
+            }
+        });
     };
 
     const handleDelete = () => {
@@ -46,6 +57,10 @@ function ActionsCell({ order }: { order: Order }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDuplicate}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
                             setTimeout(() => {

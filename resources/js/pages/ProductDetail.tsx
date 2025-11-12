@@ -1,5 +1,5 @@
 import { formatPrice } from '@/utils/helper';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, ShoppingBag, ZoomIn, X } from 'lucide-react';
 import { useState } from 'react';
 import { useCart } from 'react-use-cart';
@@ -44,6 +44,9 @@ export default function ProductDetail({ product }: { product: Product }) {
             );
         }
         setQuantity(1);
+        
+        // Redirect to cart page after adding item
+        router.visit('/cart');
     };
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {

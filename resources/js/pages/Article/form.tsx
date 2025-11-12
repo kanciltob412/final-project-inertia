@@ -58,11 +58,13 @@ export default function Form({ article }: Props) {
             }, {
                 preserveScroll: true,
                 onSuccess: () => reset(),
+                forceFormData: true,
             });
         } else {
             post("/admin/articles", {
                 preserveScroll: true,
                 onSuccess: () => reset(),
+                forceFormData: true,
             });
         }
     };
@@ -158,7 +160,15 @@ export default function Form({ article }: Props) {
                         {article?.featured_image && (
                             <div className="mt-2">
                                 <p className="text-sm leading-none font-medium mb-4">Current Image:</p>
-                                <img src={`/storage/${article.featured_image}`} alt={article.title} className="w-24 h-24 object-cover rounded" />
+                                <img 
+                                    src={
+                                        article.featured_image.startsWith('http') 
+                                            ? article.featured_image 
+                                            : `/storage/${article.featured_image}`
+                                    } 
+                                    alt={article.title} 
+                                    className="w-24 h-24 object-cover rounded" 
+                                />
                             </div>
                         )}
                     </div>

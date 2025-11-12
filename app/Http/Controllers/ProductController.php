@@ -118,4 +118,50 @@ class ProductController extends Controller
 
         return redirect()->route("products.index")->with("success", "Product deleted successfully.");
     }
+
+    /**
+     * Bulk update product status (activate/deactivate).
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:products,id',
+            'status' => 'required|in:active,inactive'
+        ]);
+
+        $isActive = $validated['status'] === 'active';
+        
+        Product::whereIn('id', $validated['ids'])
+            ->update(['is_active' => $isActive]);
+
+        $message = $isActive ? 'Products activated successfully.' : 'Products deactivated successfully.';
+        
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Duplicate a product.
+     */
+    public function duplicate(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:products,id',
+        ]);
+
+        $originalProduct = Product::findOrFail($validated['id']);
+        
+        Product::create([
+            'category_id' => $originalProduct->category_id,
+            'name' => $originalProduct->name . ' (Copy)',
+            'description' => $originalProduct->description,
+            'price' => $originalProduct->price,
+            'stock' => $originalProduct->stock,
+            'color' => $originalProduct->color,
+            'image' => $originalProduct->image, // Note: This copies the same image reference
+            'is_active' => $originalProduct->is_active,
+        ]);
+
+        return back()->with('success', 'Product duplicated successfully.');
+    }
 }

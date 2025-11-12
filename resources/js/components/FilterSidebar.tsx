@@ -46,21 +46,20 @@ export const FilterSidebar = ({
             </div>
             <div>
                 <h3 className="mb-3 font-semibold text-[#423F3B]">Categories</h3>
-                <div className="space-y-2">
+                <select
+                    value={selectedCategory}
+                    onChange={(e) => {
+                        setSelectedCategory(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                >
                     {categories.map((category) => (
-                        <button
-                            key={category}
-                            onClick={() => {
-                                setSelectedCategory(category);
-                                setCurrentPage(1);
-                            }}
-                            className={`block w-full rounded-md px-3 py-2 text-left transition-colors ${selectedCategory === category ? 'bg-[#423F3B] text-white' : 'text-[#423F3B] hover:bg-gray-100'
-                                }`}
-                        >
+                        <option key={category} value={category}>
                             {category}
-                        </button>
+                        </option>
                     ))}
-                </div>
+                </select>
             </div>
             <div>
                 <h3 className="mb-3 font-semibold text-[#423F3B]">Price Range</h3>
@@ -104,11 +103,10 @@ export const FilterSidebar = ({
                     }}
                     className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
                 >
-                    <option value="featured">Featured</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="name-asc">Name: A to Z</option>
-                    <option value="name-desc">Name: Z to A</option>
+                    <option value="name">Sort by Name</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="newest">Newest</option>
                 </select>
             </div>
             <button

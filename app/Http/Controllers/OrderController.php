@@ -195,4 +195,75 @@ class OrderController extends Controller
             return back()->with('error', $e->getMessage());
         }
     }
+
+    /**
+     * Bulk update order status or delete orders.
+     */
+    public function bulkUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:order,id',
+            'status' => 'nullable|in:pending,processing,completed,cancelled'
+        ]);
+
+        if (isset($validated['status'])) {
+            // Update status
+            Order::whereIn('id', $validated['ids'])
+                ->update(['status' => $validated['status']]);
+
+            $message = "Orders status updated to {$validated['status']} successfully.";
+        } else {
+            // Delete orders (if no status provided, assume delete operation)
+            Order::whereIn('id', $validated['ids'])->delete();
+            $message = 'Orders deleted successfully.';
+        }
+
+        return back()->with('success', $message);
+    }
+
+    /**
+     * Duplicate an order.
+     */
+    public function duplicate(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required|exists:order,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $originalOrder = Order::with('items')->findOrFail($validated['id']);
+            
+            // Create new order
+            $newOrder = Order::create([
+                'user_id' => $originalOrder->user_id,
+                'address' => $originalOrder->address,
+                'phone' => $originalOrder->phone,
+                'city' => $originalOrder->city,
+                'country' => $originalOrder->country,
+                'postal_code' => $originalOrder->postal_code,
+                'status' => 'pending', // Set as pending by default
+                'total' => $originalOrder->total,
+            ]);
+
+            // Duplicate order items
+            foreach ($originalOrder->items as $item) {
+                OrderItem::create([
+                    'order_id' => $newOrder->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->price,
+                ]);
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Order duplicated successfully.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to duplicate order: ' . $e->getMessage());
+        }
+    }
 }

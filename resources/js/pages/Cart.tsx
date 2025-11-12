@@ -25,7 +25,7 @@ export default function Cart() {
                     </div>
                     <div className="mx-auto max-w-7xl px-4 py-16 text-center">
                         <div className="flex items-center justify-center">
-                            <img src="/empty_cart.png" alt="" width={400} />
+                            <img src="/your-cart-empty.png" alt="" width={400} />
                         </div>
                         <h2 className="mb-4 text-2xl font-bold">Your cart is empty</h2>
                         {auth.user ? (

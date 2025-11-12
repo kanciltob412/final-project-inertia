@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\GetInTouchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PageController;
@@ -22,14 +23,18 @@ Route::get('/articles/{id}', [PageController::class, 'articleDetail'])->name('ar
 Route::get('/craftsmanship', [PageController::class, 'craftsmanship'])->name('craftsmanship');
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('categories', CategoryController::class);
+    Route::post('products/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
     Route::resource('products', ProductController::class);
+    Route::patch('products/bulk-update', [ProductController::class, 'bulkUpdate'])->name('products.bulk-update');
+    Route::post('articles/duplicate', [ArticleController::class, 'duplicate'])->name('articles.duplicate');
     Route::resource('articles', ArticleController::class);
+    Route::patch('articles/bulk-update', [ArticleController::class, 'bulkUpdate'])->name('articles.bulk-update');
+    Route::post('orders/duplicate', [OrderController::class, 'duplicate'])->name('orders.duplicate');
     Route::resource('orders', OrderController::class);
+    Route::patch('orders/bulk-update', [OrderController::class, 'bulkUpdate'])->name('orders.bulk-update');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

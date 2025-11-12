@@ -1,7 +1,7 @@
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Category } from "@/types";
 import { Head, Link } from "@inertiajs/react";
-import { DataTable } from "@/components/ui/data-table";
+import { CategoryDataTable } from "./CategoryDataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import categories from "@/routes/categories";
@@ -38,7 +38,7 @@ export default function Index({ data }: Props) {
                     </Button>
                 </div>
 
-                <DataTable columns={columns} data={data} />
+                <CategoryDataTable columns={columns} data={data} />
             </div>
 
         </AppLayout>

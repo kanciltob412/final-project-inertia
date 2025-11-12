@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Copy } from "lucide-react";
 import { useState } from "react";
 import { Article } from "../../types";
 
@@ -27,6 +27,17 @@ function ActionsCell({ article }: { article: Article }) {
 
     const handleEdit = () => {
         router.visit(`/admin/articles/${article.id}/edit`);
+    };
+
+    const handleDuplicate = () => {
+        router.post('/admin/articles/duplicate', {
+            id: article.id
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Optionally show a success message
+            }
+        });
     };
 
     const handleDelete = () => {
@@ -45,6 +56,10 @@ function ActionsCell({ article }: { article: Article }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDuplicate}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
                             setTimeout(() => {
@@ -135,13 +150,22 @@ export const columns: ColumnDef<Article>[] = [
     {
         accessorKey: "featured_image",
         header: "Featured Image",
-        cell: ({ row }) => (
-            <img
-                src={`/storage/${row.getValue('featured_image')}`}
-                alt={row.original.title}
-                className="h-12 w-12 object-cover rounded"
-            />
-        ),
+        cell: ({ row }) => {
+            const featuredImage = row.getValue('featured_image') as string;
+            return (
+                <img
+                    src={
+                        featuredImage?.startsWith('http') 
+                            ? featuredImage 
+                            : featuredImage 
+                                ? `/storage/${featuredImage}` 
+                                : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100'
+                    }
+                    alt={row.original.title}
+                    className="h-12 w-12 object-cover rounded"
+                />
+            );
+        },
     },
     {
         accessorKey: "date",

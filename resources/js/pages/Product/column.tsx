@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Copy } from "lucide-react";
 import { useState } from "react";
 import { Product } from "@/types";
 import products from "../../routes/products";
@@ -28,6 +28,17 @@ function ActionsCell({ product }: { product: Product }) {
 
     const handleEdit = () => {
         router.visit(products.edit(product.id));
+    };
+
+    const handleDuplicate = () => {
+        router.post('/admin/products/duplicate', {
+            id: product.id
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Optionally show a success message
+            }
+        });
     };
 
     const handleDelete = () => {
@@ -46,6 +57,10 @@ function ActionsCell({ product }: { product: Product }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleDuplicate}>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
                             setTimeout(() => {
@@ -126,6 +141,19 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "stock",
         header: "Stock",
+    },
+    {
+        accessorKey: "is_active",
+        header: "Status",
+        cell: ({ row }) => (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                row.original.is_active
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+            }`}>
+                {row.original.is_active ? 'Active' : 'Inactive'}
+            </span>
+        ),
     },
     {
         accessorKey: "image",
