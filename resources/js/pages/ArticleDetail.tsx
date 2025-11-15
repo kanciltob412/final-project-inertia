@@ -38,16 +38,16 @@ export default function ArticleDetail() {
                 <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                     {/* Main Content */}
                     <div className="lg:col-span-2">
-                        <img 
+                        <img
                             src={
-                                article.featured_image?.startsWith('http') 
-                                    ? article.featured_image 
-                                    : article.featured_image 
-                                        ? `/storage/${article.featured_image}` 
+                                article.featured_image?.startsWith('http')
+                                    ? article.featured_image
+                                    : article.featured_image
+                                        ? `/storage/${article.featured_image}`
                                         : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
-                            } 
-                            alt={article.title} 
-                            className="mb-8 h-[400px] w-full rounded-xl object-cover" 
+                            }
+                            alt={article.title}
+                            className="mb-8 h-[400px] w-full rounded-xl object-cover"
                         />
 
                         <div className="mb-6 flex items-center gap-6 text-gray-600">
@@ -65,26 +65,8 @@ export default function ArticleDetail() {
 
                         {/* AMAN: kalau content undefined → pakai string kosong */}
                         {typeof article.content === 'string' && article.content.trim().length > 0 ? (
-                            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+                            <div className="ck-content" dangerouslySetInnerHTML={{ __html: article.content }} />
                         ) : null}
-
-                        {/* Contoh konten tambahan */}
-                        <div className="prose prose-lg max-w-none">
-                            <p className="mb-6 text-gray-600">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
-                                aliqua.
-                            </p>
-                            <h2 className="mt-8 mb-4 text-2xl font-bold">The Evolution of Fashion</h2>
-                            <p className="mb-6 text-gray-600">
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                            </p>
-                            <blockquote className="my-8 border-l-4 border-black pl-4 italic">
-                                "Fashion is not something that exists in dresses only. Fashion is in the sky, in the street..."
-                            </blockquote>
-                            <p className="mb-6 text-gray-600">
-                                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.
-                            </p>
-                        </div>
 
                         {/* Share Section */}
                         <div className="mt-12 border-t border-gray-200 pt-8">
@@ -122,19 +104,28 @@ export default function ArticleDetail() {
                     <div className="lg:col-span-1">
                         <div className="sticky top-24">
                             <h2 className="mb-6 text-2xl font-bold">Article Information</h2>
-                            
+
                             <div className="rounded-lg bg-gray-50 p-6">
                                 <h3 className="mb-4 font-semibold">Category</h3>
-                                <p className="text-gray-600 mb-4">{article.category || 'General'}</p>
-                                
+                                <Link
+                                    href={`/articles?category=${encodeURIComponent(article.category || 'General')}`}
+                                    className="inline-block text-gray-600 hover:text-black hover:underline mb-4 transition-colors"
+                                >
+                                    {article.category || 'General'}
+                                </Link>
+
                                 {article.tags && (
                                     <>
                                         <h3 className="mb-4 font-semibold">Tags</h3>
                                         <div className="flex flex-wrap gap-2">
                                             {article.tags.split(',').map((tag, index) => (
-                                                <span key={index} className="rounded-full bg-gray-200 px-3 py-1 text-sm">
+                                                <Link
+                                                    key={index}
+                                                    href={`/articles?tag=${encodeURIComponent(tag.trim())}`}
+                                                    className="rounded-full bg-gray-200 px-3 py-1 text-sm hover:bg-gray-300 transition-colors cursor-pointer"
+                                                >
                                                     {tag.trim()}
-                                                </span>
+                                                </Link>
                                             ))}
                                         </div>
                                     </>

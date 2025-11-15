@@ -4,7 +4,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Box, LayoutGrid, Tag } from 'lucide-react';
+import { Coffee, DollarSign, LayoutGrid, NotebookPen, Tag, Mail } from 'lucide-react';
 import AppLogo from './app-logo';
 import categories from '../routes/categories';
 import products from '../routes/products';
@@ -26,17 +26,22 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Products',
         href: products.index().url,
-        icon: Box,
+        icon: Coffee,
     },
     {
         title: 'Articles',
         href: articles.index().url,
-        icon: Box,
+        icon: NotebookPen,
     },
     {
         title: 'Orders',
         href: orders.index().url,
-        icon: Box,
+        icon: DollarSign,
+    },
+    {
+        title: 'Newsletter',
+        href: '/admin/newsletter',
+        icon: Mail,
     },
 ];
 
@@ -48,7 +53,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={dashboard()} prefetch>
+                            <Link href="/" prefetch>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>

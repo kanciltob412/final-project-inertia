@@ -91,13 +91,26 @@ export function OrderDataTable<TData, TValue>({
     }
 
     const handleBulkStatusUpdate = (status: string) => {
+        if (selectedIds.length === 0) {
+            alert('Please select at least one order first!');
+            return;
+        }
+
+        console.log('Attempting to update orders:', { selectedIds, status });
+
         router.patch('/admin/orders/bulk-update', {
             ids: selectedIds,
             status: status
         }, {
             preserveScroll: true,
             onSuccess: () => {
+                console.log('Bulk update successful');
+                alert('Orders updated successfully!');
                 setRowSelection({})
+            },
+            onError: (errors) => {
+                console.error('Bulk update failed:', errors);
+                alert('Failed to update orders. Check console for details.');
             }
         })
     }
@@ -174,29 +187,21 @@ export function OrderDataTable<TData, TValue>({
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleBulkStatusUpdate('pending')}
+                            onClick={() => handleBulkStatusUpdate('PENDING')}
                             className="bg-yellow-50 hover:bg-yellow-100"
                         >
                             <Clock className="h-4 w-4 mr-1" />
                             Mark Pending
                         </Button>
+
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleBulkStatusUpdate('processing')}
-                            className="bg-blue-50 hover:bg-blue-100"
-                        >
-                            <Truck className="h-4 w-4 mr-1" />
-                            Mark Processing
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleBulkStatusUpdate('completed')}
+                            onClick={() => handleBulkStatusUpdate('PAID')}
                             className="bg-green-50 hover:bg-green-100"
                         >
                             <CheckCircle className="h-4 w-4 mr-1" />
-                            Mark Completed
+                            Mark Paid
                         </Button>
                         <Button
                             variant="outline"
@@ -300,7 +305,7 @@ export function OrderDataTable<TData, TValue>({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete {selectedIds.length} order(s). 
+                            This will permanently delete {selectedIds.length} order(s).
                             This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>

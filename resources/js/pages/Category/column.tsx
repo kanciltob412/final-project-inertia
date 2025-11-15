@@ -99,6 +99,15 @@ export const columns: ColumnDef<Category>[] = [
         enableHiding: false,
     },
     {
+        accessorKey: "id",
+        header: "ID",
+        cell: ({ row }) => (
+            <span className="font-mono text-sm text-gray-700">
+                #{row.original.id}
+            </span>
+        ),
+    },
+    {
         accessorKey: "name",
         header: "Name",
     },

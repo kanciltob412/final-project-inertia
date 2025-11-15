@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import HeadingSmall from "@/components/heading-small";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ImageUpload from "@/components/ImageUpload";
+import CKEditorComponent from "@/components/CKEditorComponent";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,9 +20,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Props {
     article?: Article;
+    categories?: any[];
 }
 
-export default function Form({ article }: Props) {
+export default function Form({ article, categories }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm<{
         title: string;
         slug: string;
@@ -39,7 +42,7 @@ export default function Form({ article }: Props) {
         slug: article ? article.slug : "",
         seo_keywords: article ? article.seo_keywords : "",
         excerpt: article ? article.excerpt : "",
-        content: article ? article.content : "",
+        content: article ? (article.content || "") : "",
         featured_image: null,
         category: article ? article.category : "",
         tags: article ? article.tags : "",
@@ -131,13 +134,11 @@ export default function Form({ article }: Props) {
                     {/* Content */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="content">Content</Label>
-                        <Textarea
-                            id="content"
-                            value={data.content}
-                            onChange={(e) => setData("content", e.target.value)}
+                        <CKEditorComponent
+                            data={data.content}
+                            onChange={(content) => setData("content", content)}
                             disabled={processing}
-                            rows={15}
-                            placeholder="Full article content..."
+                            placeholder="Write your article content here..."
                         />
                         {errors.content && (
                             <p className="text-sm text-red-600">{errors.content}</p>
@@ -145,33 +146,17 @@ export default function Form({ article }: Props) {
                     </div>
 
                     {/* Featured Image */}
-                    <div className="flex flex-col gap-y-2">
-                        <Label htmlFor="featured_image">Featured Image</Label>
-                        <Input
-                            id="featured_image"
-                            type="file"
-                            onChange={(e) => setData("featured_image", e.target.files ? e.target.files[0] : null)}
-                            disabled={processing}
-                            accept="image/*"
-                        />
-                        {errors.featured_image && (
-                            <p className="text-sm text-red-600">{errors.featured_image}</p>
-                        )}
-                        {article?.featured_image && (
-                            <div className="mt-2">
-                                <p className="text-sm leading-none font-medium mb-4">Current Image:</p>
-                                <img 
-                                    src={
-                                        article.featured_image.startsWith('http') 
-                                            ? article.featured_image 
-                                            : `/storage/${article.featured_image}`
-                                    } 
-                                    alt={article.title} 
-                                    className="w-24 h-24 object-cover rounded" 
-                                />
-                            </div>
-                        )}
-                    </div>
+                    <ImageUpload
+                        id="featured_image"
+                        label="Featured Image"
+                        value={data.featured_image}
+                        onChange={(file) => setData("featured_image", file)}
+                        disabled={processing}
+                        currentImage={article?.featured_image}
+                        currentImageAlt={article?.title || "Article featured image"}
+                        error={errors.featured_image}
+                        maxSize={2}
+                    />
 
                     {/* Category */}
                     <div className="flex flex-col gap-y-2">

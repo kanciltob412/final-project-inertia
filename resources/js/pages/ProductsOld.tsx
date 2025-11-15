@@ -125,7 +125,7 @@ function ProductsContent({ products }: { products: PaginatedProducts }) {
                                     <div
                                         className={
                                             viewMode === 'grid'
-                                                ? 'grid grid-cols-1 gap-8 md:grid-cols-3'
+                                                ? 'grid grid-cols-1 gap-8 md:grid-cols-3 auto-rows-fr'
                                                 : 'flex flex-col gap-8'
                                         }
                                     >

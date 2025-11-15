@@ -1,3 +1,4 @@
+import React from "react";
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Order, Product, User } from "@/types";
 import { Head, router, useForm } from "@inertiajs/react";
@@ -51,11 +52,27 @@ export default function Form({ order, users, products }: Props) {
         postal_code: order ? order.postal_code : "",
         status: order ? order.status : "pending",
         total: order ? order.total : "",
-        payment_method: order ? order.payment_method : "",
-        payment_channel: order ? order.payment_channel : "",
-        url: order ? order.url : "",
-        items: order ? order.items : undefined,
+        payment_method: order ? order.payment_method || "" : "",
+        payment_channel: order ? order.payment_channel || "" : "",
+        url: order ? order.url || "" : "",
+        items: order && order.items ? order.items.map(item => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+            price: item.price
+        })) : undefined,
     });
+
+    // Auto-calculate total when items change
+    React.useEffect(() => {
+        if (data.items && data.items.length > 0) {
+            const newTotal = data.items.reduce((sum, item) => 
+                sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
+            );
+            if (newTotal !== Number(data.total)) {
+                setData('total', newTotal);
+            }
+        }
+    }, [data.items]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -282,34 +299,152 @@ export default function Form({ order, users, products }: Props) {
                         )}
                     </div>
 
-                    {/* Items */}
+                    {/* Order Items */}
                     <div className="flex flex-col gap-y-2">
-                        <Label htmlFor="items">Order Items</Label>
-                        {/* Implement items input logic here as needed */}
-                        <div className="flex flex-col gap-y-2">
-                            {products?.map((product) => (
-                                <div key={product.id} className="flex items-center gap-x-2">
-                                    <Checkbox
-                                        id={`product-${product.id}`}
-                                        checked={data.items?.some((item) => item.product_id === product.id)}
-                                        onCheckedChange={(checked) => {
-                                            if (checked) {
-                                                setData("items", [
-                                                    ...(data.items || []),
-                                                    { product_id: product.id, quantity: 1, price: product.price },
-                                                ]);
-                                            } else {
-                                                setData("items", data.items?.filter((item) => item.product_id !== product.id));
-                                            }
+                        <Label>Order Items</Label>
+                        {data.items && data.items.length > 0 ? (
+                            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                                {data.items.map((item, index) => {
+                                    const currentProduct = products?.find(p => p.id === Number(item.product_id));
+                                    const itemSubtotal = (Number(item.price) || 0) * (Number(item.quantity) || 0);
+                                    
+                                    return (
+                                        <div key={index} className="flex items-center gap-4 bg-white p-3 rounded border">
+                                            <div className="flex-1">
+                                                <Select
+                                                    value={item.product_id.toString()}
+                                                    onValueChange={(value) => {
+                                                        const selectedProduct = products?.find(p => p.id === Number(value));
+                                                        const newItems = [...(data.items || [])];
+                                                        newItems[index] = {
+                                                            ...item,
+                                                            product_id: Number(value),
+                                                            price: selectedProduct?.price || 0
+                                                        };
+                                                        setData('items', newItems);
+                                                    }}
+                                                    disabled={processing}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select product" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {products?.map((product) => (
+                                                            <SelectItem key={product.id} value={product.id.toString()}>
+                                                                {product.name} - Rp {product.price.toLocaleString('id-ID')}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                            
+                                            <div className="flex items-center gap-2">
+                                                <Label htmlFor={`quantity-${index}`} className="text-sm whitespace-nowrap">Qty:</Label>
+                                                <Input
+                                                    id={`quantity-${index}`}
+                                                    type="number"
+                                                    min="1"
+                                                    value={item.quantity}
+                                                    onChange={(e) => {
+                                                        const newItems = [...(data.items || [])];
+                                                        newItems[index] = {
+                                                            ...item,
+                                                            quantity: Number(e.target.value) || 1
+                                                        };
+                                                        setData('items', newItems);
+                                                    }}
+                                                    className="w-20"
+                                                    disabled={processing}
+                                                />
+                                            </div>
+
+                                            <div className="flex items-center gap-2">
+                                                <Label htmlFor={`price-${index}`} className="text-sm whitespace-nowrap">Price:</Label>
+                                                <Input
+                                                    id={`price-${index}`}
+                                                    type="number"
+                                                    min="0"
+                                                    value={item.price}
+                                                    onChange={(e) => {
+                                                        const newItems = [...(data.items || [])];
+                                                        newItems[index] = {
+                                                            ...item,
+                                                            price: Number(e.target.value) || 0
+                                                        };
+                                                        setData('items', newItems);
+                                                    }}
+                                                    className="w-32"
+                                                    disabled={processing}
+                                                />
+                                            </div>
+
+                                            <div className="text-sm font-medium whitespace-nowrap">
+                                                Rp {itemSubtotal.toLocaleString('id-ID')}
+                                            </div>
+
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => {
+                                                    const newItems = data.items?.filter((_, i) => i !== index);
+                                                    setData('items', newItems);
+                                                }}
+                                                disabled={processing}
+                                            >
+                                                Remove
+                                            </Button>
+                                        </div>
+                                    );
+                                })}
+                                
+                                {/* Add New Item Button */}
+                                <div className="flex justify-between items-center border-t pt-3">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => {
+                                            const newItems = [...(data.items || [])];
+                                            newItems.push({
+                                                product_id: products?.[0]?.id || 1,
+                                                quantity: 1,
+                                                price: products?.[0]?.price || 0
+                                            });
+                                            setData('items', newItems);
                                         }}
-                                        disabled={processing}
-                                    />
-                                    <Label htmlFor={`product-${product.id}`} className="flex-1">
-                                        {product.name} - Rp {product.price.toLocaleString('id-ID')}
-                                    </Label>
+                                        disabled={processing || !products?.length}
+                                    >
+                                        Add Item
+                                    </Button>
+                                    
+                                    <p className="font-semibold text-lg">
+                                        Total: Rp {((data.items || []).reduce((sum, item) => 
+                                            sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
+                                        )).toLocaleString('id-ID')}
+                                    </p>
                                 </div>
-                            ))}
-                        </div>
+                            </div>
+                        ) : (
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <p className="text-center text-gray-600 mb-4">No items in this order</p>
+                                <div className="flex justify-center">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => {
+                                            setData('items', [{
+                                                product_id: products?.[0]?.id || 1,
+                                                quantity: 1,
+                                                price: products?.[0]?.price || 0
+                                            }]);
+                                        }}
+                                        disabled={processing || !products?.length}
+                                    >
+                                        Add First Item
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Submit */}

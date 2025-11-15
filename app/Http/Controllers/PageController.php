@@ -15,17 +15,19 @@ class PageController extends Controller
 
     public function products()
     {
-        $query = Product::with('category');
+        $query = Product::with(['category', 'variants', 'images' => function($query) {
+            $query->where('is_primary', true)->orWhere('sort_order', 1)->orderBy('sort_order');
+        }]);
 
         // Search functionality
         if (request('search')) {
             $query->where('name', 'like', '%' . request('search') . '%')
-                  ->orWhere('description', 'like', '%' . request('search') . '%');
+                ->orWhere('description', 'like', '%' . request('search') . '%');
         }
 
         // Category filter
         if (request('category') && request('category') !== 'All') {
-            $query->whereHas('category', function($q) {
+            $query->whereHas('category', function ($q) {
                 $q->where('name', request('category'));
             });
         }
@@ -40,7 +42,7 @@ class PageController extends Controller
 
         // Sorting
         $sortBy = request('sort', 'name');
-        switch($sortBy) {
+        switch ($sortBy) {
             case 'price_low':
                 $query->orderBy('price', 'asc');
                 break;
@@ -75,7 +77,9 @@ class PageController extends Controller
 
     public function productDetail(int $id)
     {
-        $product = Product::with('category')->findOrFail($id);
+        $product = Product::with(['category', 'variants', 'images' => function($query) {
+            $query->orderBy('sort_order');
+        }])->findOrFail($id);
 
         return Inertia::render('ProductDetail', [
             'product' => $product,
@@ -94,7 +98,12 @@ class PageController extends Controller
 
     public function cart()
     {
-        return Inertia::render('Cart');
+        // Get all products with their variants for stock validation
+        $products = Product::with('variants:id,product_id,color,stock')->get();
+        
+        return Inertia::render('Cart', [
+            'products' => $products
+        ]);
     }
 
     public function checkout()
@@ -106,20 +115,36 @@ class PageController extends Controller
     {
         // Get current page from request
         $currentPage = request()->get('page', 1);
-        
-        // Get the featured article only for page 1
-        $featuredArticle = null;
-        if ($currentPage == 1) {
-            $featuredArticle = \App\Models\Article::where('status', 'published')
-                ->where('is_featured', true)
-                ->first();
+        $category = request()->get('category');
+        $tag = request()->get('tag');
+
+        // Build the base query
+        $query = \App\Models\Article::where('status', 'published');
+
+        // Apply category filter
+        if ($category) {
+            $query->where('category', $category);
         }
 
-        // Get regular articles (excluding featured ones) with pagination
-        $articles = \App\Models\Article::where('status', 'published')
-            ->where('is_featured', false)
-            ->orderBy('created_at', 'desc')
-            ->paginate(6);
+        // Apply tag filter
+        if ($tag) {
+            $query->where('tags', 'LIKE', '%' . $tag . '%');
+        }
+
+        // Get the featured article only for page 1 and when no filters are applied
+        $featuredArticle = null;
+        if ($currentPage == 1 && !$category && !$tag) {
+            $featuredArticle = (clone $query)->where('is_featured', true)->first();
+        }
+
+        // Get regular articles with pagination
+        $articlesQuery = (clone $query);
+        if (!$category && !$tag) {
+            // Only exclude featured articles when no filters are applied
+            $articlesQuery->where('is_featured', false);
+        }
+
+        $articles = $articlesQuery->orderBy('created_at', 'desc')->paginate(6);
 
         // Add the featured article to the paginated data only for page 1
         if ($featuredArticle && $currentPage == 1) {
@@ -130,7 +155,11 @@ class PageController extends Controller
         }
 
         return Inertia::render('Articles', [
-            'articles' => $articles
+            'articles' => $articles,
+            'filters' => [
+                'category' => $category,
+                'tag' => $tag,
+            ]
         ]);
     }
 
@@ -146,5 +175,35 @@ class PageController extends Controller
     public function craftsmanship()
     {
         return Inertia::render('Craftsmanship');
+    }
+
+    public function shippingInfo()
+    {
+        return Inertia::render('ShippingInfo');
+    }
+
+    public function returns()
+    {
+        return Inertia::render('Returns');
+    }
+
+    public function faq()
+    {
+        return inertia('FAQ');
+    }
+
+    public function privacyPolicy()
+    {
+        return inertia('PrivacyPolicy');
+    }
+
+    public function termsOfService()
+    {
+        return inertia('TermsOfService');
+    }
+
+    public function cookiesPolicy()
+    {
+        return inertia('CookiesPolicy');
     }
 }

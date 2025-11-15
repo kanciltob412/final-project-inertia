@@ -5,6 +5,7 @@ import CraftsmanshipSection from '@/components/home/CraftsmanshipSection';
 import InspiringCarouselSection from '@/components/home/InspiringCarouselSection';
 import VisitUsSection from '@/components/home/VisitUsSection';
 import Navbar from '@/components/Navbar';
+import NewsletterSubscription from '@/components/NewsletterSubscription';
 import { motion } from 'framer-motion';
 import { Head } from '@inertiajs/react';
 const fadeIn = {
@@ -50,17 +51,7 @@ export default function Home() {
                         <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}>
                             <h2 className="mb-4 text-3xl font-bold">Welcome to Lavanya Ceramics</h2>
                             <p className="mb-8 opacity-90">Subscribe to our newsletter to stay updated on our latest collections and exclusive offers.</p>
-                            <form className="mx-auto flex max-w-md gap-4">
-                                <input type="email" placeholder="Enter your email" className="flex-1 rounded-md bg-white px-4 py-3 text-black" />
-                                <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    type="submit"
-                                    className="rounded-md bg-white px-8 py-3 text-black hover:bg-gray-100"
-                                >
-                                    Subscribe
-                                </motion.button>
-                            </form>
+                            <NewsletterSubscription />
                         </motion.div>
                     </motion.div>
                 </div>

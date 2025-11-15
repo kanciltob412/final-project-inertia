@@ -202,7 +202,7 @@ export default function Products({ products, categories, filters }: ProductsProp
 
                             {/* Products Grid */}
                             <div className={`gap-6 mb-8 ${viewMode === 'grid' 
-                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr' 
                                 : 'flex flex-col space-y-4'
                             }`}>
                                 {products.data.map((product: Product) => (

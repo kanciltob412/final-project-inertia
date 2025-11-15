@@ -1,10 +1,9 @@
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { Menu, ShoppingCart, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
-import { SharedData } from '../types';
-import { usePage } from '@inertiajs/react';
-import { logout } from '../routes';
+import { User, SharedData } from '@/types';
+import { logout } from '@/routes';
 
 interface NavbarProps {
     forceBlack?: boolean;
@@ -14,10 +13,10 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
     const user = usePage<SharedData>().props.auth.user;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
-    const { items } = useCart();
+    const { items, emptyCart } = useCart();
 
     const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    
+
     // Use forceBlack prop to override normal scroll behavior
     const shouldUseBlackStyle = forceBlack || isScrolled;
 
@@ -31,7 +30,9 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
     }, []);
 
     const handleLogout = () => {
-        router.post(logout())
+        // Clear cart items when user logs out
+        emptyCart();
+        router.post(logout());
     };
 
     return (

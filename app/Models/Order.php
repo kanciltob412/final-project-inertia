@@ -25,6 +25,7 @@ class Order extends Model
         'url',
         'payment_method',
         'payment_channel',
+        'paid_at',
     ];
 
     public function user(): BelongsTo

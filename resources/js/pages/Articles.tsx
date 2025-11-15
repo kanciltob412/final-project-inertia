@@ -20,9 +20,13 @@ interface PaginatedArticles {
 
 interface ArticlesProps {
     articles: PaginatedArticles;
+    filters?: {
+        category?: string;
+        tag?: string;
+    };
 }
 
-export default function Articles({ articles }: ArticlesProps) {
+export default function Articles({ articles, filters }: ArticlesProps) {
     const featuredArticle = articles.featured_article;
     const regularArticles = articles.data; // All articles in data are already regular (non-featured)
 
@@ -74,21 +78,58 @@ export default function Articles({ articles }: ArticlesProps) {
                     </div>
                 </div>
                 <div className="mx-auto max-w-7xl px-4 py-16">
+                    {/* Active Filters */}
+                    {(filters?.category || filters?.tag) && (
+                        <div className="mb-8 flex flex-wrap items-center gap-4">
+                            <span className="text-gray-600 font-medium">Filtered by:</span>
+                            {filters.category && (
+                                <div className="flex items-center gap-2 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                                    <span>Category: {filters.category}</span>
+                                    <Link
+                                        href="/articles"
+                                        className="ml-1 hover:text-blue-600"
+                                        title="Clear category filter"
+                                    >
+                                        ×
+                                    </Link>
+                                </div>
+                            )}
+                            {filters.tag && (
+                                <div className="flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                                    <span>Tag: {filters.tag}</span>
+                                    <Link
+                                        href={filters.category ? `/articles?category=${encodeURIComponent(filters.category)}` : '/articles'}
+                                        className="ml-1 hover:text-green-600"
+                                        title="Clear tag filter"
+                                    >
+                                        ×
+                                    </Link>
+                                </div>
+                            )}
+                            <Link
+                                href="/articles"
+                                className="text-gray-500 hover:text-gray-700 text-sm underline"
+                            >
+                                Clear all filters
+                            </Link>
+                        </div>
+                    )}
+
                     {/* Featured Article */}
                     {featuredArticle && (
                         <div className="mb-16">
                             <h2 className="mb-6 text-2xl font-semibold">Featured Article</h2>
                             <div className="grid gap-8 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2">
-                                <Link 
+                                <Link
                                     href={`/articles/${featuredArticle.id}`}
                                     className="relative h-[400px] md:h-auto block hover:opacity-90 transition-opacity"
                                 >
                                     <img
                                         src={
-                                            featuredArticle.featured_image?.startsWith('http') 
-                                                ? featuredArticle.featured_image 
-                                                : featuredArticle.featured_image 
-                                                    ? `/storage/${featuredArticle.featured_image}` 
+                                            featuredArticle.featured_image?.startsWith('http')
+                                                ? featuredArticle.featured_image
+                                                : featuredArticle.featured_image
+                                                    ? `/storage/${featuredArticle.featured_image}`
                                                     : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
                                         }
                                         alt={featuredArticle.title}
@@ -107,7 +148,7 @@ export default function Articles({ articles }: ArticlesProps) {
                                                 {featuredArticle.reading_time ? `${featuredArticle.reading_time} min read` : '5 min read'}
                                             </div>
                                         </div>
-                                        <Link 
+                                        <Link
                                             href={`/articles/${featuredArticle.id}`}
                                             className="block mb-4"
                                         >
@@ -134,16 +175,16 @@ export default function Articles({ articles }: ArticlesProps) {
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-8">
                             {regularArticles.map((article) => (
                                 <div key={article.id} className="group overflow-hidden rounded-lg bg-white shadow-md">
-                                    <Link 
+                                    <Link
                                         href={`/articles/${article.id}`}
                                         className="relative h-48 overflow-hidden block"
                                     >
                                         <img
                                             src={
-                                                article.featured_image?.startsWith('http') 
-                                                    ? article.featured_image 
-                                                    : article.featured_image 
-                                                        ? `/storage/${article.featured_image}` 
+                                                article.featured_image?.startsWith('http')
+                                                    ? article.featured_image
+                                                    : article.featured_image
+                                                        ? `/storage/${article.featured_image}`
                                                         : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500'
                                             }
                                             alt={article.title}
@@ -161,7 +202,7 @@ export default function Articles({ articles }: ArticlesProps) {
                                                 {article.reading_time ? `${article.reading_time} min read` : '5 min read'}
                                             </div>
                                         </div>
-                                        <Link 
+                                        <Link
                                             href={`/articles/${article.id}`}
                                             className="block mb-3"
                                         >
@@ -189,7 +230,7 @@ export default function Articles({ articles }: ArticlesProps) {
                             <div className="text-sm text-gray-600">
                                 Page {articles.current_page} of {articles.last_page} | {articles.total} total articles
                             </div>
-                            
+
                             {articles.last_page > 1 && (
                                 <div className="flex justify-center items-center space-x-2">
                                     {/* Previous Button */}
@@ -208,11 +249,10 @@ export default function Articles({ articles }: ArticlesProps) {
                                             <button
                                                 key={page}
                                                 onClick={() => handlePageClick(page)}
-                                                className={`px-3 py-2 text-sm font-medium rounded-md ${
-                                                    page === articles.current_page
+                                                className={`px-3 py-2 text-sm font-medium rounded-md ${page === articles.current_page
                                                         ? 'bg-blue-600 text-white'
                                                         : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                                                }`}
+                                                    }`}
                                             >
                                                 {page}
                                             </button>

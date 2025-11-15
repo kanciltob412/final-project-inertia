@@ -6,6 +6,7 @@ import { edit } from '@/routes/profile';
 import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
+import { useCart } from 'react-use-cart';
 
 interface UserMenuContentProps {
     user: User;
@@ -13,8 +14,11 @@ interface UserMenuContentProps {
 
 export function UserMenuContent({ user }: UserMenuContentProps) {
     const cleanup = useMobileNavigation();
+    const { emptyCart } = useCart();
 
     const handleLogout = () => {
+        // Clear cart items when user logs out
+        emptyCart();
         cleanup();
         router.flushAll();
     };
