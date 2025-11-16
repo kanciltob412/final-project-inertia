@@ -41,32 +41,40 @@ export default function Checkout() {
         coupon_id: null as number | null,
     });
 
-    // Calculate product-level discounts
-    const calculateOrderSubtotal = () => {
+    // Calculate product-level discounts and subtotal with discounts applied
+    const calculateSubtotalWithDiscounts = () => {
         return items.reduce((total, item) => {
-            return total + (item.itemTotal || 0);
+            const itemPrice = item.price || 0;
+            const itemQuantity = item.quantity || 1;
+            
+            if (item.discount && Number(item.discount) > 0) {
+                const discountedPrice = calculateDiscountedPrice(
+                    itemPrice,
+                    item.discount,
+                    item.discount_type || 'fixed'
+                );
+                return total + (discountedPrice * itemQuantity);
+            }
+            return total + (itemPrice * itemQuantity);
         }, 0);
     };
 
-    // Get calculated discount for each item (if product has discount)
-    const getItemDiscount = (item: any) => {
-        if (item.discount && item.discount > 0) {
-            return calculateDiscountedPrice(item.price, item.discount, item.discount_type);
-        }
-        return 0;
+    // Calculate original total (before product discounts)
+    const calculateOriginalTotal = () => {
+        return items.reduce((total, item) => {
+            return total + ((item.price || 0) * (item.quantity || 1));
+        }, 0);
     };
 
-    const subtotal = calculateOrderSubtotal();
-    const productDiscountTotal = items.reduce((total, item) => {
-        const itemDiscount = item.price * item.quantity - (item.itemTotal || 0);
-        return total + itemDiscount;
-    }, 0);
+    const subtotal = calculateSubtotalWithDiscounts();
+    const originalSubtotal = calculateOriginalTotal();
+    const productDiscountTotal = originalSubtotal - subtotal;
 
     const couponDiscount = validatedCoupon
-        ? calculateCouponDiscount(subtotal - productDiscountTotal, validatedCoupon)
+        ? calculateCouponDiscount(subtotal, validatedCoupon)
         : 0;
 
-    const finalTotal = Math.max(0, subtotal - productDiscountTotal - couponDiscount);
+    const finalTotal = Math.max(0, subtotal - couponDiscount);
 
     // Handle coupon validation
     const handleApplyCoupon = async () => {
@@ -394,7 +402,24 @@ export default function Checkout() {
                                     </p>
                                 </div>
                                 <span className="font-semibold">
-                                    {formatPrice(item.itemTotal || 0)}
+                                    {item.discount && Number(item.discount) > 0 ? (
+                                        <div className="text-right">
+                                            <p className="text-sm text-gray-600 line-through">
+                                                {formatPrice((item.price || 0) * (item.quantity || 1))}
+                                            </p>
+                                            <p className="text-green-600">
+                                                {formatPrice(
+                                                    calculateDiscountedPrice(
+                                                        item.price || 0,
+                                                        item.discount,
+                                                        item.discount_type || 'fixed'
+                                                    ) * (item.quantity || 1)
+                                                )}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        formatPrice((item.price || 0) * (item.quantity || 1))
+                                    )}
                                 </span>
                             </div>
                         ))}
@@ -403,7 +428,7 @@ export default function Checkout() {
                         {/* Subtotal */}
                         <div className="flex justify-between">
                             <span>Subtotal</span>
-                            <span>{formatPrice(subtotal)}</span>
+                            <span>{formatPrice(originalSubtotal)}</span>
                         </div>
 
                         {/* Product Discounts */}
