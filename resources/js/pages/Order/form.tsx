@@ -52,7 +52,7 @@ export default function Form({ order, users, products }: Props) {
         city: order ? order.city : "",
         country: order ? order.country : "",
         postal_code: order ? order.postal_code : "",
-        status: order ? order.status : "pending",
+        status: order ? order.status : "PENDING",
         total: order ? order.total : "",
         payment_method: order ? order.payment_method || "" : "",
         payment_channel: order ? order.payment_channel || "" : "",
@@ -256,12 +256,12 @@ export default function Form({ order, users, products }: Props) {
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="paid">Paid</SelectItem>
-                                    <SelectItem value="processing">Processing</SelectItem>
-                                    <SelectItem value="shipped">Shipped</SelectItem>
-                                    <SelectItem value="delivered">Delivered</SelectItem>
-                                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                                    <SelectItem value="PENDING">Pending</SelectItem>
+                                    <SelectItem value="PAID">Paid</SelectItem>
+                                    <SelectItem value="PROCESSING">Processing</SelectItem>
+                                    <SelectItem value="SHIPPED">Shipped</SelectItem>
+                                    <SelectItem value="DELIVERED">Delivered</SelectItem>
+                                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
                                 </SelectContent>
                             </Select>
                             {errors.status && (

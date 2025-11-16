@@ -70,13 +70,13 @@ class OrderController extends Controller
                 'city' => 'required|string',
                 'country' => 'required|string',
                 'postal_code' => 'required|string',
-                'status' => 'required|in:pending,paid,processing,shipped,delivered,cancelled,PENDING,PAID,PROCESSING,SHIPPED,DELIVERED,CANCELLED',
+                'status' => 'required|in:PENDING,PAID,PROCESSING,SHIPPED,DELIVERED,CANCELLED',
                 'total' => 'required|numeric',
                 'payment_method' => 'nullable|string',
                 'payment_channel' => 'nullable|string',
                 'url' => 'nullable|url',
-                'courier_name' => 'nullable|required_if:status,shipped|string',
-                'tracking_number' => 'nullable|required_if:status,shipped|string',
+                'courier_name' => 'nullable|required_if:status,SHIPPED|string',
+                'tracking_number' => 'nullable|required_if:status,SHIPPED|string',
                 'items' => 'nullable|array',
                 'items.*.product_id' => 'required|exists:products,id',
                 'items.*.quantity' => 'required|integer|min:1',
@@ -97,8 +97,8 @@ class OrderController extends Controller
         DB::beginTransaction();
         try {
             // Check if status is changing to shipped
-            $wasShipped = $order->status === 'shipped';
-            $isBecomingShipped = $validated['status'] === 'shipped' && !$wasShipped;
+            $wasShipped = $order->status === 'SHIPPED';
+            $isBecomingShipped = $validated['status'] === 'SHIPPED' && !$wasShipped;
             
             // Set shipped_at timestamp if becoming shipped
             if ($isBecomingShipped) {
