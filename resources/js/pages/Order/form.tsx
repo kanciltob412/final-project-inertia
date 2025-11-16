@@ -271,7 +271,7 @@ export default function Form({ order, users, products }: Props) {
                     </div>
 
                     {/* Shipping Information - Show when status is shipped */}
-                    {data.status === "shipped" && (
+                    {data.status === "SHIPPED" && (
                         <>
                             <Separator className="my-6" />
                             <div className="space-y-4">

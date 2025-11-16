@@ -121,7 +121,7 @@ export interface Order {
     city: string;
     country: string;
     postal_code: string;
-    status: 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'completed' | 'cancelled';
+    status: 'PENDING' | 'PAID' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
     url: string;
     total: number;
     payment_method: string;

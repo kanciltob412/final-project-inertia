@@ -467,7 +467,7 @@ class OrderController extends Controller
                 'city' => $originalOrder->city,
                 'country' => $originalOrder->country,
                 'postal_code' => $originalOrder->postal_code,
-                'status' => 'pending', // Set as pending by default
+                'status' => 'PENDING', // Set as pending by default
                 'total' => $originalOrder->total,
             ]);
 
@@ -637,7 +637,7 @@ class OrderController extends Controller
 
             // Update order with shipping information
             $order->update([
-                'status' => 'shipped',
+                'status' => 'SHIPPED',
                 'courier_name' => $validated['courier_name'],
                 'tracking_number' => $validated['tracking_number'],
                 'shipped_at' => now(),

@@ -293,15 +293,15 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }) => {
             const status = row.original.status;
             const statusConfig = {
-                pending: { variant: 'secondary' as const, text: 'Pending', className: 'bg-gray-100 text-gray-800' },
-                paid: { variant: 'default' as const, text: 'Paid', className: 'bg-green-100 text-green-800' },
-                processing: { variant: 'default' as const, text: 'Processing', className: 'bg-blue-100 text-blue-800' },
-                shipped: { variant: 'outline' as const, text: 'Shipped', className: 'bg-purple-100 text-purple-800' },
-                delivered: { variant: 'default' as const, text: 'Delivered', className: 'bg-green-100 text-green-800' },
-                cancelled: { variant: 'destructive' as const, text: 'Cancelled', className: 'bg-red-100 text-red-800' },
+                PENDING: { variant: 'secondary' as const, text: 'Pending', className: 'bg-gray-100 text-gray-800' },
+                PAID: { variant: 'default' as const, text: 'Paid', className: 'bg-green-100 text-green-800' },
+                PROCESSING: { variant: 'default' as const, text: 'Processing', className: 'bg-blue-100 text-blue-800' },
+                SHIPPED: { variant: 'outline' as const, text: 'Shipped', className: 'bg-purple-100 text-purple-800' },
+                DELIVERED: { variant: 'default' as const, text: 'Delivered', className: 'bg-green-100 text-green-800' },
+                CANCELLED: { variant: 'destructive' as const, text: 'Cancelled', className: 'bg-red-100 text-red-800' },
             };
             
-            const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
+            const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
             return (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.className}`}>
                     {config.text}
@@ -314,7 +314,7 @@ export const columns: ColumnDef<Order>[] = [
         header: "Shipping Info",
         cell: ({ row }) => {
             const order = row.original;
-            if (order.status === 'shipped' && order.courier_name && order.tracking_number) {
+            if (order.status === 'SHIPPED' && order.courier_name && order.tracking_number) {
                 return (
                     <div className="text-sm space-y-1">
                         <div className="font-medium text-gray-900">

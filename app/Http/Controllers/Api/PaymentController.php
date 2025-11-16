@@ -140,14 +140,14 @@ class PaymentController extends Controller
             'status'          => $status,
             'payment_channel' => $paymentChannel,
             'payment_method'  => $paymentMethod,
-            'paid_at'         => $status === 'paid' ? now() : null
+            'paid_at'         => $status === 'PAID' ? now() : null
         ]);
 
         // Send email notifications based on payment status
         try {
             $order = $order->load(['user', 'items.product', 'items.productVariant']);
             
-            if ($status === 'paid') {
+            if ($status === 'PAID') {
                 // Send success emails
                 \Illuminate\Support\Facades\Mail::to($order->user->email)->send(new \App\Mail\OrderConfirmationEmail($order));
                 
