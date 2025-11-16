@@ -29,7 +29,10 @@ You can track your shipment using the tracking number above on your courier's we
 ## Order Summary
 @if($order->items && $order->items->count() > 0)
 @foreach($order->items as $item)
-- {{ $item->product->name ?? 'Product' }} (Qty: {{ $item->quantity }}) - Rp {{ number_format($item->price, 0, ',', '.') }}
+- {{ $item->product->name ?? 'Product' }}
+  * Unit Price: Rp {{ number_format($item->price, 0, ',', '.') }}
+  * Quantity: {{ $item->quantity }}
+  * Subtotal: Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
 @endforeach
 @endif
 

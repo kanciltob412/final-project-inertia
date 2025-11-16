@@ -209,10 +209,11 @@
                     @if($item->productVariant)
                         <br><small>{{ $item->productVariant->name }}</small>
                     @endif
+                    <br><small>Unit Price: Rp {{ number_format($item->price, 0, ',', '.') }}</small>
                     <br><small>Qty: {{ $item->quantity }}</small>
                 </div>
                 <div style="font-weight: bold;">
-                    Rp {{ number_format($item->price, 0, ',', '.') }}
+                    Subtotal: Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                 </div>
             </div>
             @endforeach

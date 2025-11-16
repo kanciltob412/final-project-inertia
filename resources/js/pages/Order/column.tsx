@@ -212,6 +212,29 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
+        accessorKey: "price",
+        header: "Price",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (!order.items || order.items.length === 0) {
+                return <div>-</div>;
+            }
+            return (
+                <div>
+                    {order.items.map((item) => (
+                        <div key={item.id} className="mb-1 text-sm">
+                            {new Intl.NumberFormat('id-ID', { 
+                                style: 'currency', 
+                                currency: 'IDR',
+                                maximumFractionDigits: 0
+                            }).format(item.price)}
+                        </div>
+                    ))}
+                </div>
+            );
+        },
+    },
+    {
         accessorKey: "subtotal",
         header: "Sub Total",
         cell: ({ row }) => {
@@ -225,7 +248,8 @@ export const columns: ColumnDef<Order>[] = [
                         <div key={item.id} className="mb-1 text-sm">
                             {new Intl.NumberFormat('id-ID', { 
                                 style: 'currency', 
-                                currency: 'IDR' 
+                                currency: 'IDR',
+                                maximumFractionDigits: 0
                             }).format(item.price * item.quantity)}
                         </div>
                     ))}
@@ -236,7 +260,7 @@ export const columns: ColumnDef<Order>[] = [
     {
         accessorKey: "total",
         header: "Total",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.total)}</span>,  
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,  
     },
     {
         accessorKey: "created_at",
