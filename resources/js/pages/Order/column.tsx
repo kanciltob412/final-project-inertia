@@ -278,31 +278,6 @@ export const columns: ColumnDef<Order>[] = [
         cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
-        accessorKey: "created_at",
-        header: "Order Date",
-        cell: ({ row }) => {
-            const createdAt = new Date(row.original.created_at);
-            return (
-                <div className="text-sm">
-                    <div className="font-medium">
-                        {createdAt.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                        })}
-                    </div>
-                    <div className="text-gray-500">
-                        {createdAt.toLocaleTimeString('en-US', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        })}
-                    </div>
-                </div>
-            );
-        },
-    },
-
-    {
         accessorKey: "coupon",
         header: "Coupon Applied",
         cell: ({ row }) => {
@@ -326,6 +301,30 @@ export const columns: ColumnDef<Order>[] = [
                 );
             }
             return <span className="text-gray-400 text-sm">-</span>;
+        },
+    },
+    {
+        accessorKey: "created_at",
+        header: "Order Date",
+        cell: ({ row }) => {
+            const createdAt = new Date(row.original.created_at);
+            return (
+                <div className="text-sm">
+                    <div className="font-medium">
+                        {createdAt.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                        })}
+                    </div>
+                    <div className="text-gray-500">
+                        {createdAt.toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })}
+                    </div>
+                </div>
+            );
         },
     },
 
