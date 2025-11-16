@@ -2,10 +2,18 @@ import { Link, usePage } from '@inertiajs/react';
 import { CheckCircle, ArrowLeft, Mail, Package, Home } from 'lucide-react';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
+import { useCart } from 'react-use-cart';
+import { useEffect } from 'react';
 
 export default function PaymentSuccess() {
     const props = usePage().props as { order_id?: string };
     const order_id = props.order_id;
+    const { emptyCart } = useCart();
+
+    // Clear cart on successful payment
+    useEffect(() => {
+        emptyCart();
+    }, [emptyCart]);
 
     return (
         <div className="min-h-screen flex flex-col">
