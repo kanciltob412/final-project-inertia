@@ -51,13 +51,13 @@ class PaymentController extends Controller
         $methodMapping = [
             // E-Wallet methods
             'EWALLET' => 'EWALLET',
-            'OVO' => 'EWALLET', 
+            'OVO' => 'EWALLET',
             'DANA' => 'EWALLET',
             'SHOPEEPAY' => 'EWALLET',
             'LINKAJA' => 'EWALLET',
             'GOPAY' => 'EWALLET',
             'JENIUS' => 'EWALLET',
-            
+
             // Bank Transfer methods
             'BANK_TRANSFER' => 'BANK_TRANSFER',
             'VA' => 'BANK_TRANSFER',
@@ -67,13 +67,13 @@ class PaymentController extends Controller
             'BRI' => 'BANK_TRANSFER',
             'MANDIRI' => 'BANK_TRANSFER',
             'PERMATA' => 'BANK_TRANSFER',
-            
+
             // Credit/Debit Card methods
             'CARD' => 'CREDIT_CARD',
             'CREDIT_CARD' => 'CREDIT_CARD',
             'VISA' => 'CREDIT_CARD',
             'MASTERCARD' => 'CREDIT_CARD',
-            
+
             // Other methods
             'QR_CODE' => 'QR_CODE',
             'RETAIL_OUTLET' => 'RETAIL_OUTLET',
@@ -84,11 +84,11 @@ class PaymentController extends Controller
             // E-Wallets
             'SHOPEEPAY' => 'SHOPEEPAY',
             'OVO' => 'OVO',
-            'DANA' => 'DANA', 
+            'DANA' => 'DANA',
             'LINKAJA' => 'LINKAJA',
             'GOPAY' => 'GOPAY',
             'JENIUS' => 'JENIUS',
-            
+
             // Banks
             'BCA' => 'BCA',
             'BNI' => 'BNI',
@@ -97,13 +97,13 @@ class PaymentController extends Controller
             'PERMATA' => 'PERMATA',
             'CIMB' => 'CIMB',
             'BSI' => 'BSI',
-            
+
             // Cards
             'VISA' => 'VISA',
             'MASTERCARD' => 'MASTERCARD',
             'JCB' => 'JCB',
             'AMEX' => 'AMERICAN_EXPRESS',
-            
+
             // Retail
             'ALFAMART' => 'ALFAMART',
             'INDOMARET' => 'INDOMARET',
@@ -126,7 +126,7 @@ class PaymentController extends Controller
             $ewallets = ['SHOPEEPAY', 'OVO', 'DANA', 'LINKAJA', 'GOPAY', 'JENIUS'];
             $banks = ['BCA', 'BNI', 'BRI', 'MANDIRI', 'PERMATA', 'CIMB', 'BSI'];
             $cards = ['VISA', 'MASTERCARD', 'JCB', 'AMERICAN_EXPRESS'];
-            
+
             if (in_array($paymentChannel, $ewallets)) {
                 $paymentMethod = 'EWALLET';
             } elseif (in_array($paymentChannel, $banks)) {
@@ -146,40 +146,38 @@ class PaymentController extends Controller
         // Send email notifications based on payment status
         try {
             $order = $order->load(['user', 'items.product', 'items.productVariant']);
-            
+
             if ($status === 'PAID') {
                 // Send success emails
                 \Illuminate\Support\Facades\Mail::to($order->user->email)->send(new \App\Mail\OrderConfirmationEmail($order));
-                
+
                 // Send admin notification
                 $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
                 if (empty($adminEmails)) {
                     $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
                 }
-                
+
                 foreach ($adminEmails as $adminEmail) {
                     \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'success'));
                 }
-                
+
                 Log::info('Payment success emails sent via webhook for order: ' . $order->id);
-                
             } elseif (in_array($status, ['cancelled', 'expired', 'failed'])) {
                 // Send failure emails
                 \Illuminate\Support\Facades\Mail::to($order->user->email)->send(new \App\Mail\OrderFailedEmail($order));
-                
+
                 // Send admin notification
                 $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
                 if (empty($adminEmails)) {
                     $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
                 }
-                
+
                 foreach ($adminEmails as $adminEmail) {
                     \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'failed'));
                 }
-                
+
                 Log::info('Payment failure emails sent via webhook for order: ' . $order->id);
             }
-            
         } catch (\Exception $e) {
             Log::error('Failed to send webhook payment emails: ' . $e->getMessage());
         }

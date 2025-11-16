@@ -1,19 +1,36 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { useForm, router, usePage } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
 import { useCart } from 'react-use-cart';
-import { formatPrice } from '../utils/helper';
+import { formatPrice, calculateDiscountedPrice } from '../utils/helper';
+import { validateCoupon, calculateCouponDiscount, formatCouponDiscount } from '../utils/coupon';
 import { SharedData } from '@/types';
+import { useState, useEffect } from 'react';
 
+interface Coupon {
+    id: number;
+    code: string;
+    discount_type: 'fixed' | 'percentage';
+    discount_value: number;
+    usage_limit: number | null;
+    used_count: number;
+    expiry_date: string | null;
+    is_active: boolean;
+}
 
 export default function Checkout() {
     const { items, cartTotal, emptyCart } = useCart();
     const { auth } = usePage<SharedData>().props;
 
+    const [couponCode, setCouponCode] = useState('');
+    const [validatedCoupon, setValidatedCoupon] = useState<Coupon | null>(null);
+    const [couponError, setCouponError] = useState('');
+    const [couponLoading, setCouponLoading] = useState(false);
+
     const { data, setData, processing, errors } = useForm({
         full_name: '',
-        email: auth.user ? '' : '', // Email only needed for guest users
+        email: auth.user ? '' : '',
         password: '',
         create_account: false,
         phone: '',
@@ -21,7 +38,66 @@ export default function Checkout() {
         city: '',
         country: '',
         postal_code: '',
+        coupon_id: null as number | null,
     });
+
+    // Calculate product-level discounts
+    const calculateOrderSubtotal = () => {
+        return items.reduce((total, item) => {
+            return total + (item.itemTotal || 0);
+        }, 0);
+    };
+
+    // Get calculated discount for each item (if product has discount)
+    const getItemDiscount = (item: any) => {
+        if (item.discount && item.discount > 0) {
+            return calculateDiscountedPrice(item.price, item.discount, item.discount_type);
+        }
+        return 0;
+    };
+
+    const subtotal = calculateOrderSubtotal();
+    const productDiscountTotal = items.reduce((total, item) => {
+        const itemDiscount = item.price * item.quantity - (item.itemTotal || 0);
+        return total + itemDiscount;
+    }, 0);
+
+    const couponDiscount = validatedCoupon
+        ? calculateCouponDiscount(subtotal - productDiscountTotal, validatedCoupon)
+        : 0;
+
+    const finalTotal = Math.max(0, subtotal - productDiscountTotal - couponDiscount);
+
+    // Handle coupon validation
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) {
+            setCouponError('Please enter a coupon code');
+            return;
+        }
+
+        setCouponLoading(true);
+        setCouponError('');
+
+        const result = await validateCoupon(couponCode);
+        if (result.valid && result.coupon) {
+            setValidatedCoupon(result.coupon);
+            setData('coupon_id', result.coupon.id);
+            setCouponCode('');
+        } else {
+            setCouponError(result.message || 'Invalid coupon code');
+            setValidatedCoupon(null);
+            setData('coupon_id', null);
+        }
+
+        setCouponLoading(false);
+    };
+
+    const handleRemoveCoupon = () => {
+        setValidatedCoupon(null);
+        setCouponCode('');
+        setCouponError('');
+        setData('coupon_id', null);
+    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,6 +110,8 @@ export default function Checkout() {
             city: data.city,
             country: data.country,
             postal_code: data.postal_code,
+            coupon_id: data.coupon_id,
+            total: finalTotal,
             products: items.map((item) => ({
                 id: item.id.includes('-') ? item.id.split('-')[0] : item.id, // Base product ID
                 variant_id: item.variantId || null, // Variant ID if exists
@@ -54,7 +132,7 @@ export default function Checkout() {
         }
 
         console.log('Auth user object:', auth.user);
-        console.log('Submitting payload:', payload);
+        console.log('Submitting payload with coupon:', payload);
 
         router.post('/orders/pay', payload, {
             onStart: () => {
@@ -321,9 +399,94 @@ export default function Checkout() {
                             </div>
                         ))}
                         <hr className="my-4" />
+
+                        {/* Subtotal */}
+                        <div className="flex justify-between">
+                            <span>Subtotal</span>
+                            <span>{formatPrice(subtotal)}</span>
+                        </div>
+
+                        {/* Product Discounts */}
+                        {productDiscountTotal > 0 && (
+                            <div className="flex justify-between text-green-600">
+                                <span>Product Discounts</span>
+                                <span>-{formatPrice(productDiscountTotal)}</span>
+                            </div>
+                        )}
+
+                        {/* Coupon Section */}
+                        <div className="mt-4 pt-4 border-t">
+                            {!validatedCoupon ? (
+                                <div className="space-y-2">
+                                    <label htmlFor="coupon_code" className="block text-sm font-medium text-gray-700">
+                                        Coupon Code (Optional)
+                                    </label>
+                                    <div className="flex gap-2">
+                                        <input
+                                            id="coupon_code"
+                                            type="text"
+                                            value={couponCode}
+                                            onChange={(e) => setCouponCode(e.target.value)}
+                                            placeholder="Enter coupon code"
+                                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
+                                            disabled={couponLoading}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={handleApplyCoupon}
+                                            disabled={couponLoading}
+                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 text-sm font-medium transition-colors"
+                                        >
+                                            {couponLoading ? 'Validating...' : 'Apply'}
+                                        </button>
+                                    </div>
+                                    {couponError && (
+                                        <div className="flex gap-2 text-sm text-red-600 mt-2">
+                                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                                            <span>{couponError}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="bg-green-50 border border-green-200 rounded-md p-3">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex gap-2">
+                                            <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="font-medium text-green-900">Coupon Applied</p>
+                                                <p className="text-sm text-green-700">{validatedCoupon.code}</p>
+                                                <p className="text-xs text-green-600 mt-1">
+                                                    Discount: {formatCouponDiscount(validatedCoupon)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveCoupon}
+                                            className="text-sm text-red-600 hover:text-red-700 font-medium"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Coupon Discount */}
+                        {couponDiscount > 0 && (
+                            <div className="flex justify-between text-green-600">
+                                <span>Coupon Discount ({formatCouponDiscount(validatedCoupon!)})</span>
+                                <span>-{formatPrice(couponDiscount)}</span>
+                            </div>
+                        )}
+
+                        <hr className="my-4" />
+
+                        {/* Final Total */}
                         <div className="flex justify-between text-lg font-semibold">
                             <span>Total</span>
-                            <span>{formatPrice(cartTotal)}</span>
+                            <span className="text-xl">{formatPrice(finalTotal)}</span>
                         </div>
                     </div>
                 </div>

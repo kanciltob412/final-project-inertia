@@ -67,6 +67,8 @@ export function ProductDataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
+        getRowId: (row) => row.id.toString(),
+        enableRowSelection: true,
         state: {
             sorting,
             columnFilters,
@@ -102,27 +104,49 @@ export function ProductDataTable<TData, TValue>({
     }
 
     const handleBulkActivate = () => {
-        selectedIds.forEach((id) => {
-            router.put(`/admin/products/${id}`, {
-                status: 'active'
-            }, {
-                preserveScroll: true,
-                preserveState: false,
-            })
+        console.log('Bulk activate - Selected IDs:', selectedIds);
+        if (selectedIds.length === 0) {
+            alert('Please select at least one product');
+            return;
+        }
+
+        router.patch('/admin/products/bulk-update', {
+            ids: selectedIds,
+            status: 'active'
+        }, {
+            preserveScroll: true,
+            preserveState: false,
+            onSuccess: () => {
+                console.log('Bulk activate success');
+                setRowSelection({})
+            },
+            onError: (errors) => {
+                console.error('Bulk activate errors:', errors);
+            }
         })
-        setRowSelection({})
     }
 
     const handleBulkDeactivate = () => {
-        selectedIds.forEach((id) => {
-            router.put(`/admin/products/${id}`, {
-                status: 'inactive'
-            }, {
-                preserveScroll: true,
-                preserveState: false,
-            })
+        console.log('Bulk deactivate - Selected IDs:', selectedIds);
+        if (selectedIds.length === 0) {
+            alert('Please select at least one product');
+            return;
+        }
+
+        router.patch('/admin/products/bulk-update', {
+            ids: selectedIds,
+            status: 'inactive'
+        }, {
+            preserveScroll: true,
+            preserveState: false,
+            onSuccess: () => {
+                console.log('Bulk deactivate success');
+                setRowSelection({})
+            },
+            onError: (errors) => {
+                console.error('Bulk deactivate errors:', errors);
+            }
         })
-        setRowSelection({})
     }
 
     return (
@@ -292,7 +316,7 @@ export function ProductDataTable<TData, TValue>({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete {selectedIds.length} product(s). 
+                            This will permanently delete {selectedIds.length} product(s).
                             This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>

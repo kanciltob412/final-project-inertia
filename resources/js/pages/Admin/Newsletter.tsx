@@ -47,7 +47,7 @@ export default function Newsletter({ subscriptions }: Props) {
 
     const handleBulkDelete = () => {
         if (selectedEmails.length === 0) return;
-        
+
         router.post('/admin/newsletter/bulk', {
             ids: selectedEmails
         }, {
@@ -171,12 +171,12 @@ export default function Newsletter({ subscriptions }: Props) {
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         {/* Pagination */}
                         {subscriptions.last_page > 1 && (
                             <div className="flex items-center justify-between px-6 py-4 border-t">
                                 <div className="text-sm text-gray-600">
-                                    Page {subscriptions.current_page} of {subscriptions.last_page} 
+                                    Page {subscriptions.current_page} of {subscriptions.last_page}
                                     ({subscriptions.total} total entries)
                                 </div>
                                 <div className="flex gap-2">

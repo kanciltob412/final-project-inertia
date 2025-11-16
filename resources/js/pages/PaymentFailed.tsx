@@ -10,7 +10,7 @@ export default function PaymentFailed() {
     return (
         <div>
             <Navbar />
-            
+
             {/* Hero Section */}
             <div className="relative h-[300px] overflow-hidden bg-gradient-to-br from-red-600 to-red-800">
                 <div className="absolute inset-0 flex items-center">
@@ -132,7 +132,7 @@ export default function PaymentFailed() {
 
                     <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                         <p className="text-sm text-amber-800">
-                            <strong>Order Reservation:</strong> Your items are held for 24 hours. 
+                            <strong>Order Reservation:</strong> Your items are held for 24 hours.
                             Please complete your payment within this time to secure your order.
                         </p>
                     </div>

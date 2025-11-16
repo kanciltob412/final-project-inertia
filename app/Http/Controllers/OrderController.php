@@ -84,7 +84,6 @@ class OrderController extends Controller
             ]);
 
             Log::info("Order validation passed", ['validated_data' => $validated]);
-
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::error("Order validation failed", [
                 'order_id' => $id,
@@ -99,12 +98,12 @@ class OrderController extends Controller
             // Check if status is changing to shipped
             $wasShipped = $order->status === 'SHIPPED';
             $isBecomingShipped = $validated['status'] === 'SHIPPED' && !$wasShipped;
-            
+
             // Set shipped_at timestamp if becoming shipped
             if ($isBecomingShipped) {
                 $validated['shipped_at'] = now();
             }
-            
+
             // Update the order
             $order->update($validated);
 
@@ -114,7 +113,7 @@ class OrderController extends Controller
                     if ($order->user && $order->user->email) {
                         Mail::to($order->user->email)
                             ->send(new OrderShippedNotification($order->fresh()));
-                        
+
                         Log::info("Shipping notification sent for Order #{$order->id}");
                     }
                 } catch (\Exception $mailException) {
@@ -127,7 +126,7 @@ class OrderController extends Controller
             if (isset($validated['items'])) {
                 // Delete existing items
                 $order->items()->delete();
-                
+
                 // Create new items
                 foreach ($validated['items'] as $itemData) {
                     OrderItem::create([
@@ -140,19 +139,19 @@ class OrderController extends Controller
             }
 
             DB::commit();
-            
+
             Log::info("Order updated successfully", ['order_id' => $order->id]);
-            
+
             return redirect()->route("orders.index")->with("success", "Order updated successfully.");
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             Log::error("Failed to update order", [
                 'order_id' => $id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return back()->withErrors(['error' => 'Failed to update order: ' . $e->getMessage()]);
         }
     }
@@ -205,6 +204,8 @@ class OrderController extends Controller
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
             'postal_code' => ['required', 'string'],
+            'coupon_id' => ['nullable', 'exists:coupons,id'],
+            'total' => ['required', 'numeric', 'min:0'],
             'products.*.id' => ['required', 'exists:products,id'],
             'products.*.variant_id' => ['nullable', 'exists:product_variants,id'],
             'products.*.color' => ['nullable', 'string'],
@@ -228,6 +229,18 @@ class OrderController extends Controller
                 );
             }
 
+            // Validate coupon if provided
+            $coupon = null;
+            $couponDiscount = 0;
+            if ($request->coupon_id) {
+                $coupon = \App\Models\Coupon::findOrFail($request->coupon_id);
+                
+                // Check coupon validity
+                if (!$coupon->isValid()) {
+                    throw new Exception("Coupon is not valid: " . ($coupon->getValidationError() ?? 'Unknown error'));
+                }
+            }
+
             $order = Order::create([
                 'user_id' => $user->id,
                 'address' => $request->address,
@@ -235,13 +248,14 @@ class OrderController extends Controller
                 'city' => $request->city,
                 'country' => $request->country,
                 'postal_code' => $request->postal_code,
+                'coupon_id' => $request->coupon_id,
             ]);
 
             $total = 0;
 
             foreach ($request->products as $productData) {
                 $product = Product::find($productData['id']);
-                
+
                 // Handle variant-based or legacy product ordering
                 if (isset($productData['variant_id']) && $productData['variant_id']) {
                     // New variant-based ordering
@@ -249,12 +263,12 @@ class OrderController extends Controller
                     if (!$variant || $variant->stock < $productData['quantity']) {
                         throw new Exception("Product variant is out of stock.");
                     }
-                    
+
                     // Decrement variant stock
                     $variant->decrement('stock', $productData['quantity']);
-                    
+
                     $price = $product->price * $productData['quantity'];
-                    
+
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
@@ -268,15 +282,15 @@ class OrderController extends Controller
                     if ($totalProductStock < $productData['quantity']) {
                         throw new Exception("Product with ID {$product->id} is out of stock.");
                     }
-                    
+
                     // Decrement from first available variant
                     $availableVariant = $product->variants()->where('stock', '>', 0)->first();
                     if ($availableVariant) {
                         $availableVariant->decrement('stock', $productData['quantity']);
                     }
-                    
+
                     $price = $product->price * $productData['quantity'];
-                    
+
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
@@ -285,10 +299,22 @@ class OrderController extends Controller
                         'price' => $price,
                     ]);
                 }
-                
+
                 $total += $price;
             }
-            $order->update(['total' => $total]);
+
+            // Calculate coupon discount and final total
+            $finalTotal = $total;
+            if ($coupon) {
+                $couponDiscount = $coupon->calculateDiscount($total);
+                $finalTotal = max(0, $total - $couponDiscount);
+                $order->update([
+                    'coupon_discount' => $couponDiscount,
+                    'total' => $finalTotal,
+                ]);
+            } else {
+                $order->update(['total' => $total]);
+            }
 
             // Reuse existing invoice if available
             if ($order->url) {
@@ -314,7 +340,7 @@ class OrderController extends Controller
                     'request_payment_details' => true
                 ]
             ];
-            
+
             // Alternative: Try with explicit payment methods if needed
             // Uncomment this section if you want to explicitly enable specific methods
             /*
@@ -330,7 +356,7 @@ class OrderController extends Controller
             // Log the payload for debugging
             Log::info('Xendit Invoice Payload', $payload);
             Log::info('Xendit API Key prefix', ['key_prefix' => substr($apiKey, 0, 8)]);
-            
+
             // Direct CURL usage for full control over API behavior
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'https://api.xendit.co/v2/invoices');
@@ -379,7 +405,7 @@ class OrderController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('PayOrder exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-            
+
             // Return JSON error for Inertia requests
             if (request()->expectsJson() || request()->header('X-Inertia')) {
                 return response()->json([
@@ -387,7 +413,7 @@ class OrderController extends Controller
                     'error' => true
                 ], 422);
             }
-            
+
             return back()->withErrors(['checkout' => $e->getMessage()]);
         }
     }
@@ -498,11 +524,21 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
+            $order = Order::with(['user', 'items.product', 'items.productVariant', 'coupon'])->find($orderId);
             if ($order) {
                 // Update order status to paid
-                $order->update(['status' => 'PAID']);
-                
+                $order->update(['status' => 'PAID', 'paid_at' => now()]);
+
+                // Increment coupon usage if coupon was applied
+                if ($order->coupon_id && $order->coupon) {
+                    $order->coupon->incrementUsage();
+                    Log::info('Coupon usage incremented', [
+                        'coupon_id' => $order->coupon_id,
+                        'coupon_code' => $order->coupon->code,
+                        'new_count' => $order->coupon->used_count + 1,
+                    ]);
+                }
+
                 // Send confirmation email to customer
                 try {
                     Mail::to($order->user->email)->send(new \App\Mail\OrderConfirmationEmail($order));
@@ -510,19 +546,19 @@ class OrderController extends Controller
                 } catch (\Exception $e) {
                     Log::error('Failed to send order confirmation email: ' . $e->getMessage());
                 }
-                
+
                 // Send notification email to admin(s)
                 try {
                     $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
-                    
+
                     if (empty($adminEmails)) {
                         $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
                     }
-                    
+
                     foreach ($adminEmails as $adminEmail) {
                         Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'success'));
                     }
-                    
+
                     Log::info('Admin order notification emails sent for successful order: ' . $order->id);
                 } catch (\Exception $e) {
                     Log::error('Failed to send admin order notification email: ' . $e->getMessage());
@@ -541,7 +577,7 @@ class OrderController extends Controller
     public function paymentFailed(Request $request)
     {
         $orderId = $request->get('order_id');
-        
+
         if ($orderId) {
             $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
             if ($order) {
@@ -552,19 +588,19 @@ class OrderController extends Controller
                 } catch (\Exception $e) {
                     Log::error('Failed to send order failed email: ' . $e->getMessage());
                 }
-                
+
                 // Send notification email to admin(s) about failed payment
                 try {
                     $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
-                    
+
                     if (empty($adminEmails)) {
                         $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
                     }
-                    
+
                     foreach ($adminEmails as $adminEmail) {
                         Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'failed'));
                     }
-                    
+
                     Log::info('Admin order notification emails sent for failed order: ' . $order->id);
                 } catch (\Exception $e) {
                     Log::error('Failed to send admin order failed notification email: ' . $e->getMessage());
@@ -648,7 +684,7 @@ class OrderController extends Controller
                 if ($order->user && $order->user->email) {
                     Mail::to($order->user->email)
                         ->send(new OrderShippedNotification($order));
-                    
+
                     Log::info("Shipping notification sent", [
                         'order_id' => $order->id,
                         'customer_email' => $order->user->email,
@@ -665,7 +701,6 @@ class OrderController extends Controller
             }
 
             return back()->with('success', "Order #{$order->id} marked as shipped successfully. Customer notification sent.");
-
         } catch (Exception $e) {
             Log::error("Failed to mark order as shipped", [
                 'order_id' => $id,

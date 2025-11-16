@@ -31,7 +31,7 @@ export default function ImageUpload({
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
-        
+
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -41,7 +41,7 @@ export default function ImageUpload({
         } else {
             setPreview(null);
         }
-        
+
         onChange(file);
     };
 
@@ -58,7 +58,7 @@ export default function ImageUpload({
     return (
         <div className="grid w-full items-center gap-2">
             <Label htmlFor={id}>{label}</Label>
-            
+
             <div className="flex flex-col gap-4">
                 {displayImage && (
                     <div className="relative inline-block">
@@ -79,7 +79,7 @@ export default function ImageUpload({
                         </Button>
                     </div>
                 )}
-                
+
                 <div className="flex items-center gap-2">
                     <Input
                         ref={fileInputRef}
@@ -102,7 +102,7 @@ export default function ImageUpload({
                     </Button>
                 </div>
             </div>
-            
+
             {error && (
                 <p className="text-sm text-red-500">{error}</p>
             )}

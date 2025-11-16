@@ -9,7 +9,7 @@ export default function PaymentSuccess() {
     return (
         <div>
             <Navbar />
-            
+
             {/* Hero Section */}
             <div className="relative h-[300px] overflow-hidden bg-gradient-to-br from-green-600 to-green-800">
                 <div className="absolute inset-0 flex items-center">
@@ -41,7 +41,7 @@ export default function PaymentSuccess() {
                                 <h3 className="font-semibold text-gray-900">Email Confirmation</h3>
                             </div>
                             <p className="text-gray-600 text-sm">
-                                A confirmation email with your order details has been sent to your email address. 
+                                A confirmation email with your order details has been sent to your email address.
                                 Please check your inbox and spam folder.
                             </p>
                         </div>
@@ -52,7 +52,7 @@ export default function PaymentSuccess() {
                                 <h3 className="font-semibold text-gray-900">Order Processing</h3>
                             </div>
                             <p className="text-gray-600 text-sm">
-                                Your order is now being processed. You will receive a shipping notification 
+                                Your order is now being processed. You will receive a shipping notification
                                 once your items are dispatched.
                             </p>
                         </div>

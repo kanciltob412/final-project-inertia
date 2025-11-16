@@ -30,7 +30,7 @@ class AdminOrderNotification extends Mailable
     public function envelope(): Envelope
     {
         $status = $this->type === 'success' ? 'Successful' : 'Failed';
-        
+
         return new Envelope(
             subject: "Order {$status} - Lavanya Ceramics #{$this->order->id}",
         );

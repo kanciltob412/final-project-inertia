@@ -9,12 +9,12 @@ interface CKEditorComponentProps {
     height?: number;
 }
 
-export default function CKEditorComponent({ 
-    data, 
-    onChange, 
-    disabled = false, 
+export default function CKEditorComponent({
+    data,
+    onChange,
+    disabled = false,
     placeholder = "Start writing...",
-    height = 200 
+    height = 300
 }: CKEditorComponentProps) {
     const [content, setContent] = useState(data || '');
 
@@ -35,9 +35,12 @@ export default function CKEditorComponent({
                 onChange={handleChange}
                 disabled={disabled}
                 placeholder={placeholder}
-                style={{ height: `${height}px` }}
-                className="min-h-[200px] resize-y"
+                style={{ minHeight: `${height}px` }}
+                className="min-h-[300px] resize-y"
             />
+            <div className="text-xs text-gray-500 mt-1">
+                Rich text editor temporarily simplified
+            </div>
         </div>
     );
 }

@@ -106,23 +106,23 @@ export default function Show({ data: order }: Props) {
                                                             <>
                                                                 <span className="text-gray-300">•</span>
                                                                 <div className="flex items-center gap-1">
-                                                                    <div 
+                                                                    <div
                                                                         className="w-3 h-3 rounded-full border border-gray-300"
                                                                         style={{
-                                                                            backgroundColor: 
+                                                                            backgroundColor:
                                                                                 item.product_variant?.color?.toLowerCase() === 'white' ? '#ffffff' :
-                                                                                item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
-                                                                                item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
-                                                                                item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
-                                                                                item.product_variant?.color?.toLowerCase() === 'gray' ? '#808080' :
-                                                                                item.product_variant?.color?.toLowerCase() === 'grey' ? '#808080' :
-                                                                                item.product?.color?.toLowerCase() === 'white' ? '#ffffff' :
-                                                                                item.product?.color?.toLowerCase() === 'black' ? '#000000' :
-                                                                                item.product?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
-                                                                                item.product?.color?.toLowerCase() === 'brown' ? '#8B4513' :
-                                                                                item.product?.color?.toLowerCase() === 'gray' ? '#808080' :
-                                                                                item.product?.color?.toLowerCase() === 'grey' ? '#808080' :
-                                                                                (item.product_variant?.color || item.product?.color || '#e5e7eb')
+                                                                                    item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                        item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                            item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                                item.product_variant?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                                    item.product_variant?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                                        item.product?.color?.toLowerCase() === 'white' ? '#ffffff' :
+                                                                                                            item.product?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                                                item.product?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                                                    item.product?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                                                        item.product?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                                                            item.product?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                                                                (item.product_variant?.color || item.product?.color || '#e5e7eb')
                                                                         }}
                                                                     ></div>
                                                                     <span className="text-sm text-gray-600 capitalize">
@@ -155,14 +155,22 @@ export default function Show({ data: order }: Props) {
                                         <p className="text-gray-500 text-center py-4">No items in this order</p>
                                     )}
                                 </div>
-                                
+
                                 <Separator className="my-4" />
-                                
-                                <div className="flex justify-end">
-                                    <div className="text-right">
-                                        <p className="text-2xl font-bold text-gray-900">
-                                            Total: {formatCurrency(Number(order.total))}
-                                        </p>
+
+                                <div className="space-y-2">
+                                    {order.coupon_discount && order.coupon_discount > 0 && (
+                                        <div className="flex justify-between text-green-600">
+                                            <span>Coupon Discount</span>
+                                            <span>-{formatCurrency(Number(order.coupon_discount))}</span>
+                                        </div>
+                                    )}
+                                    <div className="flex justify-end">
+                                        <div className="text-right">
+                                            <p className="text-2xl font-bold text-gray-900">
+                                                Total: {formatCurrency(Number(order.total))}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </CardContent>
@@ -274,6 +282,28 @@ export default function Show({ data: order }: Props) {
                             </CardContent>
                         </Card>
 
+                        {/* Coupon Information */}
+                        {order.coupon_discount && order.coupon_discount > 0 && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center">
+                                        <CreditCard className="h-5 w-5 mr-2" />
+                                        Coupon Applied
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-2">
+                                        <div className="bg-green-50 border border-green-200 rounded p-3">
+                                            <p className="text-sm text-gray-600 mb-1">Discount Amount</p>
+                                            <p className="text-xl font-bold text-green-600">
+                                                -{formatCurrency(Number(order.coupon_discount))}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
                         {/* Order Timeline */}
                         <Card>
                             <CardHeader>
@@ -288,7 +318,7 @@ export default function Show({ data: order }: Props) {
                                             <p className="text-xs text-gray-500">{formatDate(order.created_at)}</p>
                                         </div>
                                     </div>
-                                    
+
                                     {order.paid_at && (
                                         <div className="flex items-center space-x-3">
                                             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -298,7 +328,7 @@ export default function Show({ data: order }: Props) {
                                             </div>
                                         </div>
                                     )}
-                                    
+
                                     {order.shipped_at && (
                                         <div className="flex items-center space-x-3">
                                             <div className="w-2 h-2 bg-purple-500 rounded-full"></div>

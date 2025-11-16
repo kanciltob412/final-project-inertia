@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\CouponController;
 
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
@@ -17,3 +18,6 @@ Route::post('webhook/orders', [PaymentController::class, 'webhookPayment'])->nam
 
 // Newsletter subscription
 Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+
+// Coupon validation
+Route::post('coupons/validate', [CouponController::class, 'validate'])->name('api.coupons.validate');

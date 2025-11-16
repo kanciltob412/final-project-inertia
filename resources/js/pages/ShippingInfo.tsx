@@ -7,11 +7,11 @@ export default function ShippingInfo() {
         <div>
             <Head title="Shipping Information" />
             <Navbar />
-            
-            
+
+
             {/* Hero Banner */}
             <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                                <img src="/craft-1.jpg" alt="Shipping Information" className="w-full h-full object-cover" />
+                <img src="/craft-1.jpg" alt="Shipping Information" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
                         <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">SHIPPING INFORMATION</h1>
@@ -20,7 +20,7 @@ export default function ShippingInfo() {
             </div>
 
             <main className="max-w-6xl mx-auto py-16 px-4">
-                        
+
                 <div className="space-y-12">
                     <section>
                         <h2 className="text-3xl font-semibold mb-6">Shipping Methods & Costs</h2>

@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -42,56 +43,56 @@ class ProductController extends Controller
             "category_id" => "required|exists:categories,id",
             "name" => "required|string|max:255",
             "description" => "required|string",
+            "color" => "nullable|string|max:100",
+            "dimension" => "nullable|string|max:255",
+            "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
-            "variants" => "required|array|min:1",
-            "variants.*.color" => "required|string|max:100",
-            "variants.*.stock" => "required|integer|min:0",
         ]);
 
         DB::transaction(function () use ($validated, $request) {
-            // Create the base product
+            // Generate a unique SKU for the product
+            $productSku = 'PRD-' . strtoupper(uniqid());
+            
+            // Create the base product (image will be set from first gallery image)
             $productData = [
+                'sku' => $productSku,
                 'category_id' => $validated['category_id'],
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'color' => $validated['color'] ?? null,
+                'dimension' => $validated['dimension'] ?? null,
+                'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
+                'image' => null, // Will be set from first gallery image
             ];
-
-            // Handle legacy single image
-            if ($request->hasFile('image')) {
-                $productData['image'] = $request->file('image')->store('products', 'public');
-            }
 
             $product = Product::create($productData);
 
-            // Handle gallery images
+            // Handle gallery images - first image becomes the main product image
             if ($request->hasFile('gallery_images')) {
                 foreach ($request->file('gallery_images') as $index => $imageFile) {
                     $imagePath = $imageFile->store('products', 'public');
+                    $isFirst = $index === 0;
+                    
+                    // Set first image as product's main image
+                    if ($isFirst) {
+                        $product->update(['image' => $imagePath]);
+                    }
+                    
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image_path' => $imagePath,
                         'alt_text' => '',
                         'sort_order' => $index,
-                        'is_primary' => $index === 0, // First image is primary
+                        'is_primary' => $isFirst,
                     ]);
                 }
             }
-
-            // Create variants for the product
-            foreach ($validated['variants'] as $variantData) {
-                ProductVariant::create([
-                    'product_id' => $product->id,
-                    'color' => $variantData['color'],
-                    'stock' => $variantData['stock'],
-                    'image' => $product->image, // Use same image for now
-                ]);
-            }
         });
 
-        return redirect()->route("products.index")->with("success", "Product created successfully with variants.");
+        return redirect()->route("products.index")->with("success", "Product created successfully.");
     }
 
     /**
@@ -123,13 +124,12 @@ class ProductController extends Controller
             "category_id" => "required|exists:categories,id",
             "name" => "required|string|max:255",
             "description" => "required|string",
+            "color" => "nullable|string|max:100",
+            "dimension" => "nullable|string|max:255",
+            "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
-            "variants" => "required|array|min:1",
-            "variants.*.id" => "nullable|exists:product_variants,id",
-            "variants.*.color" => "required|string|max:100",
-            "variants.*.stock" => "required|integer|min:0",
         ]);
 
         DB::transaction(function () use ($validated, $request, $product) {
@@ -138,6 +138,9 @@ class ProductController extends Controller
                 'category_id' => $validated['category_id'],
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'color' => $validated['color'] ?? null,
+                'dimension' => $validated['dimension'] ?? null,
+                'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
             ];
 
@@ -160,43 +163,22 @@ class ProductController extends Controller
                 }
                 $product->images()->delete();
 
-                // Create new gallery images
+                // Create new gallery images - first image becomes the main product image
                 foreach ($request->file('gallery_images') as $index => $imageFile) {
                     $imagePath = $imageFile->store('products', 'public');
+                    $isFirst = $index === 0;
+                    
+                    // Set first image as product's main image
+                    if ($isFirst) {
+                        $product->update(['image' => $imagePath]);
+                    }
+                    
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image_path' => $imagePath,
                         'alt_text' => '',
                         'sort_order' => $index,
-                        'is_primary' => $index === 0,
-                    ]);
-                }
-            }
-
-            // Handle variants
-            $existingVariantIds = $product->variants->pluck('id')->toArray();
-            $submittedVariantIds = collect($validated['variants'])->pluck('id')->filter()->toArray();
-
-            // Delete removed variants
-            $variantsToDelete = array_diff($existingVariantIds, $submittedVariantIds);
-            ProductVariant::whereIn('id', $variantsToDelete)->delete();
-
-            // Update or create variants
-            foreach ($validated['variants'] as $variantData) {
-                if (isset($variantData['id'])) {
-                    // Update existing variant
-                    $variant = ProductVariant::find($variantData['id']);
-                    $variant->update([
-                        'color' => $variantData['color'],
-                        'stock' => $variantData['stock'],
-                    ]);
-                } else {
-                    // Create new variant
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'color' => $variantData['color'],
-                        'stock' => $variantData['stock'],
-                        'image' => $product->image,
+                        'is_primary' => $isFirst,
                     ]);
                 }
             }
@@ -225,6 +207,11 @@ class ProductController extends Controller
      */
     public function bulkUpdate(Request $request)
     {
+        Log::info('Bulk update request received', [
+            'request_data' => $request->all(),
+            'user_id' => auth()->user()->id ?? null
+        ]);
+
         $validated = $request->validate([
             'ids' => 'required|array',
             'ids.*' => 'exists:products,id',
@@ -232,12 +219,17 @@ class ProductController extends Controller
         ]);
 
         $isActive = $validated['status'] === 'active';
-        
-        Product::whereIn('id', $validated['ids'])
+
+        $updated = Product::whereIn('id', $validated['ids'])
             ->update(['is_active' => $isActive]);
 
         $message = $isActive ? 'Products activated successfully.' : 'Products deactivated successfully.';
-        
+
+        Log::info('Bulk update completed', [
+            'updated_count' => $updated,
+            'message' => $message
+        ]);
+
         return back()->with('success', $message);
     }
 
@@ -251,12 +243,19 @@ class ProductController extends Controller
         ]);
 
         $originalProduct = Product::with('variants')->findOrFail($validated['id']);
-        
+
         DB::transaction(function () use ($originalProduct) {
+            // Generate a new unique SKU
+            $newSku = 'PRD-' . strtoupper(uniqid());
+            
             $newProduct = Product::create([
+                'sku' => $newSku,
                 'category_id' => $originalProduct->category_id,
                 'name' => $originalProduct->name . ' (Copy)',
                 'description' => $originalProduct->description,
+                'color' => $originalProduct->color,
+                'dimension' => $originalProduct->dimension,
+                'stock' => $originalProduct->stock,
                 'price' => $originalProduct->price,
                 'image' => $originalProduct->image, // Note: This copies the same image reference
                 'is_active' => $originalProduct->is_active,
@@ -266,10 +265,13 @@ class ProductController extends Controller
             foreach ($originalProduct->variants as $variant) {
                 ProductVariant::create([
                     'product_id' => $newProduct->id,
-                    'color' => $variant->color,
-                    'stock' => $variant->stock,
+                    'sku' => $newSku . '-' . strtoupper(substr(md5($variant->color ?? '#000000'), 0, 6)),
+                    'color' => $variant->color ?? '#000000', // Default color if missing
+                    'dimension' => $variant->dimension,
+                    'stock' => $variant->stock ?? 0,
+                    'price' => $variant->price ?? null,
                     'image' => $variant->image,
-                    'is_active' => $variant->is_active,
+                    'is_active' => $variant->is_active ?? true,
                 ]);
             }
         });

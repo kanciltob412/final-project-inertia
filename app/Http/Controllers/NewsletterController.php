@@ -87,7 +87,7 @@ class NewsletterController extends Controller
             // Send notification email to admin(s)
             try {
                 $adminEmails = User::where('role', 'ADMIN')->pluck('email')->toArray();
-                
+
                 // Also add a fallback admin email from config if no admin users found
                 if (empty($adminEmails)) {
                     $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
@@ -96,7 +96,7 @@ class NewsletterController extends Controller
                 foreach ($adminEmails as $adminEmail) {
                     Mail::to($adminEmail)->send(new AdminNewsletterNotification($subscription));
                 }
-                
+
                 Log::info('Admin notification emails sent for new newsletter subscription: ' . $subscription->email);
             } catch (\Exception $e) {
                 Log::error('Failed to send admin notification email for newsletter subscription: ' . $e->getMessage());

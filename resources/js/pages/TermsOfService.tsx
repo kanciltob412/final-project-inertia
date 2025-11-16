@@ -8,7 +8,7 @@ export default function TermsOfService() {
         <div>
             <Head title="Terms of Service - Lavanya Ceramics" />
             <Navbar />
-            
+
             {/* Hero Section */}
             <div className="relative h-[400px] md:h-[420px] overflow-hidden">
                 <img src="/inspire-3.jpg" alt="Terms of Service" className="w-full h-full object-cover" />
@@ -22,7 +22,7 @@ export default function TermsOfService() {
 
             <main className="max-w-4xl mx-auto py-16 px-4">
                 <p className="text-gray-600 mb-12 text-center">Last updated: November 16, 2025</p>
-                        
+
                 <div className="space-y-12">
                     <section>
                         <h2 className="text-3xl font-semibold mb-6">Acceptance of Terms</h2>

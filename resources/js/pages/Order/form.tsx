@@ -69,7 +69,7 @@ export default function Form({ order, users, products }: Props) {
     // Auto-calculate total when items change
     React.useEffect(() => {
         if (data.items && data.items.length > 0) {
-            const newTotal = data.items.reduce((sum, item) => 
+            const newTotal = data.items.reduce((sum, item) =>
                 sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
             );
             if (newTotal !== Number(data.total)) {
@@ -80,9 +80,9 @@ export default function Form({ order, users, products }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         console.log('Form data being submitted:', data);
-        
+
         if (order) {
             put(`/admin/orders/${order.id}`, {
                 preserveScroll: true,
@@ -367,7 +367,7 @@ export default function Form({ order, users, products }: Props) {
                                 {data.items.map((item, index) => {
                                     const currentProduct = products?.find(p => p.id === Number(item.product_id));
                                     const itemSubtotal = (Number(item.price) || 0) * (Number(item.quantity) || 0);
-                                    
+
                                     return (
                                         <div key={index} className="flex items-center gap-4 bg-white p-3 rounded border">
                                             <div className="flex-1">
@@ -397,7 +397,7 @@ export default function Form({ order, users, products }: Props) {
                                                     </SelectContent>
                                                 </Select>
                                             </div>
-                                            
+
                                             <div className="flex items-center gap-2">
                                                 <Label htmlFor={`quantity-${index}`} className="text-sm whitespace-nowrap">Qty:</Label>
                                                 <Input
@@ -457,7 +457,7 @@ export default function Form({ order, users, products }: Props) {
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* Add New Item Button */}
                                 <div className="flex justify-between items-center border-t pt-3">
                                     <Button
@@ -476,9 +476,9 @@ export default function Form({ order, users, products }: Props) {
                                     >
                                         Add Item
                                     </Button>
-                                    
+
                                     <p className="font-semibold text-lg">
-                                        Total: Rp {((data.items || []).reduce((sum, item) => 
+                                        Total: Rp {((data.items || []).reduce((sum, item) =>
                                             sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
                                         )).toLocaleString('id-ID')}
                                     </p>
@@ -509,8 +509,8 @@ export default function Form({ order, users, products }: Props) {
 
                     {/* Submit */}
                     <div className="flex items-center justify-end">
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={processing}
                             onClick={(e) => {
                                 console.log('Update button clicked', {

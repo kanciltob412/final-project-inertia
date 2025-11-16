@@ -7,11 +7,11 @@ export default function PrivacyPolicy() {
         <div>
             <Head title="Privacy Policy" />
             <Navbar />
-            
-            
+
+
             {/* Hero Banner */}
             <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                                <img src="/inspire-2.jpg" alt="Privacy Policy" className="w-full h-full object-cover" />
+                <img src="/inspire-2.jpg" alt="Privacy Policy" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
                         <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">PRIVACY POLICY</h1>
@@ -21,7 +21,7 @@ export default function PrivacyPolicy() {
 
             <main className="max-w-4xl mx-auto py-16 px-4">
                 <p className="text-gray-600 mb-12 text-center">Last updated: November 16, 2025</p>
-                        
+
                 <div className="space-y-12">
                     <section>
                         <h2 className="text-3xl font-semibold mb-6">Information We Collect</h2>

@@ -130,7 +130,7 @@ export const columns: ColumnDef<Order>[] = [
         accessorKey: "items",
         header: "Products",
         cell: ({ row }) => {
-            const order = row.original; 
+            const order = row.original;
             if (!order.items || order.items.length === 0) {
                 return <span className="text-gray-500">No items</span>;
             }
@@ -139,7 +139,7 @@ export const columns: ColumnDef<Order>[] = [
                     {order.items.map((item, index) => {
                         // Clean product name (remove color if it's at the end)
                         const cleanName = item.product?.name?.replace(/\s+(Black|White|Red|Blue|Green|Yellow|Orange|Purple|Pink|Brown|Gray|Grey|Cream|Indigo|Matte\s+\w+)\s*$/i, '') || item.product?.name || 'Product';
-                        
+
                         return (
                             <div key={item.id} className="text-sm border-b border-gray-100 pb-1 last:border-0 last:pb-0">
                                 <div className="font-medium text-gray-900">
@@ -167,21 +167,23 @@ export const columns: ColumnDef<Order>[] = [
                 <div>
                     {order.items.map((item) => {
                         // Get variant color if available
-                        const variantColor = item.product_variant_id ? 
-                            (item.product_variant?.color || 'Default') : 
+                        const variantColor = item.product_variant_id ?
+                            (item.product_variant?.color || 'Default') :
                             null;
-                        
+
                         // Extract color from product name as fallback
                         const nameColor = item.product?.name?.match(/\b(Black|White|Red|Blue|Green|Yellow|Orange|Purple|Pink|Brown|Gray|Grey|Cream|Indigo|Matte\s+\w+)\b/i);
                         const color = variantColor || (nameColor ? nameColor[0] : null);
-                        
+
                         return (
                             <div key={item.id} className="mb-1 text-sm flex items-center">
                                 {color ? (
-                                    <span className="w-4 h-4 rounded-full border border-gray-300 inline-block" 
-                                          style={{backgroundColor: color.toLowerCase() === 'cream' ? '#F5F5DC' : 
-                                                                  color.toLowerCase() === 'indigo' ? '#4B0082' :
-                                                                  color.toLowerCase()}}></span>
+                                    <span className="w-4 h-4 rounded-full border border-gray-300 inline-block"
+                                        style={{
+                                            backgroundColor: color.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                color.toLowerCase() === 'indigo' ? '#4B0082' :
+                                                    color.toLowerCase()
+                                        }}></span>
                                 ) : (
                                     <span className="text-gray-400">-</span>
                                 )}
@@ -223,8 +225,8 @@ export const columns: ColumnDef<Order>[] = [
                 <div>
                     {order.items.map((item) => (
                         <div key={item.id} className="mb-1 text-sm">
-                            {new Intl.NumberFormat('id-ID', { 
-                                style: 'currency', 
+                            {new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
                                 currency: 'IDR',
                                 maximumFractionDigits: 0
                             }).format(item.price / item.quantity)}
@@ -246,8 +248,8 @@ export const columns: ColumnDef<Order>[] = [
                 <div>
                     {order.items.map((item) => (
                         <div key={item.id} className="mb-1 text-sm">
-                            {new Intl.NumberFormat('id-ID', { 
-                                style: 'currency', 
+                            {new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
                                 currency: 'IDR',
                                 maximumFractionDigits: 0
                             }).format(item.price)}
@@ -260,7 +262,7 @@ export const columns: ColumnDef<Order>[] = [
     {
         accessorKey: "total",
         header: "Total",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,  
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
         accessorKey: "created_at",
@@ -300,7 +302,7 @@ export const columns: ColumnDef<Order>[] = [
                 DELIVERED: { variant: 'default' as const, text: 'Delivered', className: 'bg-green-100 text-green-800' },
                 CANCELLED: { variant: 'destructive' as const, text: 'Cancelled', className: 'bg-red-100 text-red-800' },
             };
-            
+
             const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
             return (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.className}`}>

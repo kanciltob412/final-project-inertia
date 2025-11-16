@@ -37,8 +37,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
 
     Route::resource('categories', CategoryController::class);
     Route::post('products/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
-    Route::resource('products', ProductController::class);
     Route::patch('products/bulk-update', [ProductController::class, 'bulkUpdate'])->name('products.bulk-update');
+    Route::resource('products', ProductController::class);
     Route::post('articles/duplicate', [ArticleController::class, 'duplicate'])->name('articles.duplicate');
     Route::resource('articles', ArticleController::class);
     Route::patch('articles/bulk-update', [ArticleController::class, 'bulkUpdate'])->name('articles.bulk-update');
@@ -49,11 +49,11 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
     // Newsletter Management
     Route::get('newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
     Route::get('newsletter/export', [NewsletterController::class, 'export'])->name('newsletter.export');
-    
+
     // Bulk Operations (must come before parameterized routes)
     Route::delete('newsletter/bulk', [NewsletterController::class, 'bulkDelete'])->name('newsletter.bulk-delete');
     Route::post('newsletter/bulk', [NewsletterController::class, 'bulkDelete'])->name('newsletter.bulk-delete-post');
-    
+
     // Individual newsletter subscription routes (parameterized routes last)
     Route::delete('newsletter/{subscription}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
 });
@@ -89,7 +89,7 @@ if (config('app.debug')) {
         $subscription = new NewsletterSubscription();
         $subscription->email = 'test@example.com';
         $subscription->created_at = now();
-        
+
         return view('emails.newsletter.welcome', compact('subscription'));
     });
 
@@ -97,7 +97,7 @@ if (config('app.debug')) {
         $subscription = new NewsletterSubscription();
         $subscription->email = 'test@example.com';
         $subscription->created_at = now();
-        
+
         return view('emails.newsletter.admin-notification', compact('subscription'));
     });
 

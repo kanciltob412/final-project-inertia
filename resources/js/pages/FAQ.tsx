@@ -56,8 +56,8 @@ export default function FAQ() {
     const [openItems, setOpenItems] = useState<number[]>([]);
 
     const toggleItem = (index: number) => {
-        setOpenItems(prev => 
-            prev.includes(index) 
+        setOpenItems(prev =>
+            prev.includes(index)
                 ? prev.filter(i => i !== index)
                 : [...prev, index]
         );
@@ -67,11 +67,11 @@ export default function FAQ() {
         <div>
             <Head title="Frequently Asked Questions" />
             <Navbar />
-            
-            
+
+
             {/* Hero Banner */}
             <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                                <img src="/inspire-1.jpg" alt="FAQ" className="w-full h-full object-cover" />
+                <img src="/inspire-1.jpg" alt="FAQ" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
                         <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">FREQUENTLY ASKED QUESTIONS</h1>
@@ -85,7 +85,7 @@ export default function FAQ() {
                         Find answers to common questions about our ceramics, shipping, and policies.
                     </p>
                 </div>
-                    
+
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div className="divide-y divide-gray-200">
                         {faqData.map((item, index) => (
@@ -114,15 +114,15 @@ export default function FAQ() {
                         ))}
                     </div>
                 </div>
-                    
+
                 <div className="mt-12 text-center">
                     <div className="bg-gray-50 rounded-lg p-8">
                         <h3 className="text-2xl font-medium mb-3">Still have questions?</h3>
                         <p className="text-gray-700 mb-6 leading-relaxed">
                             Can't find what you're looking for? Our customer service team is here to help.
                         </p>
-                        <a 
-                            href="/contact" 
+                        <a
+                            href="/contact"
                             className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
                         >
                             Contact Us
