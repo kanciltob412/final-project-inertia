@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +21,7 @@ class OrderController extends Controller
     public function index()
     {
         return Inertia::render("Order/index", [
-            "data" => Order::with('user', 'items', 'items.product', 'items.productVariant')->get()
+            "data" => Order::with('user', 'items', 'items.product')->get()
         ]);
     }
 
@@ -35,7 +34,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product')->findOrFail($id);
 
         return Inertia::render("Order/show", [
             "data" => $order
@@ -43,7 +42,7 @@ class OrderController extends Controller
     }
     public function edit($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product')->findOrFail($id);
 
         return Inertia::render("Order/form", [
             "order" => $order,
@@ -207,8 +206,6 @@ class OrderController extends Controller
             'coupon_id' => ['nullable', 'exists:coupons,id'],
             'total' => ['required', 'numeric', 'min:0'],
             'products.*.id' => ['required', 'exists:products,id'],
-            'products.*.variant_id' => ['nullable', 'exists:product_variants,id'],
-            'products.*.color' => ['nullable', 'string'],
             'products.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
@@ -256,6 +253,11 @@ class OrderController extends Controller
             foreach ($request->products as $productData) {
                 $product = Product::find($productData['id']);
 
+                // Check if product has enough stock
+                if ($product->stock < $productData['quantity']) {
+                    throw new Exception("Product '{$product->name}' does not have enough stock. Available: {$product->stock}, Requested: {$productData['quantity']}");
+                }
+
                 // Calculate product price with discount applied
                 $itemPrice = $product->price;
                 if ($product->discount && $product->discount > 0) {
@@ -266,55 +268,17 @@ class OrderController extends Controller
                     }
                 }
 
-                // Handle variant-based or legacy product ordering
-                if (isset($productData['variant_id']) && $productData['variant_id']) {
-                    // New variant-based ordering
-                    $variant = ProductVariant::find($productData['variant_id']);
-                    if (!$variant || $variant->stock < $productData['quantity']) {
-                        throw new Exception("Product variant is out of stock.");
-                    }
+                // Decrement product stock
+                $product->decrement('stock', $productData['quantity']);
 
-                    // Decrement variant stock
-                    $variant->decrement('stock', $productData['quantity']);
-                    
-                    // Also decrement product stock
-                    $product->decrement('stock', $productData['quantity']);
+                $price = $itemPrice * $productData['quantity'];
 
-                    $price = $itemPrice * $productData['quantity'];
-
-                    OrderItem::create([
-                        'order_id' => $order->id,
-                        'product_id' => $product->id,
-                        'product_variant_id' => $variant->id,
-                        'quantity' => $productData['quantity'],
-                        'price' => $price,
-                    ]);
-                } else {
-                    // Legacy ordering (for backward compatibility)
-                    $totalProductStock = $product->variants()->sum('stock');
-                    if ($totalProductStock < $productData['quantity']) {
-                        throw new Exception("Product with ID {$product->id} is out of stock.");
-                    }
-
-                    // Decrement from first available variant
-                    $availableVariant = $product->variants()->where('stock', '>', 0)->first();
-                    if ($availableVariant) {
-                        $availableVariant->decrement('stock', $productData['quantity']);
-                    }
-
-                    // Also decrement product stock
-                    $product->decrement('stock', $productData['quantity']);
-
-                    $price = $itemPrice * $productData['quantity'];
-
-                    OrderItem::create([
-                        'order_id' => $order->id,
-                        'product_id' => $product->id,
-                        'product_variant_id' => $availableVariant?->id,
-                        'quantity' => $productData['quantity'],
-                        'price' => $price,
-                    ]);
-                }
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'quantity' => $productData['quantity'],
+                    'price' => $price,
+                ]);
 
                 $total += $price;
             }
@@ -540,7 +504,7 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'items.productVariant', 'coupon'])->find($orderId);
+            $order = Order::with(['user', 'items.product', 'coupon'])->find($orderId);
             if ($order) {
                 // Update order status to paid
                 $order->update(['status' => 'PAID', 'paid_at' => now()]);
@@ -595,7 +559,7 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
+            $order = Order::with(['user', 'items.product'])->find($orderId);
             if ($order) {
                 // Send failed payment email to customer
                 try {
