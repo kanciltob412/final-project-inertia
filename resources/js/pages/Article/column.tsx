@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy } from "lucide-react";
+import { MoreHorizontal, Copy, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Article } from "../../types";
 
@@ -122,10 +122,6 @@ export const columns: ColumnDef<Article>[] = [
         header: "Title",
     },
     {
-        accessorKey: "author",
-        header: "Author",
-    },
-    {
         accessorKey: "excerpt",
         header: "Excerpt",
         cell: ({ row }) => (
@@ -135,8 +131,47 @@ export const columns: ColumnDef<Article>[] = [
         ),
     },
     {
-        accessorKey: "readTime",
-        header: "Read Time",
+        accessorKey: "seo_keywords",
+        header: "SEO Keywords",
+        cell: ({ row }) => (
+            <div className="max-w-xs truncate text-sm text-gray-600">
+                {row.original.seo_keywords || "-"}
+            </div>
+        ),
+    },
+    {
+        id: "status",
+        header: "Status",
+        cell: ({ row }) => {
+            const isPublished = row.original.status === "published";
+            const handleToggle = () => {
+                router.patch(`/admin/articles/${row.original.id}`, {
+                    status: isPublished ? "draft" : "published"
+                }, {
+                    preserveScroll: true,
+                });
+            };
+            return (
+                <Button
+                    size="sm"
+                    variant={isPublished ? "default" : "outline"}
+                    onClick={handleToggle}
+                    className="gap-2"
+                >
+                    {isPublished ? (
+                        <>
+                            <Eye className="h-4 w-4" />
+                            Published
+                        </>
+                    ) : (
+                        <>
+                            <EyeOff className="h-4 w-4" />
+                            Draft
+                        </>
+                    )}
+                </Button>
+            );
+        },
     },
     {
         accessorKey: "featured",

@@ -27,11 +27,11 @@ function ActionsCell({ order }: { order: Order }) {
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(orders.edit(order.id));
+        router.visit(orders.edit.url(order.id));
     };
 
     const handleDelete = () => {
-        router.delete(orders.destroy(order.id));
+        router.delete(orders.destroy.url(order.id));
         setDeleteOpen(false);
     };
 

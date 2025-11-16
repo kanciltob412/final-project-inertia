@@ -9,7 +9,7 @@ import HeadingSmall from "@/components/heading-small";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ImageUpload from "@/components/ImageUpload";
-import CKEditorComponent from "@/components/CKEditorComponent";
+import TiptapEditor from "@/components/TiptapEditor";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -60,13 +60,19 @@ export default function Form({ article, categories }: Props) {
                 _method: "put",
             }, {
                 preserveScroll: true,
-                onSuccess: () => reset(),
+                onSuccess: () => {
+                    reset();
+                    router.visit("/admin/articles");
+                },
                 forceFormData: true,
             });
         } else {
             post("/admin/articles", {
                 preserveScroll: true,
-                onSuccess: () => reset(),
+                onSuccess: () => {
+                    reset();
+                    router.visit("/admin/articles");
+                },
                 forceFormData: true,
             });
         }
@@ -134,8 +140,8 @@ export default function Form({ article, categories }: Props) {
                     {/* Content */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="content">Content</Label>
-                        <CKEditorComponent
-                            data={data.content}
+                        <TiptapEditor
+                            value={data.content}
                             onChange={(content) => setData("content", content)}
                             disabled={processing}
                             placeholder="Write your article content here..."

@@ -122,7 +122,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                             <div className="grid gap-8 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2">
                                 <Link
                                     href={`/articles/${featuredArticle.id}`}
-                                    className="relative h-[400px] md:h-auto block hover:opacity-90 transition-opacity"
+                                    className="relative h-[560px] block hover:opacity-90 transition-opacity"
                                 >
                                     <img
                                         src={
@@ -177,7 +177,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                 <div key={article.id} className="group overflow-hidden rounded-lg bg-white shadow-md">
                                     <Link
                                         href={`/articles/${article.id}`}
-                                        className="relative h-48 overflow-hidden block"
+                                        className="relative h-[30vh] overflow-hidden block"
                                     >
                                         <img
                                             src={
