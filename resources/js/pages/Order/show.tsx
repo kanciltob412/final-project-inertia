@@ -284,7 +284,7 @@ export default function Show({ data: order }: Props) {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-3">
-                                    <div className="bg-gray-50 rounded-lg p-3">
+                                    <div>
                                         <label className="text-xs text-gray-500 uppercase tracking-wide">Status</label>
                                         <div className="mt-1">
                                             <Badge className={getStatusColor(order.status)}>
@@ -315,66 +315,29 @@ export default function Show({ data: order }: Props) {
                         </Card>
 
                         {/* Discount Summary */}
-                        {(() => {
-                            let hasProductDiscounts = false;
-                            if (order.items && order.items.length > 0) {
-                                hasProductDiscounts = order.items.some(item => 
-                                    item.product && item.product.discount && item.product.discount > 0
-                                );
-                            }
-                            const hasCouponDiscount = order.coupon_discount && order.coupon_discount > 0;
-                            
-                            return (hasProductDiscounts || hasCouponDiscount) ? (
-                                <Card>
-                                    <CardHeader>
-                                        <CardTitle className="flex items-center">
-                                            <CreditCard className="h-5 w-5 mr-2" />
-                                            Discounts Applied
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-3">
-                                            {hasProductDiscounts && (() => {
-                                                let totalProductDiscount = 0;
-                                                order.items!.forEach(item => {
-                                                    const unitPrice = Number(item.price) / Number(item.quantity);
-                                                    const product = item.product;
-                                                    if (product && product.discount && product.discount > 0) {
-                                                        let discount = 0;
-                                                        if (product.discount_type === 'fixed') {
-                                                            discount = product.discount * item.quantity;
-                                                        } else { // percentage
-                                                            const originalPrice = (unitPrice / (1 - product.discount / 100)) * item.quantity;
-                                                            discount = originalPrice - Number(item.price);
-                                                        }
-                                                        totalProductDiscount += discount;
-                                                    }
-                                                });
-                                                return (
-                                                    <div className="bg-blue-50 border border-blue-200 rounded p-3">
-                                                        <p className="text-sm text-gray-600 mb-1">Product Discounts</p>
-                                                        <p className="text-lg font-bold text-blue-600">
-                                                            -{formatCurrency(totalProductDiscount)}
-                                                        </p>
-                                                    </div>
-                                                );
-                                            })()}
-                                            {hasCouponDiscount && (
-                                                <div className="bg-green-50 border border-green-200 rounded p-3">
-                                                    <p className="text-sm text-gray-600 mb-1">Coupon Discount</p>
-                                                    <p className="text-lg font-bold text-green-600">
-                                                        -{formatCurrency(Number(order.coupon_discount))}
-                                                    </p>
-                                                    {order.coupon && (
-                                                        <p className="text-xs text-gray-500 mt-2">Code: {order.coupon.code}</p>
-                                                    )}
-                                                </div>
+                        {order.coupon_discount && order.coupon_discount > 0 && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center">
+                                        <CreditCard className="h-5 w-5 mr-2" />
+                                        Coupon Information
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-2">
+                                        <div className="bg-green-50 border border-green-200 rounded p-3">
+                                            <p className="text-sm text-gray-600 mb-1">Coupon Discount</p>
+                                            <p className="text-lg font-bold text-green-600">
+                                                -{formatCurrency(Number(order.coupon_discount))}
+                                            </p>
+                                            {order.coupon && (
+                                                <p className="text-xs text-gray-500 mt-2">Code: {order.coupon.code}</p>
                                             )}
                                         </div>
-                                    </CardContent>
-                                </Card>
-                            ) : null;
-                        })()}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Order Timeline */}
                         <Card>
