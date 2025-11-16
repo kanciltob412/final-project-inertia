@@ -11,6 +11,9 @@ use Inertia\Inertia;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\NewsletterController;
+use App\Models\NewsletterSubscription;
+use App\Mail\WelcomeNewsletterSubscriber;
+use App\Mail\AdminNewsletterNotification;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/products', [PageController::class, 'products'])->name('products');
@@ -69,6 +72,7 @@ Route::get('/payment-failed', [OrderController::class, 'paymentFailed'])->name('
 Route::get('/user', [UserController::class, 'index']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::get('/get-in-touch', GetInTouchController::class);
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 
 
@@ -77,6 +81,34 @@ if (file_exists(__DIR__ . '/settings.php')) {
 }
 if (file_exists(__DIR__ . '/auth.php')) {
     require __DIR__ . '/auth.php';
+}
+
+// Test routes for email templates (remove in production)
+if (config('app.debug')) {
+    Route::get('/test-newsletter-email', function () {
+        $subscription = new NewsletterSubscription();
+        $subscription->email = 'test@example.com';
+        $subscription->created_at = now();
+        
+        return view('emails.newsletter.welcome', compact('subscription'));
+    });
+
+    Route::get('/test-admin-email', function () {
+        $subscription = new NewsletterSubscription();
+        $subscription->email = 'test@example.com';
+        $subscription->created_at = now();
+        
+        return view('emails.newsletter.admin-notification', compact('subscription'));
+    });
+
+    // Test route for admin newsletter (bypasses auth)
+    Route::get('/test-admin-newsletter', [NewsletterController::class, 'index']);
+
+    // Test route for user registration email
+    Route::get('/test-user-registration-email', function () {
+        $user = App\Models\User::first();
+        return view('emails.admin.user-registration', compact('user'));
+    });
 }
 
 require __DIR__ . '/settings.php';

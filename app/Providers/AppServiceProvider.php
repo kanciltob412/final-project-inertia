@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
         );
 
         // Register model observers
-        Order::observe(OrderObserver::class);
-        \App\Models\NewsletterSubscription::observe(\App\Observers\NewsletterSubscriptionObserver::class);
+        // Order::observe(OrderObserver::class);
+        // \App\Models\NewsletterSubscription::observe(\App\Observers\NewsletterSubscriptionObserver::class);
     }
 }

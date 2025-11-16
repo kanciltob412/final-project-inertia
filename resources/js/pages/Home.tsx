@@ -46,11 +46,9 @@ export default function Home() {
                         initial="initial"
                         whileInView="animate"
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-2xl bg-black p-12 text-center text-white"
+                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 via-gray-950 to-gray-800 p-12 text-center text-white shadow-2xl"
                     >
                         <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}>
-                            <h2 className="mb-4 text-3xl font-bold">Welcome to Lavanya Ceramics</h2>
-                            <p className="mb-8 opacity-90">Subscribe to our newsletter to stay updated on our latest collections and exclusive offers.</p>
                             <NewsletterSubscription />
                         </motion.div>
                     </motion.div>

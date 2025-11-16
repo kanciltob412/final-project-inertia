@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\NewsletterController;
+
 Route::prefix('admin')->group(function () {
 
     Route::get('/categories', function () {
@@ -15,4 +17,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/users/{namauser}', function ($namauser) {
         return 'Admin - User: ' . e($namauser);
     });
+
+    // Newsletter admin routes
+    Route::get('/newsletter', [NewsletterController::class, 'index'])->name('admin.newsletter.index');
+    Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    Route::post('/newsletter/bulk', [NewsletterController::class, 'bulkDelete'])->name('admin.newsletter.bulk');
+    Route::get('/newsletter/export', [NewsletterController::class, 'export'])->name('admin.newsletter.export');
 });
