@@ -130,6 +130,8 @@ export interface Order {
     courier_name: string | null;
     tracking_number: string | null;
     shipped_at: string | null;
+    coupon_id: number | null;
+    coupon_discount: number | null;
     created_at: string;
     updated_at: string;
 
@@ -138,6 +140,8 @@ export interface Order {
     user: User;
     // Relation to Order Items
     items: OrderItem[];
+    // Relation to Coupon
+    coupon?: Coupon;
 
 }
 export interface OrderItem {
@@ -153,4 +157,17 @@ export interface OrderItem {
     // Relations
     product: Product;
     product_variant?: ProductVariant;
+}
+
+export interface Coupon {
+    id: number;
+    code: string;
+    discount_type: 'fixed' | 'percentage';
+    discount_value: number;
+    usage_limit: number | null;
+    used_count: number;
+    expiry_date: string | null;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
 }

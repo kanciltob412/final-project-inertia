@@ -34,7 +34,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('user', 'items', 'items.product')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'coupon')->findOrFail($id);
 
         return Inertia::render("Order/show", [
             "data" => $order
