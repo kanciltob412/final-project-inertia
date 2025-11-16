@@ -29,11 +29,11 @@ You can track your shipment using the tracking number above on your courier's we
 ## Order Summary
 @if($order->items && $order->items->count() > 0)
 @foreach($order->items as $item)
-- {{ $item->product->name ?? 'Product' }} (Qty: {{ $item->quantity }}) - ${{ number_format($item->price, 2) }}
+- {{ $item->product->name ?? 'Product' }} (Qty: {{ $item->quantity }}) - Rp {{ number_format($item->price, 0, ',', '.') }}
 @endforeach
 @endif
 
-**Total: ${{ number_format($order->total, 2) }}**
+**Total: Rp {{ number_format($order->total, 0, ',', '.') }}**
 
 <x-mail::button url="{{ config('app.url') }}" color="black">
 Visit Our Store

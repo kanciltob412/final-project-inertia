@@ -66,7 +66,7 @@ export default function TermsOfService() {
                         <ul className="list-disc pl-6 text-gray-700 mb-4 space-y-2">
                             <li>We reserve the right to refuse any order</li>
                             <li>Payment must be received before shipment</li>
-                            <li>All prices are in USD and subject to change without notice</li>
+                            <li>All prices are in Indonesian Rupiah (IDR) and subject to change without notice</li>
                             <li>You are responsible for providing accurate shipping information</li>
                         </ul>
                     </section>

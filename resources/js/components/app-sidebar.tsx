@@ -4,7 +4,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Coffee, DollarSign, LayoutGrid, NotebookPen, Tag, Mail } from 'lucide-react';
+import { Coffee, Banknote, LayoutGrid, NotebookPen, Tag, Mail } from 'lucide-react';
 import AppLogo from './app-logo';
 import categories from '../routes/categories';
 import products from '../routes/products';
@@ -36,7 +36,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Orders',
         href: orders.index().url,
-        icon: DollarSign,
+        icon: Banknote,
     },
     {
         title: 'Newsletter',

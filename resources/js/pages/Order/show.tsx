@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft, Edit, User, MapPin, CreditCard, Package, Truck } from "lucide-react";
 import HeadingSmall from "@/components/heading-small";
+import { formatCurrency } from "@/utils/helper";
 
 interface Props {
     data: Order;
@@ -107,10 +108,10 @@ export default function Show({ data: order }: Props) {
                                                     )}
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="font-medium">${Number(item.price).toFixed(2)}</p>
+                                                    <p className="font-medium">{formatCurrency(Number(item.price))}</p>
                                                     <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                                                     <p className="font-semibold text-gray-900">
-                                                        ${(Number(item.price) * Number(item.quantity)).toFixed(2)}
+                                                        {formatCurrency(Number(item.price) * Number(item.quantity))}
                                                     </p>
                                                 </div>
                                             </div>
@@ -125,7 +126,7 @@ export default function Show({ data: order }: Props) {
                                 <div className="flex justify-end">
                                     <div className="text-right">
                                         <p className="text-2xl font-bold text-gray-900">
-                                            Total: ${Number(order.total).toFixed(2)}
+                                            Total: {formatCurrency(Number(order.total))}
                                         </p>
                                     </div>
                                 </div>
