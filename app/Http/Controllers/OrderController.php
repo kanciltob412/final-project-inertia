@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Exception;
 
 class OrderController extends Controller
@@ -442,10 +443,35 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::find($orderId);
+            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
             if ($order) {
                 // Update order status to paid
                 $order->update(['status' => 'PAID']);
+                
+                // Send confirmation email to customer
+                try {
+                    Mail::to($order->user->email)->send(new \App\Mail\OrderConfirmationEmail($order));
+                    Log::info('Order confirmation email sent to customer: ' . $order->user->email);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send order confirmation email: ' . $e->getMessage());
+                }
+                
+                // Send notification email to admin(s)
+                try {
+                    $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
+                    
+                    if (empty($adminEmails)) {
+                        $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                    }
+                    
+                    foreach ($adminEmails as $adminEmail) {
+                        Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'success'));
+                    }
+                    
+                    Log::info('Admin order notification emails sent for successful order: ' . $order->id);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send admin order notification email: ' . $e->getMessage());
+                }
             }
         }
 
@@ -460,6 +486,36 @@ class OrderController extends Controller
     public function paymentFailed(Request $request)
     {
         $orderId = $request->get('order_id');
+        
+        if ($orderId) {
+            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
+            if ($order) {
+                // Send failed payment email to customer
+                try {
+                    Mail::to($order->user->email)->send(new \App\Mail\OrderFailedEmail($order));
+                    Log::info('Order failed email sent to customer: ' . $order->user->email);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send order failed email: ' . $e->getMessage());
+                }
+                
+                // Send notification email to admin(s) about failed payment
+                try {
+                    $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
+                    
+                    if (empty($adminEmails)) {
+                        $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                    }
+                    
+                    foreach ($adminEmails as $adminEmail) {
+                        Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'failed'));
+                    }
+                    
+                    Log::info('Admin order notification emails sent for failed order: ' . $order->id);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send admin order failed notification email: ' . $e->getMessage());
+                }
+            }
+        }
 
         return Inertia::render('PaymentFailed', [
             'order_id' => $orderId

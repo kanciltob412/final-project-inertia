@@ -143,6 +143,47 @@ class PaymentController extends Controller
             'paid_at'         => $status === 'paid' ? now() : null
         ]);
 
+        // Send email notifications based on payment status
+        try {
+            $order = $order->load(['user', 'items.product', 'items.productVariant']);
+            
+            if ($status === 'paid') {
+                // Send success emails
+                \Illuminate\Support\Facades\Mail::to($order->user->email)->send(new \App\Mail\OrderConfirmationEmail($order));
+                
+                // Send admin notification
+                $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
+                if (empty($adminEmails)) {
+                    $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                }
+                
+                foreach ($adminEmails as $adminEmail) {
+                    \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'success'));
+                }
+                
+                Log::info('Payment success emails sent via webhook for order: ' . $order->id);
+                
+            } elseif (in_array($status, ['cancelled', 'expired', 'failed'])) {
+                // Send failure emails
+                \Illuminate\Support\Facades\Mail::to($order->user->email)->send(new \App\Mail\OrderFailedEmail($order));
+                
+                // Send admin notification
+                $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
+                if (empty($adminEmails)) {
+                    $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                }
+                
+                foreach ($adminEmails as $adminEmail) {
+                    \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotification($order, 'failed'));
+                }
+                
+                Log::info('Payment failure emails sent via webhook for order: ' . $order->id);
+            }
+            
+        } catch (\Exception $e) {
+            Log::error('Failed to send webhook payment emails: ' . $e->getMessage());
+        }
+
         // Log the payload for debugging (remove in production)
         Log::info('Payment webhook payload', [
             'original' => $payload,

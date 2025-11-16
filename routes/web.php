@@ -109,6 +109,22 @@ if (config('app.debug')) {
         $user = App\Models\User::first();
         return view('emails.admin.user-registration', compact('user'));
     });
+
+    // Test routes for order emails
+    Route::get('/test-order-confirmation-email', function () {
+        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        return view('emails.orders.confirmation', compact('order'));
+    });
+
+    Route::get('/test-order-failed-email', function () {
+        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        return view('emails.orders.failed', compact('order'));
+    });
+
+    Route::get('/test-admin-order-email/{type}', function ($type) {
+        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        return view('emails.orders.admin-notification', compact('order', 'type'));
+    });
 }
 
 require __DIR__ . '/settings.php';
