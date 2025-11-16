@@ -283,17 +283,17 @@ class OrderController extends Controller
                 $total += $price;
             }
 
-            // Calculate coupon discount and final total
+            // Calculate coupon discount and final total (Total = amount customer pays)
             $finalTotal = $total;
             if ($coupon) {
                 $couponDiscount = $coupon->calculateDiscount($total);
                 $finalTotal = max(0, $total - $couponDiscount);
                 $order->update([
                     'coupon_discount' => $couponDiscount,
-                    'total' => $finalTotal,
+                    'total' => $finalTotal,  // Final amount customer pays after coupon
                 ]);
             } else {
-                $order->update(['total' => $total]);
+                $order->update(['total' => $total]);  // Total = subtotal (no coupon)
             }
 
             // Reuse existing invoice if available
