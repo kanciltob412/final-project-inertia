@@ -38,6 +38,8 @@ export default function Form({ order, users, products }: Props) {
         payment_method: string;
         payment_channel: string;
         url: string;
+        courier_name?: string;
+        tracking_number?: string;
         items?: {
             product_id: number | string;
             quantity: number | string;
@@ -55,6 +57,8 @@ export default function Form({ order, users, products }: Props) {
         payment_method: order ? order.payment_method || "" : "",
         payment_channel: order ? order.payment_channel || "" : "",
         url: order ? order.url || "" : "",
+        courier_name: order ? order.courier_name || "" : "",
+        tracking_number: order ? order.tracking_number || "" : "",
         items: order && order.items ? order.items.map(item => ({
             product_id: item.product_id,
             quantity: item.quantity,
@@ -241,8 +245,11 @@ export default function Form({ order, users, products }: Props) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="pending">Pending</SelectItem>
-                                    <SelectItem value="cancelled">Cancelled</SelectItem>
                                     <SelectItem value="paid">Paid</SelectItem>
+                                    <SelectItem value="processing">Processing</SelectItem>
+                                    <SelectItem value="shipped">Shipped</SelectItem>
+                                    <SelectItem value="delivered">Delivered</SelectItem>
+                                    <SelectItem value="cancelled">Cancelled</SelectItem>
                                 </SelectContent>
                             </Select>
                             {errors.status && (
@@ -250,6 +257,47 @@ export default function Form({ order, users, products }: Props) {
                             )}
                         </div>
                     </div>
+
+                    {/* Shipping Information - Show when status is shipped */}
+                    {data.status === "shipped" && (
+                        <>
+                            <Separator className="my-6" />
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold">Shipping Information</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Courier Name */}
+                                    <div className="flex flex-col gap-y-2">
+                                        <Label htmlFor="courier_name">Courier Name</Label>
+                                        <Input
+                                            id="courier_name"
+                                            value={data.courier_name || ""}
+                                            onChange={(e) => setData("courier_name", e.target.value)}
+                                            disabled={processing}
+                                            placeholder="e.g., DHL, FedEx, UPS"
+                                        />
+                                        {errors.courier_name && (
+                                            <p className="text-sm text-red-600">{errors.courier_name}</p>
+                                        )}
+                                    </div>
+
+                                    {/* Tracking Number */}
+                                    <div className="flex flex-col gap-y-2">
+                                        <Label htmlFor="tracking_number">Tracking Number</Label>
+                                        <Input
+                                            id="tracking_number"
+                                            value={data.tracking_number || ""}
+                                            onChange={(e) => setData("tracking_number", e.target.value)}
+                                            disabled={processing}
+                                            placeholder="Enter tracking number"
+                                        />
+                                        {errors.tracking_number && (
+                                            <p className="text-sm text-red-600">{errors.tracking_number}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Payment Method */}

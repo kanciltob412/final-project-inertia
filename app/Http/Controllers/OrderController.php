@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderShippedNotification;
 use Exception;
 
 class OrderController extends Controller
@@ -62,11 +63,13 @@ class OrderController extends Controller
             'city' => 'required|string',
             'country' => 'required|string',
             'postal_code' => 'required|string',
-            'status' => 'required|in:pending,paid,cancelled',
+            'status' => 'required|in:pending,paid,processing,shipped,delivered,cancelled',
             'total' => 'required|numeric',
             'payment_method' => 'nullable|string',
             'payment_channel' => 'nullable|string',
             'url' => 'nullable|url',
+            'courier_name' => 'nullable|required_if:status,shipped|string',
+            'tracking_number' => 'nullable|required_if:status,shipped|string',
             'items' => 'nullable|array',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',
@@ -75,8 +78,32 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         try {
+            // Check if status is changing to shipped
+            $wasShipped = $order->status === 'shipped';
+            $isBecomingShipped = $validated['status'] === 'shipped' && !$wasShipped;
+            
+            // Set shipped_at timestamp if becoming shipped
+            if ($isBecomingShipped) {
+                $validated['shipped_at'] = now();
+            }
+            
             // Update the order
             $order->update($validated);
+
+            // Send shipping notification if status changed to shipped
+            if ($isBecomingShipped) {
+                try {
+                    if ($order->user && $order->user->email) {
+                        Mail::to($order->user->email)
+                            ->send(new OrderShippedNotification($order->fresh()));
+                        
+                        Log::info("Shipping notification sent for Order #{$order->id}");
+                    }
+                } catch (\Exception $mailException) {
+                    Log::error("Failed to send shipping notification for Order #{$order->id}: " . $mailException->getMessage());
+                    // Continue with order update even if email fails
+                }
+            }
 
             // Update order items if provided
             if (isset($validated['items'])) {
@@ -592,7 +619,7 @@ class OrderController extends Controller
             try {
                 if ($order->user && $order->user->email) {
                     Mail::to($order->user->email)
-                        ->send(new \App\Mail\OrderShippedNotification($order));
+                        ->send(new OrderShippedNotification($order));
                     
                     Log::info("Shipping notification sent", [
                         'order_id' => $order->id,
