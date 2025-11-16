@@ -250,29 +250,6 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "price",
-        header: "Price",
-        cell: ({ row }) => {
-            const order = row.original;
-            if (!order.items || order.items.length === 0) {
-                return <div>-</div>;
-            }
-            return (
-                <div>
-                    {order.items.map((item) => (
-                        <div key={item.id} className="mb-1 text-sm">
-                            {new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                maximumFractionDigits: 0
-                            }).format(item.price / item.quantity)}
-                        </div>
-                    ))}
-                </div>
-            );
-        },
-    },
-    {
         accessorKey: "subtotal",
         header: "Sub Total",
         cell: ({ row }) => {
