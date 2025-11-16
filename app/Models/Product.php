@@ -61,12 +61,6 @@ class Product extends Model
         return $this->variants()->sum('stock');
     }
 
-    // Helper method to get available colors
-    public function getAvailableColors(): array
-    {
-        return $this->activeVariants()->pluck('color')->toArray();
-    }
-
     // Helper method to check if product has any stock
     public function hasStock(): bool
     {

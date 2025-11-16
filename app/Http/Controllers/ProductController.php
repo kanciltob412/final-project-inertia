@@ -257,29 +257,17 @@ class ProductController extends Controller
                 'category_id' => $originalProduct->category_id,
                 'name' => $originalProduct->name . ' (Copy)',
                 'description' => $originalProduct->description,
-                'color' => $originalProduct->color,
                 'dimension' => $originalProduct->dimension,
                 'stock' => $originalProduct->stock,
                 'price' => $originalProduct->price,
-                'image' => $originalProduct->image, // Note: This copies the same image reference
+                'discount' => $originalProduct->discount,
+                'discount_type' => $originalProduct->discount_type,
+                'image' => $originalProduct->image,
                 'is_active' => $originalProduct->is_active,
             ]);
 
-            // Duplicate all variants
-            foreach ($originalProduct->variants as $variant) {
-                ProductVariant::create([
-                    'product_id' => $newProduct->id,
-                    'sku' => $newSku . '-' . strtoupper(substr(md5($variant->color ?? '#000000'), 0, 6)),
-                    'color' => $variant->color ?? '#000000', // Default color if missing
-                    'dimension' => $variant->dimension,
-                    'stock' => $variant->stock ?? 0,
-                    'price' => $variant->price ?? null,
-                    'image' => $variant->image,
-                    'is_active' => $variant->is_active ?? true,
-                ]);
-            }
         });
 
-        return back()->with('success', 'Product duplicated successfully with all variants.');
+        return back()->with('success', 'Product duplicated successfully.');
     }
 }
