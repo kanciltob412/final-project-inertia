@@ -92,65 +92,87 @@ export default function Show({ data: order }: Props) {
                             <CardContent>
                                 <div className="space-y-4">
                                     {order.items && order.items.length > 0 ? (
-                                        order.items.map((item) => (
-                                            <div key={item.id} className="flex items-center justify-between p-4 border rounded-lg">
-                                                <div className="flex-1">
-                                                    <h4 className="font-semibold text-gray-900">
-                                                        {item.product?.name || 'Product'}
-                                                    </h4>
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <p className="text-sm text-gray-500">
-                                                            SKU: {item.product?.sku || 'N/A'}
-                                                        </p>
-                                                        {(item.product_variant?.color || item.product?.color) && (
-                                                            <>
-                                                                <span className="text-gray-300">•</span>
-                                                                <div className="flex items-center gap-1">
-                                                                    <div
-                                                                        className="w-3 h-3 rounded-full border border-gray-300"
-                                                                        style={{
-                                                                            backgroundColor:
-                                                                                item.product_variant?.color?.toLowerCase() === 'white' ? '#ffffff' :
-                                                                                    item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
-                                                                                        item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
-                                                                                            item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
-                                                                                                item.product_variant?.color?.toLowerCase() === 'gray' ? '#808080' :
-                                                                                                    item.product_variant?.color?.toLowerCase() === 'grey' ? '#808080' :
-                                                                                                        item.product?.color?.toLowerCase() === 'white' ? '#ffffff' :
-                                                                                                            item.product?.color?.toLowerCase() === 'black' ? '#000000' :
-                                                                                                                item.product?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
-                                                                                                                    item.product?.color?.toLowerCase() === 'brown' ? '#8B4513' :
-                                                                                                                        item.product?.color?.toLowerCase() === 'gray' ? '#808080' :
-                                                                                                                            item.product?.color?.toLowerCase() === 'grey' ? '#808080' :
-                                                                                                                                (item.product_variant?.color || item.product?.color || '#e5e7eb')
-                                                                        }}
-                                                                    ></div>
-                                                                    <span className="text-sm text-gray-600 capitalize">
-                                                                        {item.product_variant?.color || item.product?.color}
-                                                                    </span>
-                                                                </div>
-                                                            </>
+                                        order.items.map((item) => {
+                                            const unitPrice = Number(item.price) / Number(item.quantity);
+                                            const product = item.product;
+                                            let originalUnitPrice = unitPrice;
+                                            let discountAmount = 0;
+
+                                            if (product && product.discount && product.discount > 0) {
+                                                if (product.discount_type === 'fixed') {
+                                                    originalUnitPrice = unitPrice + product.discount;
+                                                    discountAmount = product.discount * item.quantity;
+                                                } else { // percentage
+                                                    originalUnitPrice = unitPrice / (1 - product.discount / 100);
+                                                    discountAmount = (originalUnitPrice * item.quantity) - Number(item.price);
+                                                }
+                                            }
+
+                                            return (
+                                                <div key={item.id} className="p-4 border rounded-lg">
+                                                    <div className="flex items-center justify-between mb-3">
+                                                        <div className="flex-1">
+                                                            <h4 className="font-semibold text-gray-900">
+                                                                {item.product?.name || 'Product'}
+                                                            </h4>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <p className="text-sm text-gray-500">
+                                                                    SKU: {item.product?.sku || 'N/A'}
+                                                                </p>
+                                                                {(item.product_variant?.color || item.product?.color) && (
+                                                                    <>
+                                                                        <span className="text-gray-300">•</span>
+                                                                        <div className="flex items-center gap-1">
+                                                                            <div
+                                                                                className="w-3 h-3 rounded-full border border-gray-300"
+                                                                                style={{
+                                                                                    backgroundColor:
+                                                                                        item.product_variant?.color?.toLowerCase() === 'white' ? '#ffffff' :
+                                                                                            item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                                item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                                    item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                                        item.product_variant?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                                            item.product_variant?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                                                item.product?.color?.toLowerCase() === 'white' ? '#ffffff' :
+                                                                                                                    item.product?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                                                        item.product?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                                                            item.product?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                                                                item.product?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                                                                    item.product?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                                                                        (item.product_variant?.color || item.product?.color || '#e5e7eb')
+                                                                }}
+                                                                            ></div>
+                                                                            <span className="text-sm text-gray-600 capitalize">
+                                                                                {item.product_variant?.color || item.product?.color}
+                                                                            </span>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-sm text-gray-500">Qty: {item.quantity}</div>
+                                                    </div>
+
+                                                    {/* Price Breakdown */}
+                                                    <div className="bg-gray-50 rounded p-3 space-y-2">
+                                                        <div className="flex justify-between text-sm">
+                                                            <span className="text-gray-600">Original Price (per unit)</span>
+                                                            <span className="font-medium text-gray-900">{formatCurrency(originalUnitPrice)}</span>
+                                                        </div>
+                                                        {discountAmount > 0 && (
+                                                            <div className="flex justify-between text-sm">
+                                                                <span className="text-gray-600">Discount</span>
+                                                                <span className="font-medium text-red-600">-{formatCurrency(discountAmount)}</span>
+                                                            </div>
                                                         )}
+                                                        <div className="flex justify-between text-sm border-t pt-2">
+                                                            <span className="text-gray-600">Total</span>
+                                                            <span className="font-semibold text-gray-900">{formatCurrency(Number(item.price))}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="text-right space-y-1">
-                                                    <div>
-                                                        <p className="text-xs text-gray-400 uppercase tracking-wide">Unit Price</p>
-                                                        <p className="font-medium text-gray-900">{formatCurrency(Number(item.price) / Number(item.quantity))}</p>
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-xs text-gray-400 uppercase tracking-wide">Quantity</p>
-                                                        <p className="text-sm text-gray-600">{item.quantity}</p>
-                                                    </div>
-                                                    <div className="pt-2 border-t">
-                                                        <p className="text-xs text-gray-400 uppercase tracking-wide">Subtotal</p>
-                                                        <p className="font-semibold text-gray-900">
-                                                            {formatCurrency(Number(item.price))}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))
+                                            );
+                                        })
                                     ) : (
                                         <p className="text-gray-500 text-center py-4">No items in this order</p>
                                     )}
@@ -313,31 +335,6 @@ export default function Show({ data: order }: Props) {
                                 </div>
                             </CardContent>
                         </Card>
-
-                        {/* Discount Summary */}
-                        {order.coupon_discount && order.coupon_discount > 0 && (
-                            <Card>
-                                <CardHeader>
-                                    <CardTitle className="flex items-center">
-                                        <CreditCard className="h-5 w-5 mr-2" />
-                                        Coupon Information
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="space-y-2">
-                                        <div className="bg-green-50 border border-green-200 rounded p-3">
-                                            <p className="text-sm text-gray-600 mb-1">Coupon Discount</p>
-                                            <p className="text-lg font-bold text-green-600">
-                                                -{formatCurrency(Number(order.coupon_discount))}
-                                            </p>
-                                            {order.coupon && (
-                                                <p className="text-xs text-gray-500 mt-2">Code: {order.coupon.code}</p>
-                                            )}
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )}
 
                         {/* Order Timeline */}
                         <Card>
