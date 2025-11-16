@@ -26,6 +26,14 @@ class Order extends Model
         'payment_method',
         'payment_channel',
         'paid_at',
+        'courier_name',
+        'tracking_number',
+        'shipped_at',
+    ];
+
+    protected $casts = [
+        'paid_at' => 'datetime',
+        'shipped_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

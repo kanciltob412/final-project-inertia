@@ -11,20 +11,36 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { router, Link } from "@inertiajs/react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { router, Link, useForm } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy } from "lucide-react";
+import { MoreHorizontal, Copy, Truck } from "lucide-react";
 import { useState } from "react";
 import { Order } from "@/types";
 import orders from "../../routes/orders";
 
 function ActionsCell({ order }: { order: Order }) {
-    const [open, setOpen] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [shippingOpen, setShippingOpen] = useState(false);
+    
+    const { data, setData, post, processing, errors, reset } = useForm({
+        courier_name: '',
+        tracking_number: '',
+    });
 
     const handleEdit = () => {
         router.visit(orders.edit(order.id));
@@ -43,7 +59,17 @@ function ActionsCell({ order }: { order: Order }) {
 
     const handleDelete = () => {
         router.delete(orders.destroy(order.id));
-        setOpen(false);
+        setDeleteOpen(false);
+    };
+
+    const handleMarkAsShipped = () => {
+        post(`/admin/orders/${order.id}/ship`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setShippingOpen(false);
+                reset();
+            }
+        });
     };
 
     return (
@@ -62,6 +88,12 @@ function ActionsCell({ order }: { order: Order }) {
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
+                    {(order.status === 'paid' || order.status === 'processing') && (
+                        <DropdownMenuItem onClick={() => setShippingOpen(true)}>
+                            <Truck className="h-4 w-4 mr-2" />
+                            Mark as Shipped
+                        </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem onClick={handleDuplicate}>
                         <Copy className="h-4 w-4 mr-2" />
                         Duplicate
@@ -69,7 +101,7 @@ function ActionsCell({ order }: { order: Order }) {
                     <DropdownMenuItem
                         onClick={() => {
                             setTimeout(() => {
-                                setOpen(true);
+                                setDeleteOpen(true);
                             }, 50);
                         }}
                     >
@@ -78,7 +110,7 @@ function ActionsCell({ order }: { order: Order }) {
                 </DropdownMenuContent>
             </DropdownMenu>
 
-            <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -92,6 +124,60 @@ function ActionsCell({ order }: { order: Order }) {
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
+
+            <Dialog open={shippingOpen} onOpenChange={setShippingOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Mark Order #{order.id} as Shipped</DialogTitle>
+                        <DialogDescription>
+                            Enter the courier and tracking information for this order.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="courier_name">Courier Name</Label>
+                            <Input
+                                id="courier_name"
+                                value={data.courier_name}
+                                onChange={(e) => setData('courier_name', e.target.value)}
+                                placeholder="e.g., DHL, FedEx, UPS"
+                            />
+                            {errors.courier_name && (
+                                <p className="text-sm text-red-500">{errors.courier_name}</p>
+                            )}
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="tracking_number">Tracking Number</Label>
+                            <Input
+                                id="tracking_number"
+                                value={data.tracking_number}
+                                onChange={(e) => setData('tracking_number', e.target.value)}
+                                placeholder="Enter tracking number"
+                            />
+                            {errors.tracking_number && (
+                                <p className="text-sm text-red-500">{errors.tracking_number}</p>
+                            )}
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button 
+                            variant="outline" 
+                            onClick={() => {
+                                setShippingOpen(false);
+                                reset();
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={handleMarkAsShipped}
+                            disabled={processing}
+                        >
+                            {processing ? 'Marking as Shipped...' : 'Mark as Shipped'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
@@ -298,6 +384,31 @@ export const columns: ColumnDef<Order>[] = [
                     {config.text}
                 </span>
             );
+        },
+    },
+    {
+        accessorKey: "shipping",
+        header: "Shipping Info",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (order.status === 'shipped' && order.courier_name && order.tracking_number) {
+                return (
+                    <div className="text-sm space-y-1">
+                        <div className="font-medium text-gray-900">
+                            {order.courier_name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                            Tracking: {order.tracking_number}
+                        </div>
+                        {order.shipped_at && (
+                            <div className="text-xs text-gray-400">
+                                Shipped: {new Date(order.shipped_at).toLocaleDateString()}
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+            return <span className="text-gray-400 text-sm">-</span>;
         },
     },
     {

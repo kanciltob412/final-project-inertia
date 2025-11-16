@@ -127,6 +127,9 @@ export interface Order {
     payment_method: string;
     payment_channel: string;
     paid_at: string | null;
+    courier_name: string | null;
+    tracking_number: string | null;
+    shipped_at: string | null;
     created_at: string;
     updated_at: string;
 

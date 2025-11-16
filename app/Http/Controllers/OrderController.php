@@ -566,4 +566,59 @@ class OrderController extends Controller
             return $user;
         }
     }
+
+    /**
+     * Mark an order as shipped with courier and tracking information.
+     */
+    public function markAsShipped(Request $request, $id)
+    {
+        try {
+            $order = Order::with('user', 'items', 'items.product')->findOrFail($id);
+
+            $validated = $request->validate([
+                'courier_name' => 'required|string|max:255',
+                'tracking_number' => 'required|string|max:255',
+            ]);
+
+            // Update order with shipping information
+            $order->update([
+                'status' => 'shipped',
+                'courier_name' => $validated['courier_name'],
+                'tracking_number' => $validated['tracking_number'],
+                'shipped_at' => now(),
+            ]);
+
+            // Send email notification to customer
+            try {
+                if ($order->user && $order->user->email) {
+                    Mail::to($order->user->email)
+                        ->send(new \App\Mail\OrderShippedNotification($order));
+                    
+                    Log::info("Shipping notification sent", [
+                        'order_id' => $order->id,
+                        'customer_email' => $order->user->email,
+                        'courier' => $validated['courier_name'],
+                        'tracking' => $validated['tracking_number']
+                    ]);
+                }
+            } catch (Exception $mailException) {
+                Log::error("Failed to send shipping notification email", [
+                    'order_id' => $order->id,
+                    'error' => $mailException->getMessage()
+                ]);
+                // Continue execution even if email fails
+            }
+
+            return back()->with('success', "Order #{$order->id} marked as shipped successfully. Customer notification sent.");
+
+        } catch (Exception $e) {
+            Log::error("Failed to mark order as shipped", [
+                'order_id' => $id,
+                'error' => $e->getMessage(),
+                'request' => $request->all()
+            ]);
+
+            return back()->with('error', 'Failed to mark order as shipped: ' . $e->getMessage());
+        }
+    }
 }
