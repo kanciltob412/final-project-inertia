@@ -156,8 +156,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "color",
-        header: "Color",
+        accessorKey: "discount",
+        header: "Original Price",
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -166,27 +166,63 @@ export const columns: ColumnDef<Order>[] = [
             return (
                 <div>
                     {order.items.map((item) => {
-                        // Get variant color if available
-                        const variantColor = item.product_variant_id ?
-                            (item.product_variant?.color || 'Default') :
-                            null;
+                        const unitPrice = item.price / item.quantity;
+                        const product = item.product;
+                        let originalUnitPrice = unitPrice;
 
-                        // Extract color from product name as fallback
-                        const nameColor = item.product?.name?.match(/\b(Black|White|Red|Blue|Green|Yellow|Orange|Purple|Pink|Brown|Gray|Grey|Cream|Indigo|Matte\s+\w+)\b/i);
-                        const color = variantColor || (nameColor ? nameColor[0] : null);
+                        if (product && product.discount && Number(product.discount) > 0) {
+                            if (product.discount_type === 'fixed') {
+                                originalUnitPrice = unitPrice + Number(product.discount);
+                            } else { // percentage
+                                originalUnitPrice = unitPrice / (1 - Number(product.discount) / 100);
+                            }
+                        }
 
                         return (
-                            <div key={item.id} className="mb-1 text-sm flex items-center">
-                                {color ? (
-                                    <span className="w-4 h-4 rounded-full border border-gray-300 inline-block"
-                                        style={{
-                                            backgroundColor: color.toLowerCase() === 'cream' ? '#F5F5DC' :
-                                                color.toLowerCase() === 'indigo' ? '#4B0082' :
-                                                    color.toLowerCase()
-                                        }}></span>
-                                ) : (
-                                    <span className="text-gray-400">-</span>
-                                )}
+                            <div key={item.id} className="mb-1 text-sm">
+                                {new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0
+                                }).format(originalUnitPrice)}
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "discount_amount",
+        header: "Discount",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (!order.items || order.items.length === 0) {
+                return <div>-</div>;
+            }
+            return (
+                <div>
+                    {order.items.map((item) => {
+                        const unitPrice = item.price / item.quantity;
+                        const product = item.product;
+                        let discountAmount = 0;
+
+                        if (product && product.discount && Number(product.discount) > 0) {
+                            if (product.discount_type === 'fixed') {
+                                discountAmount = Number(product.discount) * item.quantity;
+                            } else { // percentage
+                                const originalUnitPrice = unitPrice / (1 - Number(product.discount) / 100);
+                                discountAmount = (originalUnitPrice * item.quantity) - item.price;
+                            }
+                        }
+
+                        return (
+                            <div key={item.id} className={`mb-1 text-sm ${discountAmount > 0 ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+                                {discountAmount > 0 ? '-' : ''}{new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0
+                                }).format(discountAmount)}
                             </div>
                         );
                     })}
