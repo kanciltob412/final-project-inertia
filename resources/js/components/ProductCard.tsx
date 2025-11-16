@@ -160,7 +160,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                                     {formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type || 'fixed'))}
                                 </p>
                                 <span className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded">
-                                    {product.discount_type === 'fixed' ? `-Rp ${product.discount.toLocaleString('id-ID')}` : `-${product.discount.toFixed(0)}%`}
+                                    {product.discount_type === 'fixed' ? `-Rp ${Number(product.discount).toLocaleString('id-ID')}` : `-${Number(product.discount).toFixed(0)}%`}
                                 </span>
                             </div>
                         ) : (
