@@ -276,6 +276,9 @@ class OrderController extends Controller
 
                     // Decrement variant stock
                     $variant->decrement('stock', $productData['quantity']);
+                    
+                    // Also decrement product stock
+                    $product->decrement('stock', $productData['quantity']);
 
                     $price = $itemPrice * $productData['quantity'];
 
@@ -298,6 +301,9 @@ class OrderController extends Controller
                     if ($availableVariant) {
                         $availableVariant->decrement('stock', $productData['quantity']);
                     }
+
+                    // Also decrement product stock
+                    $product->decrement('stock', $productData['quantity']);
 
                     $price = $itemPrice * $productData['quantity'];
 
