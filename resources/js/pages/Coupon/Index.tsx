@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Pagination } from '@/components/Pagination';
 import {
     Table,
     TableBody,
@@ -12,8 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { format } from 'date-fns';
-import { AlertCircle, Trash2 } from 'lucide-react';
+import { Trash2, AlertCircle } from 'lucide-react';
 
 interface Coupon {
     id: number;
@@ -30,8 +27,8 @@ interface Coupon {
 interface Props {
     coupons: {
         data: Coupon[];
-        links: any;
-        meta: any;
+        links: Record<string, any>;
+        meta: Record<string, any>;
     };
 }
 
@@ -39,8 +36,8 @@ export default function CouponIndex({ coupons }: Props) {
     const [selectedCoupons, setSelectedCoupons] = useState<number[]>([]);
 
     const handleDelete = (id: number) => {
-        if (confirm('Are you sure you want to delete this coupon?')) {
-            router.delete(route('admin.coupons.destroy', id));
+        if (window.confirm('Are you sure you want to delete this coupon?')) {
+            router.delete(`/admin/coupons/${id}`);
         }
     };
 
@@ -71,17 +68,8 @@ export default function CouponIndex({ coupons }: Props) {
         return new Date(expiryDate) < new Date();
     };
 
-    const canBeUsed = (coupon: Coupon) => {
-        if (!coupon.is_active) return false;
-        if (isExpired(coupon.expiry_date)) return false;
-        if (coupon.usage_limit !== null && coupon.used_count >= coupon.usage_limit) {
-            return false;
-        }
-        return true;
-    };
-
     return (
-        <AdminLayout>
+        <AppLayout>
             <Head title="Coupons" />
 
             <div className="space-y-6">
@@ -93,7 +81,7 @@ export default function CouponIndex({ coupons }: Props) {
                             Manage discount coupons for your store
                         </p>
                     </div>
-                    <Link href={route('admin.coupons.create')}>
+                    <Link href="/admin/coupons/create">
                         <Button>Create Coupon</Button>
                     </Link>
                 </div>
@@ -159,7 +147,13 @@ export default function CouponIndex({ coupons }: Props) {
                                         <TableCell>
                                             {coupon.expiry_date ? (
                                                 <div className="text-sm">
-                                                    {format(new Date(coupon.expiry_date), 'MMM dd, yyyy')}
+                                                    {coupon.expiry_date
+                                                        ? new Date(coupon.expiry_date).toLocaleDateString('en-US', {
+                                                              year: 'numeric',
+                                                              month: 'short',
+                                                              day: 'numeric',
+                                                          })
+                                                        : 'No expiry'}
                                                 </div>
                                             ) : (
                                                 <span className="text-gray-400">No expiry</span>
@@ -192,7 +186,7 @@ export default function CouponIndex({ coupons }: Props) {
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Link
-                                                    href={route('admin.coupons.edit', coupon.id)}
+                                                    href={`/admin/coupons/${coupon.id}/edit`}
                                                     className="text-sm text-blue-600 hover:text-blue-900"
                                                 >
                                                     Edit
@@ -211,12 +205,7 @@ export default function CouponIndex({ coupons }: Props) {
                         </TableBody>
                     </Table>
                 </div>
-
-                {/* Pagination */}
-                {coupons.meta?.last_page > 1 && (
-                    <Pagination links={coupons.links} meta={coupons.meta} />
-                )}
             </div>
-        </AdminLayout>
+        </AppLayout>
     );
 }

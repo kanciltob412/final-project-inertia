@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
-import AdminLayout from '@/Layouts/AdminLayout';
+import { Head, useForm, Link } from '@inertiajs/react';
+import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { format } from 'date-fns';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import HeadingSmall from '@/components/heading-small';
+import { BreadcrumbItem } from '@/types';
 
 interface Coupon {
     id: number;
@@ -27,7 +30,7 @@ export default function CouponEdit({ coupon }: Props) {
         discount_value: coupon.discount_value.toString(),
         usage_limit: coupon.usage_limit?.toString() || '',
         expiry_date: coupon.expiry_date
-            ? format(new Date(coupon.expiry_date), 'yyyy-MM-dd')
+            ? new Date(coupon.expiry_date).toISOString().split('T')[0]
             : '',
         is_active: coupon.is_active,
     });
@@ -38,9 +41,16 @@ export default function CouponEdit({ coupon }: Props) {
             : `${coupon.discount_value}%`
     );
 
+    const breadcrumbs: BreadcrumbItem[] = [
+        {
+            title: "Coupons",
+            href: "/admin/coupons",
+        },
+    ];
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        put(route('admin.coupons.update', coupon.id));
+        put(`/admin/coupons/${coupon.id}`);
     };
 
     const handleDiscountChange = (value: string) => {
@@ -66,136 +76,120 @@ export default function CouponEdit({ coupon }: Props) {
     };
 
     return (
-        <AdminLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Edit Coupon" />
 
-            <div className="max-w-2xl">
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold tracking-tight">Edit Coupon</h1>
-                    <p className="mt-1 text-sm text-gray-600">
-                        Used: <span className="font-semibold">{coupon.used_count}</span>
-                        {coupon.usage_limit && ` of ${coupon.usage_limit}`}
-                    </p>
-                </div>
+            <div className="p-6">
+                <HeadingSmall
+                    title="Edit Coupon"
+                    description={`Used: ${coupon.used_count}${coupon.usage_limit ? ` of ${coupon.usage_limit}` : ''}`}
+                />
+
+                <Separator className="my-8" />
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Coupon Code */}
-                    <div>
-                        <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
-                            Coupon Code
-                        </label>
+                    <div className="flex flex-col gap-y-2">
+                        <Label htmlFor="code">Coupon Code</Label>
                         <Input
                             id="code"
                             type="text"
                             value={data.code}
                             onChange={(e) => setData('code', e.target.value.toUpperCase())}
                             placeholder="e.g., SUMMER20"
-                            className={errors.code ? 'border-red-500' : ''}
+                            disabled={processing}
                         />
                         {errors.code && (
-                            <p className="mt-1 text-sm text-red-600">{errors.code}</p>
+                            <p className="text-sm text-red-600">{errors.code}</p>
                         )}
                     </div>
 
                     {/* Discount Type and Value */}
                     <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label htmlFor="discount_type" className="block text-sm font-medium text-gray-700 mb-2">
-                                Discount Type
-                            </label>
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="discount_type">Discount Type</Label>
                             <select
                                 id="discount_type"
                                 value={data.discount_type}
                                 onChange={(e) => handleTypeChange(e.target.value)}
-                                className="w-full rounded-md border-gray-300 shadow-sm px-3 py-2 border focus:border-blue-500 focus:ring-blue-500"
+                                disabled={processing}
+                                className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <option value="fixed">Fixed Amount (Rp)</option>
                                 <option value="percentage">Percentage (%)</option>
                             </select>
                         </div>
 
-                        <div>
-                            <label htmlFor="discount_value" className="block text-sm font-medium text-gray-700 mb-2">
-                                Discount Value
-                            </label>
-                            <div className="space-y-2">
-                                <Input
-                                    id="discount_value"
-                                    type="number"
-                                    value={data.discount_value}
-                                    onChange={(e) => handleDiscountChange(e.target.value)}
-                                    placeholder={data.discount_type === 'fixed' ? 'e.g., 50000' : 'e.g., 20'}
-                                    step="0.01"
-                                    min="0.01"
-                                    className={errors.discount_value ? 'border-red-500' : ''}
-                                />
-                                {discountPreview && (
-                                    <p className="text-sm text-gray-600">
-                                        Preview: <span className="font-semibold text-green-600">{discountPreview}</span>
-                                    </p>
-                                )}
-                            </div>
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="discount_value">Discount Value</Label>
+                            <Input
+                                id="discount_value"
+                                type="number"
+                                value={data.discount_value}
+                                onChange={(e) => handleDiscountChange(e.target.value)}
+                                placeholder={data.discount_type === 'fixed' ? 'e.g., 50000' : 'e.g., 20'}
+                                step="0.01"
+                                min="0.01"
+                                disabled={processing}
+                            />
+                            {discountPreview && (
+                                <p className="text-sm text-gray-600">
+                                    Preview: <span className="font-semibold text-green-600">{discountPreview}</span>
+                                </p>
+                            )}
                             {errors.discount_value && (
-                                <p className="mt-1 text-sm text-red-600">{errors.discount_value}</p>
+                                <p className="text-sm text-red-600">{errors.discount_value}</p>
                             )}
                         </div>
                     </div>
 
                     {/* Usage Limit */}
-                    <div>
-                        <label htmlFor="usage_limit" className="block text-sm font-medium text-gray-700 mb-2">
-                            Usage Limit (Optional)
-                        </label>
+                    {/* Usage Limit */}
+                    <div className="flex flex-col gap-y-2">
+                        <Label htmlFor="usage_limit">Usage Limit (leave empty for unlimited)</Label>
                         <Input
                             id="usage_limit"
                             type="number"
                             value={data.usage_limit}
                             onChange={(e) => setData('usage_limit', e.target.value)}
-                            placeholder="e.g., 100 (leave empty for unlimited)"
+                            placeholder="e.g., 100"
                             min="1"
-                            className={errors.usage_limit ? 'border-red-500' : ''}
+                            disabled={processing}
                         />
-                        <p className="mt-1 text-xs text-gray-500">
-                            Leave empty for unlimited uses. Current usage: {coupon.used_count}
-                        </p>
                         {errors.usage_limit && (
-                            <p className="mt-1 text-sm text-red-600">{errors.usage_limit}</p>
+                            <p className="text-sm text-red-600">{errors.usage_limit}</p>
                         )}
                     </div>
 
                     {/* Expiry Date */}
-                    <div>
-                        <label htmlFor="expiry_date" className="block text-sm font-medium text-gray-700 mb-2">
-                            Expiry Date (Optional)
-                        </label>
+                    <div className="flex flex-col gap-y-2">
+                        <Label htmlFor="expiry_date">Expiry Date (Optional)</Label>
                         <Input
                             id="expiry_date"
                             type="date"
                             value={data.expiry_date}
                             onChange={(e) => setData('expiry_date', e.target.value)}
-                            min={format(new Date(), 'yyyy-MM-dd')}
-                            className={errors.expiry_date ? 'border-red-500' : ''}
+                            min={new Date().toISOString().split('T')[0]}
+                            disabled={processing}
                         />
-                        <p className="mt-1 text-xs text-gray-500">
-                            Leave empty to never expire
-                        </p>
                         {errors.expiry_date && (
-                            <p className="mt-1 text-sm text-red-600">{errors.expiry_date}</p>
+                            <p className="text-sm text-red-600">{errors.expiry_date}</p>
                         )}
                     </div>
 
                     {/* Active Status */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-x-3">
                         <input
                             id="is_active"
                             type="checkbox"
                             checked={data.is_active}
                             onChange={(e) => setData('is_active', e.target.checked)}
+                            disabled={processing}
                             className="rounded border-gray-300"
                         />
-                        <label htmlFor="is_active" className="text-sm font-medium text-gray-700">
-                            Active
-                        </label>
+                        <Label htmlFor="is_active" className="text-sm font-medium">
+                            Active Coupon
+                        </Label>
                     </div>
 
                     {/* Actions */}
@@ -203,16 +197,15 @@ export default function CouponEdit({ coupon }: Props) {
                         <Button
                             type="submit"
                             disabled={processing}
-                            className="bg-blue-600 hover:bg-blue-700"
                         >
                             {processing ? 'Updating...' : 'Update Coupon'}
                         </Button>
-                        <Link href={route('admin.coupons.index')}>
+                        <Link href="/admin/coupons">
                             <Button variant="outline">Cancel</Button>
                         </Link>
                     </div>
                 </form>
             </div>
-        </AdminLayout>
+        </AppLayout>
     );
 }

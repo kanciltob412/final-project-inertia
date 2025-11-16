@@ -28,4 +28,3 @@ export const calculateDiscountedPrice = (price: number, discount: number, discou
         return Math.max(0, price * (1 - discount / 100));
     }
 };
-};
