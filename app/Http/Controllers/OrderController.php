@@ -256,6 +256,16 @@ class OrderController extends Controller
             foreach ($request->products as $productData) {
                 $product = Product::find($productData['id']);
 
+                // Calculate product price with discount applied
+                $itemPrice = $product->price;
+                if ($product->discount && $product->discount > 0) {
+                    if ($product->discount_type === 'fixed') {
+                        $itemPrice = max(0, $product->price - $product->discount);
+                    } else { // percentage
+                        $itemPrice = $product->price * (1 - $product->discount / 100);
+                    }
+                }
+
                 // Handle variant-based or legacy product ordering
                 if (isset($productData['variant_id']) && $productData['variant_id']) {
                     // New variant-based ordering
@@ -267,7 +277,7 @@ class OrderController extends Controller
                     // Decrement variant stock
                     $variant->decrement('stock', $productData['quantity']);
 
-                    $price = $product->price * $productData['quantity'];
+                    $price = $itemPrice * $productData['quantity'];
 
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -289,7 +299,7 @@ class OrderController extends Controller
                         $availableVariant->decrement('stock', $productData['quantity']);
                     }
 
-                    $price = $product->price * $productData['quantity'];
+                    $price = $itemPrice * $productData['quantity'];
 
                     OrderItem::create([
                         'order_id' => $order->id,
