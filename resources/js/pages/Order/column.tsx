@@ -227,7 +227,7 @@ export const columns: ColumnDef<Order>[] = [
                                 style: 'currency', 
                                 currency: 'IDR',
                                 maximumFractionDigits: 0
-                            }).format(item.price)}
+                            }).format(item.price / item.quantity)}
                         </div>
                     ))}
                 </div>
@@ -250,7 +250,7 @@ export const columns: ColumnDef<Order>[] = [
                                 style: 'currency', 
                                 currency: 'IDR',
                                 maximumFractionDigits: 0
-                            }).format(item.price * item.quantity)}
+                            }).format(item.price)}
                         </div>
                     ))}
                 </div>

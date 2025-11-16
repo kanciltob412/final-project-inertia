@@ -136,7 +136,7 @@ export default function Show({ data: order }: Props) {
                                                 <div className="text-right space-y-1">
                                                     <div>
                                                         <p className="text-xs text-gray-400 uppercase tracking-wide">Unit Price</p>
-                                                        <p className="font-medium text-gray-900">{formatCurrency(Number(item.price))}</p>
+                                                        <p className="font-medium text-gray-900">{formatCurrency(Number(item.price) / Number(item.quantity))}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-xs text-gray-400 uppercase tracking-wide">Quantity</p>
@@ -145,7 +145,7 @@ export default function Show({ data: order }: Props) {
                                                     <div className="pt-2 border-t">
                                                         <p className="text-xs text-gray-400 uppercase tracking-wide">Subtotal</p>
                                                         <p className="font-semibold text-gray-900">
-                                                            {formatCurrency(Number(item.price) * Number(item.quantity))}
+                                                            {formatCurrency(Number(item.price))}
                                                         </p>
                                                     </div>
                                                 </div>
