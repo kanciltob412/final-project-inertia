@@ -98,14 +98,40 @@ export default function Show({ data: order }: Props) {
                                                     <h4 className="font-semibold text-gray-900">
                                                         {item.product?.name || 'Product'}
                                                     </h4>
-                                                    <p className="text-sm text-gray-500">
-                                                        SKU: {item.product?.sku || 'N/A'}
-                                                    </p>
-                                                    {item.product_variant && (
+                                                    <div className="flex items-center gap-2 mt-1">
                                                         <p className="text-sm text-gray-500">
-                                                            Variant: {item.product_variant.color || 'Default'}
+                                                            SKU: {item.product?.sku || 'N/A'}
                                                         </p>
-                                                    )}
+                                                        {(item.product_variant?.color || item.product?.color) && (
+                                                            <>
+                                                                <span className="text-gray-300">•</span>
+                                                                <div className="flex items-center gap-1">
+                                                                    <div 
+                                                                        className="w-3 h-3 rounded-full border border-gray-300"
+                                                                        style={{
+                                                                            backgroundColor: 
+                                                                                item.product_variant?.color?.toLowerCase() === 'white' ? '#ffffff' :
+                                                                                item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                item.product_variant?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                item.product_variant?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                item.product?.color?.toLowerCase() === 'white' ? '#ffffff' :
+                                                                                item.product?.color?.toLowerCase() === 'black' ? '#000000' :
+                                                                                item.product?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
+                                                                                item.product?.color?.toLowerCase() === 'brown' ? '#8B4513' :
+                                                                                item.product?.color?.toLowerCase() === 'gray' ? '#808080' :
+                                                                                item.product?.color?.toLowerCase() === 'grey' ? '#808080' :
+                                                                                (item.product_variant?.color || item.product?.color || '#e5e7eb')
+                                                                        }}
+                                                                    ></div>
+                                                                    <span className="text-sm text-gray-600 capitalize">
+                                                                        {item.product_variant?.color || item.product?.color}
+                                                                    </span>
+                                                                </div>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="font-medium">{formatCurrency(Number(item.price))}</p>
