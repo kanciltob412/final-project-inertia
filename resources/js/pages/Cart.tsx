@@ -17,15 +17,18 @@ export default function Cart() {
     // Calculate subtotal with discounts applied
     const calculateSubtotalWithDiscounts = () => {
         return items.reduce((total, item) => {
+            const itemPrice = item.price || 0;
+            const itemQuantity = item.quantity || 1;
+            
             if (item.discount && Number(item.discount) > 0) {
                 const discountedPrice = calculateDiscountedPrice(
-                    item.price || 0,
+                    itemPrice,
                     item.discount,
                     item.discount_type || 'fixed'
                 );
-                return total + (discountedPrice * (item.quantity || 1));
+                return total + (discountedPrice * itemQuantity);
             }
-            return total + ((item.price || 0) * (item.quantity || 1));
+            return total + (itemPrice * itemQuantity);
         }, 0);
     };
 
@@ -218,7 +221,7 @@ export default function Cart() {
                     <div className="rounded-lg border p-6 shadow-sm h-fit">
                         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                         <div className="space-y-2 mb-4">
-                            {cartTotal !== subtotalWithDiscounts && (
+                            {items.some(item => item.discount && Number(item.discount) > 0) ? (
                                 <>
                                     <div className="flex justify-between text-sm text-gray-600">
                                         <span>Subtotal (before discounts):</span>
