@@ -3,7 +3,7 @@ import Navbar from '@/components/Navbar';
 import { router, usePage } from '@inertiajs/react';
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { useCart } from 'react-use-cart';
-import { formatPrice } from '../utils/helper';
+import { formatPrice, calculateDiscountedPrice } from '../utils/helper';
 import { SharedData, Product } from '@/types';
 
 interface CartPageProps extends SharedData {
@@ -13,6 +13,23 @@ interface CartPageProps extends SharedData {
 export default function Cart() {
     const { cartTotal, items, updateItemQuantity, removeItem } = useCart();
     const { auth, products } = usePage<CartPageProps>().props;
+
+    // Calculate subtotal with discounts applied
+    const calculateSubtotalWithDiscounts = () => {
+        return items.reduce((total, item) => {
+            if (item.discount && Number(item.discount) > 0) {
+                const discountedPrice = calculateDiscountedPrice(
+                    item.price || 0,
+                    item.discount,
+                    item.discount_type || 'fixed'
+                );
+                return total + (discountedPrice * (item.quantity || 1));
+            }
+            return total + ((item.price || 0) * (item.quantity || 1));
+        }, 0);
+    };
+
+    const subtotalWithDiscounts = calculateSubtotalWithDiscounts();
 
     if (items.length === 0) {
         return (
@@ -160,7 +177,30 @@ export default function Cart() {
                                     </div>
 
                                     <p className="font-semibold text-gray-800">
-                                        {formatPrice(item.itemTotal || 0)}
+                                        {item.discount && Number(item.discount) > 0 ? (
+                                            <div className="text-right">
+                                                <p className="text-sm text-gray-600 line-through">
+                                                    {formatPrice((item.price || 0) * (item.quantity || 1))}
+                                                </p>
+                                                <p className="text-green-600">
+                                                    {formatPrice(
+                                                        calculateDiscountedPrice(
+                                                            item.price || 0,
+                                                            item.discount,
+                                                            item.discount_type || 'fixed'
+                                                        ) * (item.quantity || 1)
+                                                    )}
+                                                </p>
+                                                <span className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded">
+                                                    {item.discount_type === 'fixed' 
+                                                        ? `-Rp ${Number(item.discount).toLocaleString('id-ID')}` 
+                                                        : `-${Number(item.discount).toFixed(0)}%`
+                                                    }
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            formatPrice(item.itemTotal || 0)
+                                        )}
                                     </p>
 
                                     <button
@@ -177,9 +217,28 @@ export default function Cart() {
                     {/* Summary */}
                     <div className="rounded-lg border p-6 shadow-sm h-fit">
                         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-                        <div className="flex justify-between mb-2">
-                            <span>Total</span>
-                            <span className="font-semibold">{formatPrice(cartTotal)}</span>
+                        <div className="space-y-2 mb-4">
+                            {cartTotal !== subtotalWithDiscounts && (
+                                <>
+                                    <div className="flex justify-between text-sm text-gray-600">
+                                        <span>Subtotal (before discounts):</span>
+                                        <span>{formatPrice(cartTotal)}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-green-600">
+                                        <span>Discount savings:</span>
+                                        <span>-{formatPrice(cartTotal - subtotalWithDiscounts)}</span>
+                                    </div>
+                                    <div className="border-t pt-2 flex justify-between font-semibold">
+                                        <span>Total</span>
+                                        <span className="text-green-600">{formatPrice(subtotalWithDiscounts)}</span>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="flex justify-between mb-2">
+                                    <span>Total</span>
+                                    <span className="font-semibold">{formatPrice(cartTotal)}</span>
+                                </div>
+                            )}
                         </div>
                         {auth.user ? (
                             <>
