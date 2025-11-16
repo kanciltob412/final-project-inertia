@@ -37,7 +37,7 @@ export default function PaymentSuccess() {
                     <div className="grid md:grid-cols-2 gap-8 mb-8">
                         <div className="bg-gray-50 p-6 rounded-lg">
                             <div className="flex items-center mb-3">
-                                <Mail className="h-5 w-5 text-blue-600 mr-2" />
+                                <Mail className="h-5 w-5 text-black mr-2" />
                                 <h3 className="font-semibold text-gray-900">Email Confirmation</h3>
                             </div>
                             <p className="text-gray-600 text-sm">
@@ -62,21 +62,21 @@ export default function PaymentSuccess() {
                         <h3 className="font-semibold text-gray-900 mb-4">What happens next?</h3>
                         <div className="space-y-3">
                             <div className="flex items-start">
-                                <div className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">1</div>
+                                <div className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">1</div>
                                 <div>
                                     <p className="font-medium text-gray-900">Order Processing</p>
                                     <p className="text-sm text-gray-600">We'll prepare your handcrafted ceramics with care (1-2 business days)</p>
                                 </div>
                             </div>
                             <div className="flex items-start">
-                                <div className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">2</div>
+                                <div className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">2</div>
                                 <div>
                                     <p className="font-medium text-gray-900">Quality Check & Packaging</p>
                                     <p className="text-sm text-gray-600">Each piece is carefully inspected and securely packaged</p>
                                 </div>
                             </div>
                             <div className="flex items-start">
-                                <div className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">3</div>
+                                <div className="bg-black text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">3</div>
                                 <div>
                                     <p className="font-medium text-gray-900">Shipping</p>
                                     <p className="text-sm text-gray-600">Your order will be shipped and you'll receive tracking information</p>
@@ -95,7 +95,7 @@ export default function PaymentSuccess() {
                         </Link>
                         <Link
                             href="/contact"
-                            className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
                         >
                             <Mail className="h-4 w-4 mr-2" />
                             Contact Us

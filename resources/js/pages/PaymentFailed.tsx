@@ -50,18 +50,18 @@ export default function PaymentFailed() {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-6 mb-8">
-                        <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                        <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
                             <div className="flex items-center mb-3">
-                                <RefreshCw className="h-5 w-5 text-blue-600 mr-2" />
-                                <h3 className="font-semibold text-blue-800">Try Again</h3>
+                                <RefreshCw className="h-5 w-5 text-black mr-2" />
+                                <h3 className="font-semibold text-gray-900">Try Again</h3>
                             </div>
-                            <p className="text-blue-700 text-sm mb-4">
+                            <p className="text-gray-700 text-sm mb-4">
                                 Your order is still reserved. You can attempt the payment again with the same or different payment method.
                             </p>
                             {order_id && (
                                 <Link
                                     href={`/orders/${order_id}/retry-payment`}
-                                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                                    className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <RefreshCw className="h-4 w-4 mr-2" />
                                     Retry Payment
@@ -124,7 +124,7 @@ export default function PaymentFailed() {
                         </Link>
                         <Link
                             href="/cart"
-                            className="flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                            className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
                         >
                             Return to Cart
                         </Link>
