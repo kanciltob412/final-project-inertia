@@ -98,19 +98,30 @@ export default function Show({ data: order }: Props) {
                                             let originalUnitPrice = unitPrice;
                                             let discountAmount = 0;
 
-                                            if (product && product.discount && product.discount > 0) {
+                                            if (product && product.discount && Number(product.discount) > 0) {
                                                 if (product.discount_type === 'fixed') {
-                                                    originalUnitPrice = unitPrice + product.discount;
-                                                    discountAmount = product.discount * item.quantity;
+                                                    originalUnitPrice = unitPrice + Number(product.discount);
+                                                    discountAmount = Number(product.discount) * item.quantity;
                                                 } else { // percentage
-                                                    originalUnitPrice = unitPrice / (1 - product.discount / 100);
+                                                    originalUnitPrice = unitPrice / (1 - Number(product.discount) / 100);
                                                     discountAmount = (originalUnitPrice * item.quantity) - Number(item.price);
                                                 }
                                             }
 
                                             return (
                                                 <div key={item.id} className="p-4 border rounded-lg">
-                                                    <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex gap-4 mb-3">
+                                                        {/* Product Image */}
+                                                        {product?.image && (
+                                                            <div className="shrink-0">
+                                                                <img 
+                                                                    src={`/storage/${product.image}`} 
+                                                                    alt={product.name}
+                                                                    className="w-20 h-20 object-cover rounded"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                        {/* Product Info */}
                                                         <div className="flex-1">
                                                             <h4 className="font-semibold text-gray-900">
                                                                 {item.product?.name || 'Product'}
@@ -128,6 +139,7 @@ export default function Show({ data: order }: Props) {
                                                                                 style={{
                                                                                     backgroundColor:
                                                                                         item.product_variant?.color?.toLowerCase() === 'white' ? '#ffffff' :
+
                                                                                             item.product_variant?.color?.toLowerCase() === 'black' ? '#000000' :
                                                                                                 item.product_variant?.color?.toLowerCase() === 'cream' ? '#F5F5DC' :
                                                                                                     item.product_variant?.color?.toLowerCase() === 'brown' ? '#8B4513' :
@@ -149,8 +161,8 @@ export default function Show({ data: order }: Props) {
                                                                     </>
                                                                 )}
                                                             </div>
+                                                            <div className="text-sm text-gray-500 mt-2">Qty: {item.quantity}</div>
                                                         </div>
-                                                        <div className="text-sm text-gray-500">Qty: {item.quantity}</div>
                                                     </div>
 
                                                     {/* Price Breakdown */}
