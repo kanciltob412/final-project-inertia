@@ -273,11 +273,6 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "total",
-        header: "Total",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
-    },
-    {
         accessorKey: "coupon",
         header: "Coupon Applied",
         cell: ({ row }) => {
@@ -302,6 +297,11 @@ export const columns: ColumnDef<Order>[] = [
             }
             return <span className="text-gray-400 text-sm">-</span>;
         },
+    },
+    {
+        accessorKey: "total",
+        header: "Total",
+        cell: ({ row }) => <span className="font-bold text-gray-900">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
         accessorKey: "created_at",
