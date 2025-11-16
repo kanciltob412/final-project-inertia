@@ -303,6 +303,33 @@ export const columns: ColumnDef<Order>[] = [
     },
 
     {
+        accessorKey: "coupon",
+        header: "Coupon Applied",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (order.coupon_discount && order.coupon_discount > 0) {
+                return (
+                    <div className="text-sm space-y-1">
+                        {order.coupon && (
+                            <div className="font-medium text-gray-900">
+                                Code: {order.coupon.code}
+                            </div>
+                        )}
+                        <div className="text-green-600 font-medium">
+                            -{new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                maximumFractionDigits: 0
+                            }).format(Number(order.coupon_discount))}
+                        </div>
+                    </div>
+                );
+            }
+            return <span className="text-gray-400 text-sm">-</span>;
+        },
+    },
+
+    {
         accessorKey: "status",
         header: "Status",
         cell: ({ row }) => {
