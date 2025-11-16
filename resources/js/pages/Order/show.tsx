@@ -319,10 +319,10 @@ export default function Show({ data: order }: Props) {
                             <CardContent>
                                 <div className="space-y-3">
                                     <div>
-                                        <label className="text-xs text-gray-500 uppercase tracking-wide">Status</label>
+                                        <label className="text-xs text-gray-500 uppercase tracking-wide">Payment Status</label>
                                         <div className="mt-1">
                                             <Badge className={getStatusColor(order.status)}>
-                                                {order.status === 'PAID' ? 'Paid' : 'Pending'}
+                                                {order.status === 'PAID' ? 'Paid' : order.status === 'PENDING' ? 'Pending' : order.status.charAt(0).toUpperCase() + order.status.slice(1).toLowerCase()}
                                             </Badge>
                                         </div>
                                     </div>
