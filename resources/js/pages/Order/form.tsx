@@ -26,7 +26,7 @@ interface Props {
 }
 
 export default function Form({ order, users, products }: Props) {
-    const { data, setData, post, processing, errors, reset } = useForm<{
+    const { data, setData, post, put, processing, errors, reset } = useForm<{
         user_id: number | string;
         phone: string;
         address: string;
@@ -80,18 +80,30 @@ export default function Form({ order, users, products }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        console.log('Form data being submitted:', data);
+        
         if (order) {
-            router.post(`/admin/orders/${order.id}`, {
-                ...data,
-                _method: "put",
-            }, {
+            put(`/admin/orders/${order.id}`, {
                 preserveScroll: true,
-                onSuccess: () => reset(),
+                onSuccess: (page) => {
+                    console.log('Order updated successfully:', page);
+                    reset();
+                },
+                onError: (errors) => {
+                    console.error('Update errors:', errors);
+                },
             });
         } else {
             post("/admin/orders", {
                 preserveScroll: true,
-                onSuccess: () => reset(),
+                onSuccess: (page) => {
+                    console.log('Order created successfully:', page);
+                    reset();
+                },
+                onError: (errors) => {
+                    console.error('Create errors:', errors);
+                },
             });
         }
     };
@@ -497,7 +509,17 @@ export default function Form({ order, users, products }: Props) {
 
                     {/* Submit */}
                     <div className="flex items-center justify-end">
-                        <Button type="submit" disabled={processing}>
+                        <Button 
+                            type="submit" 
+                            disabled={processing}
+                            onClick={(e) => {
+                                console.log('Update button clicked', {
+                                    processing,
+                                    order: !!order,
+                                    data: data
+                                });
+                            }}
+                        >
                             {processing ? "Saving..." : (order ? "Update Order" : "Create Order")}
                         </Button>
                     </div>

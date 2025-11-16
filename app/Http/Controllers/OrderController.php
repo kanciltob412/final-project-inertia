@@ -53,28 +53,46 @@ class OrderController extends Controller
     }
     public function update(Request $request, $id)
     {
-        // Logic to update the order
-        $order = Order::findOrFail($id);
-
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'address' => 'required|string',
-            'phone' => 'required|string',
-            'city' => 'required|string',
-            'country' => 'required|string',
-            'postal_code' => 'required|string',
-            'status' => 'required|in:pending,paid,processing,shipped,delivered,cancelled',
-            'total' => 'required|numeric',
-            'payment_method' => 'nullable|string',
-            'payment_channel' => 'nullable|string',
-            'url' => 'nullable|url',
-            'courier_name' => 'nullable|required_if:status,shipped|string',
-            'tracking_number' => 'nullable|required_if:status,shipped|string',
-            'items' => 'nullable|array',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
+        // Log incoming request for debugging
+        Log::info("Order update request received", [
+            'order_id' => $id,
+            'request_data' => $request->all()
         ]);
+
+        try {
+            // Logic to update the order
+            $order = Order::findOrFail($id);
+
+            $validated = $request->validate([
+                'user_id' => 'required|exists:users,id',
+                'address' => 'required|string',
+                'phone' => 'required|string',
+                'city' => 'required|string',
+                'country' => 'required|string',
+                'postal_code' => 'required|string',
+                'status' => 'required|in:pending,paid,processing,shipped,delivered,cancelled,PENDING,PAID,PROCESSING,SHIPPED,DELIVERED,CANCELLED',
+                'total' => 'required|numeric',
+                'payment_method' => 'nullable|string',
+                'payment_channel' => 'nullable|string',
+                'url' => 'nullable|url',
+                'courier_name' => 'nullable|required_if:status,shipped|string',
+                'tracking_number' => 'nullable|required_if:status,shipped|string',
+                'items' => 'nullable|array',
+                'items.*.product_id' => 'required|exists:products,id',
+                'items.*.quantity' => 'required|integer|min:1',
+                'items.*.price' => 'required|numeric|min:0',
+            ]);
+
+            Log::info("Order validation passed", ['validated_data' => $validated]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error("Order validation failed", [
+                'order_id' => $id,
+                'errors' => $e->errors(),
+                'request_data' => $request->all()
+            ]);
+            return back()->withErrors($e->errors())->withInput();
+        }
 
         DB::beginTransaction();
         try {
@@ -122,9 +140,19 @@ class OrderController extends Controller
             }
 
             DB::commit();
+            
+            Log::info("Order updated successfully", ['order_id' => $order->id]);
+            
             return redirect()->route("orders.index")->with("success", "Order updated successfully.");
         } catch (\Exception $e) {
             DB::rollback();
+            
+            Log::error("Failed to update order", [
+                'order_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return back()->withErrors(['error' => 'Failed to update order: ' . $e->getMessage()]);
         }
     }
