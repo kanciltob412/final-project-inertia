@@ -204,19 +204,65 @@
             <h3>Ordered Items</h3>
             @foreach($order->items as $item)
             <div class="item">
-                <div>
+                <div style="flex: 1;">
                     <strong>{{ $item->product->name }}</strong>
-                    @if($item->productVariant)
-                        <br><small>{{ $item->productVariant->name }}</small>
+                    @if($item->product->dimension)
+                    <br><small>Dimension: {{ $item->product->dimension }}</small>
                     @endif
                     <br><small>Unit Price: Rp {{ number_format($item->price / $item->quantity, 0, ',', '.') }}</small>
                     <br><small>Qty: {{ $item->quantity }}</small>
+                    @if($item->discount && $item->discount > 0)
+                    <br><small style="color: #28a745;"><strong>Discount: 
+                        @if($item->discount_type === 'percentage')
+                            {{ round($item->discount / $item->quantity) }}%
+                        @else
+                            Rp {{ number_format($item->discount / $item->quantity, 0, ',', '.') }} per item
+                        @endif
+                    </strong></small>
+                    @endif
                 </div>
-                <div style="font-weight: bold;">
-                    Subtotal: Rp {{ number_format($item->price, 0, ',', '.') }}
+                <div>
+                    @if($item->discount && $item->discount > 0)
+                    <div style="font-size: 0.9em; color: #999; text-decoration: line-through;">
+                        @if($item->discount_type === 'percentage')
+                            Rp {{ number_format(($item->price * $item->quantity) / (1 - ($item->discount / $item->quantity) / 100), 0, ',', '.') }}
+                        @else
+                            Rp {{ number_format($item->price + $item->discount, 0, ',', '.') }}
+                        @endif
+                    </div>
+                    @endif
+                    <div style="font-weight: bold;">
+                        Rp {{ number_format($item->price, 0, ',', '.') }}
+                    </div>
                 </div>
             </div>
             @endforeach
+        </div>
+
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #555;">Subtotal:</span>
+                <span style="color: #333;">Rp {{ number_format($order->total + ($order->coupon_discount ?? 0) - ($order->shipping_cost ?? 0), 0, ',', '.') }}</span>
+            </div>
+            @if($order->shipping_cost)
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #555;">
+                    <strong>Shipping:</strong>
+                    @if($order->shipping_courier)
+                    <br><small>({{ strtoupper($order->shipping_courier) }} - {{ $order->shipping_service }})</small>
+                    @endif
+                </span>
+                <span style="color: #333; font-weight: bold;">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+            </div>
+            @endif
+            @if($order->coupon_discount)
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #28a745;">
+                    <strong>Coupon Discount ({{ $order->coupon?->code }}):</strong>
+                </span>
+                <span style="color: #28a745; font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
+            </div>
+            @endif
         </div>
 
         @if($type === 'success')

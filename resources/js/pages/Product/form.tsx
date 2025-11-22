@@ -24,8 +24,7 @@ interface Props {
 }
 
 export default function Form({ categories, product }: Props) {
-    // Safe image mapping (no variant/color logic)
-    // Only use File[] for upload, metadata for display can be handled separately if needed
+    // Initialize gallery files array for image uploads
     const initialGalleryFiles: File[] = [];
 
     const { data, setData, processing, errors } = useForm({
@@ -34,6 +33,7 @@ export default function Form({ categories, product }: Props) {
         name: product?.name || "",
         description: product?.description || "",
         stock: product?.stock?.toString() || "",
+        dimension: product?.dimension || "",
         price: product?.price?.toString() || "",
         discount: product?.discount?.toString() || "",
         discount_type: product?.discount_type || "fixed",
@@ -84,6 +84,7 @@ export default function Form({ categories, product }: Props) {
         formData.append('discount_type', data.discount_type || 'fixed');
         formData.append('category_id', data.category_id?.toString() || '');
         formData.append('stock', data.stock?.toString() || '0');
+        formData.append('dimension', data.dimension || '');
 
         // Add gallery images (File[])
         let galleryIndex = 0;
@@ -165,6 +166,22 @@ export default function Form({ categories, product }: Props) {
                         )}
                     </div>
 
+                    {/* Dimension */}
+                    <div className="flex flex-col gap-y-2">
+                        <Label htmlFor="dimension">Dimension</Label>
+                        <Input
+                            id="dimension"
+                            type="text"
+                            value={data.dimension}
+                            onChange={(e) => setData("dimension", e.target.value)}
+                            disabled={processing}
+                            placeholder="e.g., 10cm x 10cm x 5cm"
+                        />
+                        {errors.dimension && (
+                            <p className="text-sm text-red-600">{errors.dimension}</p>
+                        )}
+                    </div>
+
                     {/* Name */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="name">Name</Label>
@@ -209,8 +226,6 @@ export default function Form({ categories, product }: Props) {
 
                         {/* Right Column - Details */}
                         <div className="space-y-6">
-                            {/* Dimension field removed */}
-
                             {/* Stock */}
                             <div className="flex flex-col gap-y-2">
                                 <Label htmlFor="stock">Stock</Label>

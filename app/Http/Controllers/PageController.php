@@ -15,7 +15,7 @@ class PageController extends Controller
 
     public function products()
     {
-        $query = Product::with(['category', 'variants', 'images' => function($query) {
+        $query = Product::with(['category', 'images' => function ($query) {
             $query->where('is_primary', true)->orWhere('sort_order', 1)->orderBy('sort_order');
         }]);
 
@@ -77,7 +77,7 @@ class PageController extends Controller
 
     public function productDetail(int $id)
     {
-        $product = Product::with(['category', 'variants', 'images' => function($query) {
+        $product = Product::with(['category', 'images' => function ($query) {
             $query->orderBy('sort_order');
         }])->findOrFail($id);
 
@@ -98,9 +98,9 @@ class PageController extends Controller
 
     public function cart()
     {
-        // Get all products with their variants for stock validation
-        $products = Product::with('variants:id,product_id,color,stock')->get();
-        
+        // Get all products for stock validation
+        $products = Product::all();
+
         return Inertia::render('Cart', [
             'products' => $products
         ]);

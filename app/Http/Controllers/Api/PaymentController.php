@@ -145,7 +145,7 @@ class PaymentController extends Controller
 
         // Send email notifications based on payment status
         try {
-            $order = $order->load(['user', 'items.product', 'items.productVariant']);
+            $order = $order->load(['user', 'items.product']);
 
             if ($status === 'PAID') {
                 // Send success emails

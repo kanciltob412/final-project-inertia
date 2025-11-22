@@ -136,22 +136,24 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "price",
         header: "Price",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.price)}</span>,
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(row.original.price)}</span>,
     },
     {
         accessorKey: "discount",
         header: "Discount",
         cell: ({ row }) => {
-            const discount = row.original.discount || 0;
+            const discount = row.original.discount;
             const discountType = row.original.discount_type || 'fixed';
+            const discountNum = Number(discount);
 
-            if (discount === 0) {
-                return <span className="text-gray-500">No discount</span>;
+            // Show dash if no discount
+            if (!discount || discountNum <= 0) {
+                return <span className="text-gray-400">-</span>;
             }
 
             return (
                 <span className="text-green-600 font-medium">
-                    {discountType === 'percentage' ? `${discount}%` : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(discount)}
+                    {discountType === 'percentage' ? `${Math.round(discountNum)}%` : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(discountNum)}
                 </span>
             );
         },

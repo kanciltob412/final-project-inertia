@@ -137,17 +137,21 @@ export const columns: ColumnDef<Order>[] = [
             return (
                 <div className="max-w-xs space-y-1">
                     {order.items.map((item) => {
-                        // Clean product name (remove color if it's at the end)
-                        const cleanName = item.product?.name?.replace(/\s+(Black|White|Red|Blue|Green|Yellow|Orange|Purple|Pink|Brown|Gray|Grey|Cream|Indigo|Matte\s+\w+)\s*$/i, '') || item.product?.name || 'Product';
+                        const itemName = item.product?.name || 'Product';
 
                         return (
                             <div key={item.id} className="text-sm border-b border-gray-100 pb-1 last:border-0 last:pb-0">
                                 <div className="font-medium text-gray-900">
-                                    {cleanName}
+                                    {itemName}
                                 </div>
                                 <div className="text-xs text-gray-500">
                                     SKU: {item.product?.sku || 'N/A'}
                                 </div>
+                                {item.product?.dimension && (
+                                    <div className="text-xs text-gray-500">
+                                        Dimension: {item.product.dimension}
+                                    </div>
+                                )}
                             </div>
                         );
                     })}

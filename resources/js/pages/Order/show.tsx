@@ -13,6 +13,7 @@ interface OrderItem {
         name: string;
         sku: string;
         image?: string;
+        dimension?: string;
         discount?: number;
         discount_type?: 'fixed' | 'percentage';
     };
@@ -170,6 +171,9 @@ export default function OrderShow() {
                                                 <div>
                                                     <p className="font-semibold">{product?.name || 'Unknown Product'}</p>
                                                     <p className="text-sm text-gray-600">SKU: {product?.sku || 'N/A'}</p>
+                                                    {product?.dimension && (
+                                                        <p className="text-sm text-gray-600">Dimension: {product.dimension}</p>
+                                                    )}
                                                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                                                     {discountAmount > 0 && (
                                                         <p className="text-xs text-green-600 font-semibold mt-1">

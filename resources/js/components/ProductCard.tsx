@@ -31,7 +31,7 @@ const formatPriceWithDiscount = (price: number, discount?: number, discountType?
             <span className="text-gray-500 line-through text-sm">{formatPrice(price)}</span>
             <span className="text-green-600 font-semibold">{formatPrice(discountedPrice)}</span>
             <span className="text-green-600 text-xs bg-green-100 px-2 py-1 rounded">
-                {discountType === 'percentage' ? `${discount}% off` : `Save ${formatPrice(discount)}`}
+                {discountType === 'percentage' ? `${Math.round(discount)}% off` : `Save ${formatPrice(discount)}`}
             </span>
         </div>
     );
@@ -72,6 +72,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     ...product,
                     id: productId,
                     price: discountedPrice,
+                    originalPrice: product.price,
                     stock: product.stock
                 },
                 1,
@@ -101,6 +102,11 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                                 {product.sku && (
                                     <p className="text-sm text-gray-500">
                                         <span className="font-medium">SKU:</span> {product.sku}
+                                    </p>
+                                )}
+                                {product.dimension && (
+                                    <p className="text-sm text-gray-500">
+                                        <span className="font-medium">Dimension:</span> {product.dimension}
                                     </p>
                                 )}
                                 <p className="text-sm text-gray-500">
@@ -179,6 +185,11 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                         {product.sku && (
                             <p className="text-xs text-gray-500">
                                 <span className="font-medium">SKU:</span> {product.sku}
+                            </p>
+                        )}
+                        {product.dimension && (
+                            <p className="text-xs text-gray-500">
+                                <span className="font-medium">Dimension:</span> {product.dimension}
                             </p>
                         )}
                         <p className="text-xs text-gray-500">

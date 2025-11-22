@@ -40,16 +40,13 @@ export default function Checkout() {
 
     // Shipping state
     const [provinces, setProvinces] = useState<Province[]>([]);
-    const [originCities, setOriginCities] = useState<City[]>([]);
+    const [, setOriginCities] = useState<City[]>([]);
     const [destCities, setDestCities] = useState<City[]>([]);
     const [couriers, setCouriers] = useState<Record<string, string>>({});
 
-    const [originProvince, setOriginProvince] = useState('');
-    const [originCity, setOriginCity] = useState('');
     const [destProvince, setDestProvince] = useState('');
     const [destCity, setDestCity] = useState('');
     const [weight, setWeight] = useState('1000');
-    const [selectedCourier, setSelectedCourier] = useState('jne');
 
     const [shippingCosts, setShippingCosts] = useState<Record<string, ShippingResponse> | null>(null);
     const [shippingLoading, setShippingLoading] = useState(false);
@@ -247,10 +244,9 @@ export default function Checkout() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Build products array (NOT JSON string)
+        // Build products array
         const products = items.map((item) => ({
             id: parseInt(item.id.includes('-') ? item.id.split('-')[0] : item.id, 10), // Base product ID as integer
-            variant_id: item.variantId ? parseInt(item.variantId.toString(), 10) : null, // Variant ID if exists
             quantity: typeof item.quantity === 'number' ? item.quantity : (typeof item.quantity === 'string' ? parseInt(item.quantity, 10) : 1),
         }));
 
@@ -265,8 +261,8 @@ export default function Checkout() {
             shipping_courier: data.shipping_courier,
             shipping_service: data.shipping_service,
             destination_city_id: data.destination_city_id,
-            coupon_id: data.coupon_id,
-            coupon_discount: data.coupon_discount,
+            coupon_id: data.coupon_id && data.coupon_id > 0 ? data.coupon_id : null,
+            coupon_discount: data.coupon_discount && data.coupon_discount > 0 ? data.coupon_discount : 0,
             products: products, // Send as array, not JSON string
             email: !auth.user ? data.email : auth.user.email,
         };
@@ -540,8 +536,16 @@ export default function Checkout() {
                                 <select
                                     value={destCity}
                                     onChange={(e) => {
-                                        setDestCity(e.target.value);
+                                        const selectedCityId = e.target.value;
+                                        setDestCity(selectedCityId);
                                         setShippingCosts(null);
+
+                                        // Sync the city field and postal code with the selected destination city
+                                        const selectedCity = destCities.find(c => c.city_id === selectedCityId);
+                                        if (selectedCity) {
+                                            setData('city', selectedCity.city_name);
+                                            setData('postal_code', selectedCity.postal_code);
+                                        }
                                     }}
                                     disabled={!destProvince}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
@@ -680,7 +684,7 @@ export default function Checkout() {
                                 <p className="text-gray-800 text-sm mb-2">
                                     <span className="font-semibold">Applied:</span> {appliedCoupon.code}
                                     <br />
-                                    <span className="font-semibold">Discount:</span> {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `Rp ${appliedCoupon.discount_value.toLocaleString('id-ID')}`}
+                                    <span className="font-semibold">Discount:</span> {appliedCoupon.discount_type === 'percentage' ? `${Math.round(appliedCoupon.discount_value)}%` : `Rp ${Math.round(appliedCoupon.discount_value).toLocaleString('id-ID')}`}
                                     <br />
                                     <span className="font-semibold">You save:</span> Rp {discountAmount.toLocaleString('id-ID')}
                                 </p>
@@ -751,18 +755,41 @@ export default function Checkout() {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="font-medium">{item.name}</p>
+                                        {item.sku && (
+                                            <p className="text-sm text-gray-500">
+                                                SKU: {item.sku}
+                                            </p>
+                                        )}
                                         <p className="text-sm text-gray-500">
                                             Qty: {item.quantity}
                                         </p>
                                         {item.discount && item.discount > 0 && (
                                             <p className="text-xs text-green-600 font-semibold mt-1">
-                                                {item.discount_type === 'percentage' ? `Product discount: ${item.discount}%` : `Product discount: ${formatPrice(item.discount)}`}
+                                                {item.discount_type === 'percentage'
+                                                    ? `Save Rp ${Math.round((item.price * (item.quantity || 1)) * (item.discount / (100 - item.discount))).toLocaleString('id-ID')}`
+                                                    : `Save Rp ${Math.round(item.discount * (item.quantity || 1)).toLocaleString('id-ID')}`}
                                             </p>
                                         )}
                                     </div>
-                                    <span className="font-semibold">
-                                        {formatPrice(item.itemTotal || 0)}
-                                    </span>
+                                    <div className="text-right">
+                                        {item.discount && item.discount > 0 ? (
+                                            <div className="space-y-1">
+                                                <p className="text-sm text-gray-500 line-through">
+                                                    {formatPrice(item.discount_type === 'percentage'
+                                                        ? (item.price * (item.quantity || 1) / (1 - item.discount / 100))
+                                                        : (item.price * (item.quantity || 1) + item.discount * (item.quantity || 1))
+                                                    )}
+                                                </p>
+                                                <p className="font-semibold text-green-600">
+                                                    {formatPrice(item.itemTotal || 0)}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <span className="font-semibold">
+                                                {formatPrice(item.itemTotal || 0)}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))}

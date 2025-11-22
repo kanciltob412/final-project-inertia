@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,7 +20,7 @@ class ProductController extends Controller
     public function index()
     {
         return Inertia::render("Product/index", [
-            "data" => Product::with(["category", "variants"])->get()
+            "data" => Product::with(["category"])->get()
         ]);
     }
 
@@ -107,7 +106,7 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Product::with(['variants', 'images'])->findOrFail($id);
+        $product = Product::with(['images'])->findOrFail($id);
         return Inertia::render("Product/form", [
             "product" => $product,
             "categories" => Category::all()
@@ -118,7 +117,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $product = Product::with('variants')->findOrFail($id);
+        $product = Product::findOrFail($id);
         $validated = $request->validate([
             "category_id" => "required|exists:categories,id",
             "sku" => "required|string|max:255|unique:products,sku," . $id,
@@ -242,7 +241,7 @@ class ProductController extends Controller
             'id' => 'required|exists:products,id',
         ]);
 
-        $originalProduct = Product::with('variants')->findOrFail($validated['id']);
+        $originalProduct = Product::findOrFail($validated['id']);
 
         DB::transaction(function () use ($originalProduct) {
             // Generate a new unique SKU

@@ -120,17 +120,17 @@ if (config('app.debug')) {
 
     // Test routes for order emails
     Route::get('/test-order-confirmation-email', function () {
-        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        $order = App\Models\Order::with(['user', 'items.product'])->first();
         return view('emails.orders.confirmation', compact('order'));
     });
 
     Route::get('/test-order-failed-email', function () {
-        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        $order = App\Models\Order::with(['user', 'items.product'])->first();
         return view('emails.orders.failed', compact('order'));
     });
 
     Route::get('/test-admin-order-email/{type}', function ($type) {
-        $order = App\Models\Order::with(['user', 'items.product', 'items.productVariant'])->first();
+        $order = App\Models\Order::with(['user', 'items.product'])->first();
         return view('emails.orders.admin-notification', compact('order', 'type'));
     });
 }

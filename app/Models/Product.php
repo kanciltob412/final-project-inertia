@@ -20,6 +20,7 @@ class Product extends Model
         'discount',
         'discount_type',
         'stock',
+        'dimension',
         'image',
         'is_active',
     ];
@@ -35,16 +36,6 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function variants(): HasMany
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
-
-    public function activeVariants(): HasMany
-    {
-        return $this->hasMany(ProductVariant::class)->where('is_active', true);
-    }
-
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');
@@ -55,22 +46,10 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->where('is_primary', true);
     }
 
-    // Helper method to get total stock across all variants
-    public function getTotalStock(): int
-    {
-        return $this->variants()->sum('stock');
-    }
-
-    // Helper method to get available colors
-    public function getAvailableColors(): array
-    {
-        return $this->activeVariants()->pluck('color')->toArray();
-    }
-
     // Helper method to check if product has any stock
     public function hasStock(): bool
     {
-        return $this->getTotalStock() > 0;
+        return $this->stock > 0;
     }
 
     protected static function boot()

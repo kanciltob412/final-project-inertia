@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductVariant;
 use App\Models\OrderItem;
 use App\Models\User;
 use App\Models\Coupon;
@@ -23,7 +22,7 @@ class OrderController extends Controller
     public function index()
     {
         return Inertia::render("Order/index", [
-            "data" => Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->get()
+            "data" => Order::with('user', 'items', 'items.product', 'coupon')->get()
         ]);
     }
 
@@ -36,7 +35,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'coupon')->findOrFail($id);
 
         return Inertia::render("Order/show", [
             "data" => $order
@@ -44,7 +43,7 @@ class OrderController extends Controller
     }
     public function edit($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'coupon')->findOrFail($id);
 
         return Inertia::render("Order/form", [
             "order" => $order,
@@ -162,6 +161,8 @@ class OrderController extends Controller
                         'product_id' => $itemData['product_id'],
                         'quantity' => $itemData['quantity'],
                         'price' => $itemData['price'],
+                        'discount' => $itemData['discount'] ?? 0,
+                        'discount_type' => $itemData['discount_type'] ?? 'fixed',
                     ]);
                 }
             }
@@ -248,8 +249,6 @@ class OrderController extends Controller
             'coupon_discount' => ['nullable', 'numeric', 'min:0'],
             'products' => ['required', 'array'],
             'products.*.id' => ['required', 'exists:products,id'],
-            'products.*.variant_id' => ['nullable', 'exists:product_variants,id'],
-            'products.*.color' => ['nullable', 'string'],
             'products.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
@@ -291,8 +290,13 @@ class OrderController extends Controller
                 foreach ($request->products as $productData) {
                     $product = Product::find($productData['id']);
 
+                    // Check if product exists
+                    if (!$product) {
+                        throw new Exception("Product with ID {$productData['id']} not found.");
+                    }
+
                     // Check if product has enough stock
-                    if (!$product || $product->stock < $productData['quantity']) {
+                    if ($product->stock < $productData['quantity']) {
                         throw new Exception("Product '{$product->name}' is out of stock.");
                     }
 
@@ -317,9 +321,10 @@ class OrderController extends Controller
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
-                        'product_variant_id' => null,
                         'quantity' => $productData['quantity'],
-                        'price' => $product->price,
+                        'price' => $lineTotal,
+                        'discount' => $discountAmount * $productData['quantity'],
+                        'discount_type' => $product->discount_type,
                     ]);
 
                     $total += $lineTotal;
@@ -383,22 +388,28 @@ class OrderController extends Controller
 
             // Direct CURL usage for full control over API behavior
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, 'https://api.xendit.co/v2/invoices');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Authorization: Basic ' . base64_encode($apiKey . ':'),
-            ]);
+            $response = null;
+            $httpCode = null;
 
-            $response = curl_exec($ch);
-            if (curl_errno($ch)) {
-                throw new Exception('Curl error: ' . curl_error($ch));
+            try {
+                curl_setopt($ch, CURLOPT_URL, 'https://api.xendit.co/v2/invoices');
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'Authorization: Basic ' . base64_encode($apiKey . ':'),
+                ]);
+
+                $response = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    throw new Exception('Curl error: ' . curl_error($ch));
+                }
+
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            } finally {
+                curl_close($ch);
             }
-
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
 
             // Log the response for debugging
             Log::info('Xendit API Response', [
@@ -528,6 +539,8 @@ class OrderController extends Controller
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
                     'price' => $item->price,
+                    'discount' => $item->discount,
+                    'discount_type' => $item->discount_type,
                 ]);
             }
 
@@ -548,7 +561,7 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
+            $order = Order::with(['user', 'items.product'])->find($orderId);
             if ($order) {
                 // Update order status to paid
                 $order->update(['status' => 'PAID']);
@@ -593,7 +606,7 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
+            $order = Order::with(['user', 'items.product'])->find($orderId);
             if ($order) {
                 // Send failed payment email to customer
                 try {

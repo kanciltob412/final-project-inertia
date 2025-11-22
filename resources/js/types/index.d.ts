@@ -48,18 +48,6 @@ export interface Category {
     updated_at: string;
 }
 
-export interface ProductVariant {
-    id?: number;
-    product_id?: number;
-    sku?: string;
-    color: string;
-    stock: number;
-    image?: string;
-    is_active?: boolean;
-    created_at?: string;
-    updated_at?: string;
-}
-
 export interface ProductImage {
     id: number;
     product_id: number;
@@ -81,20 +69,16 @@ export interface Product {
     price: number;
     discount?: number;
     discount_type?: 'fixed' | 'percentage';
+    stock?: number;
+    dimension?: string;
     is_active: boolean;
     created_at: string;
     updated_at: string;
     
     // Relation to Category
     category: Category;
-    // Relation to Variants
-    variants?: ProductVariant[];
     // Relation to Gallery Images
     images?: ProductImage[];
-    
-    // Legacy fields for backward compatibility (will be removed)
-    stock?: number;
-    color?: string;
 }
 
 export interface Article {
@@ -154,7 +138,6 @@ export interface OrderItem {
     id: number;
     order_id: number;
     product_id: number;
-    product_variant_id?: number;
     quantity: number;
     price: number;
     created_at: string;
@@ -162,7 +145,6 @@ export interface OrderItem {
     
     // Relations
     product: Product;
-    product_variant?: ProductVariant;
 }
 
 export interface Coupon {

@@ -69,6 +69,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                     ...product,
                     id: String(cartId),
                     price: discountedPrice,
+                    originalPrice: product.price,
                     stock: product.stock
                 },
                 quantityNumber,
@@ -117,6 +118,14 @@ export default function ProductDetail({ product }: { product: Product }) {
                                             <span className="font-medium">SKU:</span> {product.sku}
                                         </p>
                                     )}
+                                    {product.dimension && (
+                                <div className="mb-6">
+                                    <p className="text-sm text-gray-500">
+                                        <span className="font-medium">Dimension:</span>
+                                        <span className="ml-1">{product.dimension}</span>
+                                    </p>
+                                </div>
+                            )}
                                 </div>
                             </div>
                             {product.discount && product.discount > 0 ? (
@@ -126,7 +135,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                                         <span className="text-3xl font-bold text-green-600">{formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type))}</span>
                                     </div>
                                     <p className="mt-2 text-sm text-green-600 font-semibold">
-                                        {product.discount_type === 'percentage' ? `Save ${product.discount}%` : `Save ${formatPrice(product.discount)}`}
+                                        {product.discount_type === 'percentage' ? `Save ${Math.round(product.discount)}%` : `Save Rp ${Math.round(product.discount)}`}
                                     </p>
                                 </div>
                             ) : (
@@ -145,7 +154,9 @@ export default function ProductDetail({ product }: { product: Product }) {
                                                 `${currentStock} available`)}
                                     </span>
                                 </p>
-                            </div>                            <div className="mb-6">
+                            </div>
+                            
+                            <div className="mb-6">
                                 <h2 className="mb-2 font-semibold">Description</h2>
                                 <div
                                     className="text-gray-600 prose prose-sm max-w-none"

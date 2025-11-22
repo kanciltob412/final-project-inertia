@@ -91,34 +91,28 @@ export default function Cart() {
                                         <p className="text-sm text-gray-500">
                                             Category: {item.category?.name || 'Uncategorized'}
                                         </p>
-                                        {/* Variant Color Display */}
-                                        {item.color && (
-                                            <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
-                                                <span className="font-medium">Color:</span>
-                                                <div
-                                                    className="w-5 h-5 rounded border border-gray-300 shadow-sm"
-                                                    style={{ backgroundColor: item.color }}
-                                                />
+                                        {item.dimension && (
+                                            <p className="text-sm text-gray-500">
+                                                Dimension: {item.dimension}
                                             </p>
                                         )}
-                                        {/* Variant SKU */}
-                                        {item.variantId && (
-                                            <p className="text-xs text-gray-500">
-                                                <span className="font-medium">Variant ID:</span> {item.variantId}
-                                            </p>
-                                        )}
-                                        {/* Stock information - use variant stock */}
+                                        {/* Stock information */}
                                         <p className="text-xs text-gray-500">
                                             <span className="font-medium">Stock:</span>
                                             <span className={`ml-1 ${(item.stock || 0) === 0 ? 'text-red-600' :
-                                                    ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? 'text-red-600' :
-                                                        ((item.stock || 0) <= 5 ? 'text-orange-600' : 'text-green-600'))
+                                                ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? 'text-red-600' :
+                                                    ((item.stock || 0) <= 5 ? 'text-orange-600' : 'text-green-600'))
                                                 }`}>
                                                 {(item.stock || 0) === 0 ? 'Out of stock' :
                                                     ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? `Only ${item.stock} left` :
                                                         `${item.stock} available`)}
                                             </span>
                                         </p>
+                                          {item.discount && item.discount > 0 && (
+                                            <p className="text-sm text-red-600 font-medium mt-1">
+                                                Discount: {item.discount_type === 'percentage' ? `${Math.round(item.discount)}%` : `Rp ${Math.round(item.discount).toLocaleString('id-ID')}`}
+                                            </p>
+                                        )}
                                         {/* Warning for quantity exceeding stock */}
                                         {item.quantity! > (item.stock || 0) && (item.stock || 0) > 0 && (
                                             <p className="text-xs text-red-600 font-medium mt-1">
@@ -147,8 +141,8 @@ export default function Cart() {
                                             onClick={() => updateItemQuantity(item.id, item.quantity! + 1)}
                                             disabled={(item.stock || 0) === 0 || (item.quantity! >= (item.stock || 0))}
                                             className={`rounded-md border p-1 ${(item.stock || 0) === 0 || (item.quantity! >= (item.stock || 0))
-                                                    ? 'opacity-50 cursor-not-allowed text-gray-400'
-                                                    : 'hover:bg-gray-100'
+                                                ? 'opacity-50 cursor-not-allowed text-gray-400'
+                                                : 'hover:bg-gray-100'
                                                 }`}
                                             title={(item.stock || 0) === 0 ? 'Out of stock' :
                                                 (item.quantity! >= (item.stock || 0)) ? 'Maximum stock reached' : 'Increase quantity'}
@@ -158,14 +152,22 @@ export default function Cart() {
                                     </div>
 
                                     <p className="font-semibold text-gray-800">
-                                        {formatPrice(item.itemTotal || 0)}
+                                        {item.discount && item.discount > 0 ? (
+                                            <div className="space-y-1">
+                                                <p className="text-sm text-gray-500 line-through">
+                                                    {formatPrice(item.discount_type === 'percentage'
+                                                        ? (item.price * (item.quantity || 1) / (1 - item.discount / 100))
+                                                        : (item.price * (item.quantity || 1) + item.discount * (item.quantity || 1))
+                                                    )}
+                                                </p>
+                                                <p className="text-lg text-green-600">
+                                                    {formatPrice(item.itemTotal || 0)}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            formatPrice(item.itemTotal || 0)
+                                        )}
                                     </p>
-                                    {item.discount && item.discount > 0 && (
-                                        <p className="text-sm text-green-600 font-semibold">
-                                            {item.discount_type === 'percentage' ? `${item.discount}% off` : `Save ${formatPrice(item.discount)}`}
-                                        </p>
-                                    )}
-
                                     <button
                                         onClick={() => removeItem(item.id)}
                                         className="flex items-center text-red-500 hover:underline"

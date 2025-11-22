@@ -410,7 +410,9 @@ export default function Form({ order, users, products }: Props) {
                                                     <SelectContent>
                                                         {products?.map((product) => (
                                                             <SelectItem key={product.id} value={product.id.toString()}>
-                                                                {product.name} - Rp {product.price.toLocaleString('id-ID')}
+                                                                {product.name}
+                                                                {product.dimension && ` - Dimension: ${product.dimension}`}
+                                                                - Rp {product.price.toLocaleString('id-ID')}
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>
