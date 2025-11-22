@@ -426,3 +426,45 @@
 [logs] ┌ 07:17:33 INFO ───────────────────────────────────────────────────────────────┐
 [logs] │ Order updated successfully                                                   │
 [logs] └ PUT: /admin/orders/119 • Auth ID: 13 (info@lavanyaceramics.com) • order_id: 119 ┘
+[logs] ┌ 07:22:18 Symfony\Component\...\ProcessTimedOutException ── vendor/symfony/pro... ┐
+[logs] │ The process "'/usr/local/Cellar/php/8.4.13/bin/php' 'artisan' 'queue:work' ... │
+[logs] └──────────────────────────────────────────────────────── artisan queue:listen ┘
+[queue] 
+[queue]    Symfony\Component\Process\Exception\ProcessTimedOutException 
+[queue] 
+[queue]   The process "'/usr/local/Cellar/php/8.4.13/bin/php' 'artisan' 'queue:work' '--once' '--name=default' '--queue=default' '--backoff=0' '--memory=128' '--sleep=3' '--tries=1'" exceeded the timeout of 60 seconds.
+[queue] 
+[queue]   at vendor/symfony/process/Process.php:1181
+[queue]     1177▕ 
+[queue]     1178▕         if (null !== $this->timeout && $this->timeout < microtime(true) - $this->starttime) {
+[queue]     1179▕             $this->stop(0);
+[queue]     1180▕ 
+[queue]   ➜ 1181▕             throw new ProcessTimedOutException($this, ProcessTimedOutException::TYPE_GENERAL);
+[queue]     1182▕         }
+[queue]     1183▕ 
+[queue]     1184▕         if (null !== $this->idleTimeout && $this->idleTimeout < microtime(true) - $this->lastOutputTime) {
+[queue]     1185▕             $this->stop(0);
+[queue] 
+[queue]       [2m+18 vendor frames [22m
+[queue] 
+[queue]   19  artisan:16
+[queue]       Illuminate\Foundation\Application::handleCommand(Object(Symfony\Component\Console\Input\ArgvInput))
+[queue] 
+[logs] ┌ 07:22:18 Symfony\Component\...\ProcessTimedOutException ── vendor/symfony/pro... ┐
+[logs] │ The process "'/usr/local/Cellar/php/8.4.13/bin/php' 'artisan' 'queue:work' ... │
+[logs] └──────────────────────────────────────────────────────── artisan queue:listen ┘
+[logs] ┌ 07:22:18 Symfony\Component\...\ProcessTimedOutException ── vendor/symfony/pro... ┐
+[logs] │ The process "'/usr/local/Cellar/php/8.4.13/bin/php' 'artisan' 'queue:work' ... │
+[logs] └──────────────────────────────────────────────────────── artisan queue:listen ┘
+[logs] ┌ 07:22:18 Symfony\Component\...\ProcessTimedOutException ── vendor/symfony/pro... ┐
+[logs] │ The process "'/usr/local/Cellar/php/8.4.13/bin/php' 'artisan' 'queue:work' ... │
+[logs] └──────────────────────────────────────────────────────── artisan queue:listen ┘
+[queue] php artisan queue:listen --tries=1 exited with code 1
+--> Sending SIGTERM to other processes..
+[logs] 
+[logs] php artisan pail --timeout=0 exited with code 0
+--> Sending SIGTERM to other processes..
+[server] php artisan serve exited with code 0
+--> Sending SIGTERM to other processes..
+[vite] npm run dev exited with code 0
+Script npx concurrently -c "#93c5fd,#c4b5fd,#fb7185,#fdba74" "php artisan serve" "php artisan queue:listen --tries=1" "php artisan pail --timeout=0" "npm run dev" --names=server,queue,logs,vite --kill-others handling the dev event returned with error code 1
