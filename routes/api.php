@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentController;
-use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\WishlistController;
@@ -17,9 +16,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::post('webhook/orders', [PaymentController::class, 'webhookPayment'])->name('api.payment.webhook');
-
-// Newsletter subscription
-Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
 // RajaOngkir Shipping API routes (public, no auth required)
 Route::prefix('shipping')->group(function () {
