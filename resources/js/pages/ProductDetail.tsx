@@ -6,6 +6,7 @@ import { useCart } from 'react-use-cart';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductGallery from '@/components/ProductGallery';
+import WishlistButton from '@/components/WishlistButton';
 import { Product } from '@/types';
 
 // Helper function to calculate discounted price
@@ -201,12 +202,15 @@ export default function ProductDetail({ product }: { product: Product }) {
                                     <ShoppingCart className="h-5 w-5" />
                                     {currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}
                                 </button>
-                                <button
-                                    onClick={() => router.visit('/products')}
-                                    className="w-full rounded-md border border-gray-300 py-3 text-gray-700 hover:bg-gray-50"
-                                >
-                                    Continue Shopping
-                                </button>
+                                <div className="flex gap-3">
+                                    <WishlistButton productId={product.id} className="flex-1" />
+                                    <button
+                                        onClick={() => router.visit('/products')}
+                                        className="flex-1 rounded-md border border-gray-300 py-3 text-gray-700 hover:bg-gray-50"
+                                    >
+                                        Continue Shopping
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

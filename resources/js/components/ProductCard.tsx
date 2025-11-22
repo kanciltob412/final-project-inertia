@@ -3,6 +3,7 @@ import { formatPrice } from '@/utils/helper';
 import { Link } from '@inertiajs/react';
 import { Eye, ShoppingCart } from 'lucide-react';
 import { useCart } from 'react-use-cart';
+import WishlistButton from './WishlistButton';
 // import { useState } from 'react';
 
 // Helper function to strip HTML tags and truncate by words
@@ -118,7 +119,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                             </div>
                             <p className="text-gray-500">{stripHtmlAndTruncateByWords(product.description, 10)}</p>
                         </div>
-                        <div className="flex justify-between items-center">
+                        <div className="flex justify-between items-center gap-2">
                             <Link
                                 href={`/products/${product.id}`}
                                 className="inline-flex w-fit items-center gap-2 rounded-md bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
@@ -126,18 +127,21 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                                 <Eye className="h-4 w-4" />
                                 View Details
                             </Link>
-                            <button
-                                onClick={handleAddToCart}
-                                disabled={currentStock === 0}
-                                className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
-                                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                    : 'bg-black text-white hover:bg-gray-800'
-                                    }`}
-                                title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
-                            >
-                                <ShoppingCart className="h-4 w-4" />
-                                {currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <WishlistButton productId={product.id} />
+                                <button
+                                    onClick={handleAddToCart}
+                                    disabled={currentStock === 0}
+                                    className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
+                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                        : 'bg-black text-white hover:bg-gray-800'
+                                        }`}
+                                    title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
+                                >
+                                    <ShoppingCart className="h-4 w-4" />
+                                    {currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,6 +158,9 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
+                <div className="absolute top-2 right-2">
+                    <WishlistButton productId={product.id} className="text-white drop-shadow-md" />
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Link
                         href={`/products/${product.id}`}
@@ -201,11 +208,12 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     </div>
                     <p className="mt-2 text-sm text-gray-500">{stripHtmlAndTruncateByWords(product.description, 10)}</p>
                 </div>
-                <div className="flex justify-end mt-3">
+                <div className="flex justify-between items-center gap-2 mt-3">
+                    <WishlistButton productId={product.id} />
                     <button
                         onClick={handleAddToCart}
                         disabled={currentStock === 0}
-                        className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
+                        className={`flex-1 flex items-center justify-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
                             ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                             : 'bg-black text-white hover:bg-gray-800'
                             }`}

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\WishlistController;
 
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
@@ -13,6 +14,14 @@ Route::post('register', [AuthController::class, 'register'])->name('api.register
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('api.profile');
+
+    // Wishlist routes
+    Route::prefix('wishlist')->group(function () {
+        Route::get('/', [WishlistController::class, 'index'])->name('wishlist.index');
+        Route::post('/', [WishlistController::class, 'store'])->name('wishlist.store');
+        Route::delete('/{productId}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+        Route::get('/check/{productId}', [WishlistController::class, 'check'])->name('wishlist.check');
+    });
 });
 
 Route::post('webhook/orders', [PaymentController::class, 'webhookPayment'])->name('api.payment.webhook');

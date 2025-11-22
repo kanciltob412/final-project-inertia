@@ -39,8 +39,10 @@ class HandleInertiaRequests extends Middleware
         [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
 
         $userOrders = null;
+        $wishlistCount = 0;
         if ($request->user()) {
             $userOrders = $request->user()->orders()->latest()->take(5)->get(['id', 'total', 'status', 'created_at']);
+            $wishlistCount = $request->user()->wishlists()->count();
         }
 
         return [
@@ -51,6 +53,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'userOrders' => $userOrders,
+            'wishlistCount' => $wishlistCount,
             'csrf_token' => csrf_token(),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
