@@ -1,8 +1,9 @@
 import { Product } from '@/types';
-import { formatPrice, calculateDiscountedPrice } from '@/utils/helper';
-import { Link, router } from '@inertiajs/react';
+import { formatPrice } from '@/utils/helper';
+import { Link } from '@inertiajs/react';
 import { Eye, ShoppingCart } from 'lucide-react';
 import { useCart } from 'react-use-cart';
+// import { useState } from 'react';
 
 // Helper function to strip HTML tags and truncate by words
 const stripHtmlAndTruncateByWords = (html: string, maxWords: number = 20) => {
@@ -11,41 +12,40 @@ const stripHtmlAndTruncateByWords = (html: string, maxWords: number = 20) => {
     return words.length > maxWords ? words.slice(0, maxWords).join(' ') + '...' : stripped;
 };
 
+
+
 export default function ProductCard({ product, viewMode = 'grid' }: { product: Product; viewMode?: 'grid' | 'list' }) {
     const { addItem, items, updateItemQuantity } = useCart();
-    
+
     // Get the main image - prefer primary gallery image, fallback to product.image
     const getMainImage = () => {
         const primaryImage = product.images?.find(img => img.is_primary);
         return primaryImage ? primaryImage.image_path : product.image;
     };
-    
-    // Use product-level stock and color directly (no variants)
+
+    // Calculate stock from product.stock
     const currentStock = product.stock || 0;
-    
+
     const handleAddToCart = () => {
         if (currentStock === 0) {
             return; // Don't add to cart if no stock
         }
 
-        // Use product ID as cart item identifier
-        const cartId = String(product.id);
-        
-        if (items.some((item) => item.id === cartId)) {
-            const existingItem = items.find((item) => item.id === cartId);
+        const productId = String(product.id);
+        if (items.some((item) => item.id === productId)) {
+            const existingItem = items.find((item) => item.id === productId);
             const newQuantity = Number(existingItem?.quantity) + 1;
-            
-            // Check if new quantity would exceed available stock
             if (newQuantity > currentStock) {
                 return; // Don't update if would exceed stock
             }
-            
-            updateItemQuantity(cartId, newQuantity);
+            updateItemQuantity(productId, newQuantity);
         } else {
             addItem(
                 {
                     ...product,
-                    id: cartId,
+                    id: productId,
+                    price: product.price,
+                    stock: product.stock
                 },
                 1,
             );
@@ -63,35 +63,19 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     <div className="flex flex-1 flex-col justify-between p-6">
                         <div>
                             <h3 className="mb-2 text-xl font-semibold text-black">{product.name}</h3>
-                            <div className="mb-2">
-                                {product.discount && product.discount > 0 ? (
-                                    <div className="flex items-center gap-2">
-                                        <p className="text-gray-600 line-through">{formatPrice(product.price)}</p>
-                                        <p className="text-lg font-bold text-green-600">
-                                            {formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type || 'fixed'))}
-                                        </p>
-                                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                            {product.discount_type === 'fixed' ? `-$${product.discount.toFixed(2)}` : `-${product.discount.toFixed(0)}%`}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <p className="text-gray-600">{formatPrice(product.price)}</p>
-                                )}
-                            </div>
+                            <p className="mb-2 text-gray-600">{formatPrice(product.price)}</p>
                             <div className="mb-4 space-y-2">
                                 {product.sku && (
                                     <p className="text-sm text-gray-500">
                                         <span className="font-medium">SKU:</span> {product.sku}
                                     </p>
                                 )}
-                                {currentStock !== undefined && (
-                                    <p className="text-sm text-gray-500">
-                                        <span className="font-medium">Stock:</span> 
-                                        <span className={`ml-1 ${currentStock === 0 ? 'text-red-600' : (currentStock === 1 ? 'text-red-600' : (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))}`}>
-                                            {currentStock === 0 ? 'Out of stock' : (currentStock === 1 ? 'Only 1 left' : (currentStock <= 5 ? `Only ${currentStock} left` : `${currentStock} available`))}
-                                        </span>
-                                    </p>
-                                )}
+                                <p className="text-sm text-gray-500">
+                                    <span className="font-medium">Stock:</span>
+                                    <span className={`ml-1 ${currentStock === 0 ? 'text-red-600' : (currentStock >= 1 && currentStock <= 3 ? 'text-red-600' : (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))}`}>
+                                        {currentStock === 0 ? 'Out of stock' : (currentStock >= 1 && currentStock <= 3 ? `Only ${currentStock} left` : `${currentStock} available`)}
+                                    </span>
+                                </p>
                             </div>
                             <p className="text-gray-500">{stripHtmlAndTruncateByWords(product.description, 10)}</p>
                         </div>
@@ -106,11 +90,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                             <button
                                 onClick={handleAddToCart}
                                 disabled={currentStock === 0}
-                                className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${
-                                    currentStock === 0
-                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                                className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
+                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                                         : 'bg-black text-white hover:bg-gray-800'
-                                }`}
+                                    }`}
                                 title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
                             >
                                 <ShoppingCart className="h-4 w-4" />
@@ -125,9 +108,9 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
 
     return (
         <div className="group overflow-hidden rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
-          {/* Image */}
-          <div className="relative h-64 bg-gray-100 overflow-hidden">
-            <img
+            {/* Image */}
+            <div className="relative h-64 bg-gray-100 overflow-hidden">
+                <img
                     src={`/storage/${getMainImage()}`}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -152,35 +135,19 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                             {product.name}
                         </Link>
                     </h3>
-                    <div className="mt-1">
-                        {product.discount && product.discount > 0 ? (
-                            <div className="flex items-center gap-2">
-                                <p className="text-sm text-gray-600 line-through">{formatPrice(product.price)}</p>
-                                <p className="text-base font-bold text-green-600">
-                                    {formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type || 'fixed'))}
-                                </p>
-                                <span className="text-xs bg-green-100 text-green-800 px-1 py-0.5 rounded">
-                                    {product.discount_type === 'fixed' ? `-Rp ${Number(product.discount).toLocaleString('id-ID')}` : `-${Number(product.discount).toFixed(0)}%`}
-                                </span>
-                            </div>
-                        ) : (
-                            <p className="text-gray-600">{formatPrice(product.price)}</p>
-                        )}
-                    </div>
+                    <p className="mt-1 text-gray-600">{formatPrice(product.price)}</p>
                     <div className="mt-2 space-y-2">
                         {product.sku && (
                             <p className="text-xs text-gray-500">
                                 <span className="font-medium">SKU:</span> {product.sku}
                             </p>
                         )}
-                        {currentStock !== undefined && (
-                            <p className="text-xs text-gray-500">
-                                <span className="font-medium">Stock:</span> 
-                                <span className={`ml-1 ${currentStock === 0 ? 'text-red-600' : (currentStock === 1 ? 'text-red-600' : (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))}`}>
-                                    {currentStock === 0 ? 'Out of stock' : (currentStock === 1 ? 'Only 1 left' : (currentStock <= 5 ? `Only ${currentStock} left` : `${currentStock} available`))}
-                                </span>
-                            </p>
-                        )}
+                        <p className="text-xs text-gray-500">
+                            <span className="font-medium">Stock:</span>
+                            <span className={`ml-1 ${currentStock === 0 ? 'text-red-600' : (currentStock >= 1 && currentStock <= 3 ? 'text-red-600' : (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))}`}>
+                                {currentStock === 0 ? 'Out of stock' : (currentStock >= 1 && currentStock <= 3 ? `Only ${currentStock} left` : `${currentStock} available`)}
+                            </span>
+                        </p>
                     </div>
                     <p className="mt-2 text-sm text-gray-500">{stripHtmlAndTruncateByWords(product.description, 10)}</p>
                 </div>
@@ -188,11 +155,10 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     <button
                         onClick={handleAddToCart}
                         disabled={currentStock === 0}
-                        className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${
-                            currentStock === 0
-                                ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                        className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
+                                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                                 : 'bg-black text-white hover:bg-gray-800'
-                        }`}
+                            }`}
                         title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
                     >
                         <ShoppingCart className="h-4 w-4" />

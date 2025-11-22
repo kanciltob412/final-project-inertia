@@ -2,7 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Menu, ShoppingCart, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
-import { User, SharedData } from '@/types';
+import { SharedData } from '@/types';
 import { logout } from '@/routes';
 
 interface NavbarProps {

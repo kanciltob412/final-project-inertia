@@ -6,7 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\GetInTouchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CouponController;
+use App\Http\Controllers\RajaOngkirController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PageController;
@@ -32,6 +32,7 @@ Route::get('/faq', [PageController::class, 'faq'])->name('faq');
 Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('privacy-policy');
 Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
 Route::get('/cookies-policy', [PageController::class, 'cookiesPolicy'])->name('cookies-policy');
+Route::get('/shipping-test', fn() => inertia('ShippingTest'))->name('shipping-test');
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -47,9 +48,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
     Route::patch('orders/bulk-update', [OrderController::class, 'bulkUpdate'])->name('orders.bulk-update');
     Route::resource('orders', OrderController::class);
 
-    // Coupons Management
-    Route::resource('coupons', CouponController::class);
-
     // Newsletter Management
     Route::get('newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');
     Route::get('newsletter/export', [NewsletterController::class, 'export'])->name('newsletter.export');
@@ -64,6 +62,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
 
 // Guest checkout allowed - no auth required
 Route::post('orders/pay', [OrderController::class, 'payOrder'])->name('orders.pay');
+// Allow guests to view their orders
+Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('orders.show')->withoutMiddleware(['auth', 'verified', 'checkAdmin']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Other authenticated routes can be added here

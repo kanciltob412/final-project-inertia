@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react';
 import type { PriceRange } from '../context/FilterContext';
+import { useState, useEffect, useRef } from 'react';
 
 interface FilterSidebarProps {
     searchQuery: string;
@@ -29,6 +30,42 @@ export const FilterSidebar = ({
     clearFilters,
     setCurrentPage,
 }: FilterSidebarProps) => {
+    const [localMinPrice, setLocalMinPrice] = useState(priceRange.min !== undefined ? String(priceRange.min) : '');
+    const [localMaxPrice, setLocalMaxPrice] = useState(priceRange.max === Infinity || priceRange.max === undefined ? '' : String(priceRange.max));
+    const minPriceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const maxPriceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleMinPriceChange = (value: string) => {
+        setLocalMinPrice(value);
+
+        if (minPriceTimeoutRef.current) {
+            clearTimeout(minPriceTimeoutRef.current);
+        }
+
+        minPriceTimeoutRef.current = setTimeout(() => {
+            setPriceRange({
+                ...priceRange,
+                min: value === '' ? 0 : parseFloat(value),
+            });
+            setCurrentPage(1);
+        }, 1500);
+    };
+
+    const handleMaxPriceChange = (value: string) => {
+        setLocalMaxPrice(value);
+
+        if (maxPriceTimeoutRef.current) {
+            clearTimeout(maxPriceTimeoutRef.current);
+        }
+
+        maxPriceTimeoutRef.current = setTimeout(() => {
+            setPriceRange({
+                ...priceRange,
+                max: value === '' ? Infinity : parseFloat(value),
+            });
+            setCurrentPage(1);
+        }, 1500);
+    };
     return (
         <div className="w-64 space-y-6">
             <div className="relative flex-1 md:w-64">
@@ -67,29 +104,17 @@ export const FilterSidebar = ({
                     <input
                         type="number"
                         placeholder="Min"
-                        value={priceRange.min !== undefined ? String(priceRange.min) : ''}
-                        onChange={(e) => {
-                            setPriceRange({
-                                ...priceRange,
-                                min: e.target.value === '' ? 0 : parseFloat(e.target.value),
-                            });
-                            setCurrentPage(1);
-                        }}
-                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                        value={localMinPrice}
+                        onChange={(e) => handleMinPriceChange(e.target.value)}
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
 
                     <input
                         type="number"
                         placeholder="Max"
-                        value={priceRange.max === Infinity || priceRange.max === undefined ? '' : String(priceRange.max)}
-                        onChange={(e) => {
-                            setPriceRange({
-                                ...priceRange,
-                                max: e.target.value === '' ? Infinity : parseFloat(e.target.value),
-                            });
-                            setCurrentPage(1);
-                        }}
-                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                        value={localMaxPrice}
+                        onChange={(e) => handleMaxPriceChange(e.target.value)}
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                 </div>
             </div>

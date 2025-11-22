@@ -163,6 +163,10 @@
                 <span class="value">{{ $order->created_at->format('F j, Y \a\t g:i A') }}</span>
             </div>
             <div class="info-row">
+                <span class="label">Total Amount:</span>
+                <span class="value" style="font-weight: bold;">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+            </div>
+            <div class="info-row">
                 <span class="label">Payment Status:</span>
                 <span class="value" style="color: {{ $type === 'success' ? '#28a745' : '#dc3545' }}; font-weight: bold;">
                     {{ $type === 'success' ? 'PAID' : 'FAILED' }}
@@ -198,78 +202,21 @@
 
         <div class="order-items">
             <h3>Ordered Items</h3>
-            @php
-                $subtotal = 0;
-                $totalProductDiscounts = 0;
-            @endphp
             @foreach($order->items as $item)
-                @php
-                    $product = $item->product;
-                    $qty = $item->quantity;
-                    $unitPrice = $item->price / $qty;
-                    $itemSubtotal = $unitPrice * $qty;
-                    $subtotal += $itemSubtotal;
-                    
-                    // Calculate product discount for this item
-                    $itemDiscount = 0;
-                    if($product->discount && $product->discount > 0) {
-                        if($product->discount_type === 'percentage') {
-                            $itemDiscount = ($itemSubtotal * $product->discount) / 100;
-                        } else {
-                            $itemDiscount = $product->discount * $qty;
-                        }
-                        $totalProductDiscounts += $itemDiscount;
-                    }
-                @endphp
-                <div class="item">
-                    <div>
-                        <strong>{{ $product->name }}</strong>
-                        @if($item->productVariant)
-                            <br><small>{{ $item->productVariant->name }}</small>
-                        @endif
-                        <br><small>Unit Price: Rp {{ number_format($unitPrice, 0, ',', '.') }}</small>
-                        <br><small>Qty: {{ $qty }}</small>
-                        @if($product->discount && $product->discount > 0)
-                            <br><small style="color: #28a745; font-weight: bold;">
-                                @if($product->discount_type === 'percentage')
-                                    Discount: {{ $product->discount }}% (-Rp {{ number_format($itemDiscount, 0, ',', '.') }})
-                                @else
-                                    Discount: -Rp {{ number_format($itemDiscount, 0, ',', '.') }}
-                                @endif
-                            </small>
-                        @endif
-                    </div>
-                    <div style="font-weight: bold;">
-                        Rp {{ number_format($item->price, 0, ',', '.') }}
-                    </div>
+            <div class="item">
+                <div>
+                    <strong>{{ $item->product->name }}</strong>
+                    @if($item->productVariant)
+                        <br><small>{{ $item->productVariant->name }}</small>
+                    @endif
+                    <br><small>Unit Price: Rp {{ number_format($item->price / $item->quantity, 0, ',', '.') }}</small>
+                    <br><small>Qty: {{ $item->quantity }}</small>
                 </div>
+                <div style="font-weight: bold;">
+                    Subtotal: Rp {{ number_format($item->price, 0, ',', '.') }}
+                </div>
+            </div>
             @endforeach
-        </div>
-
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid {{ $type === 'success' ? '#28a745' : '#dc3545' }};">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">Subtotal:</span>
-                <span style="font-weight: bold;">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
-            </div>
-            
-            @if($totalProductDiscounts > 0)
-            <div style="display: flex; justify-content: space-between; color: #28a745; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">Product Discounts:</span>
-                <span style="font-weight: bold;">-Rp {{ number_format($totalProductDiscounts, 0, ',', '.') }}</span>
-            </div>
-            @endif
-            
-            @if($order->coupon_discount && $order->coupon_discount > 0)
-            <div style="display: flex; justify-content: space-between; color: #28a745; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">🎫 Coupon Discount:</span>
-                <span style="font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
-            </div>
-            @endif
-            
-            <div style="display: flex; justify-content: space-between; font-size: 18px;">
-                <span style="font-weight: bold;">Final Total:</span>
-                <span style="font-weight: bold;">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
-            </div>
         </div>
 
         @if($type === 'success')

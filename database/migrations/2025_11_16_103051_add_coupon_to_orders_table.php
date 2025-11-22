@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order', function (Blueprint $table) {
-            $table->foreignId('coupon_id')->nullable()->constrained('coupons')->nullOnDelete();
-            $table->decimal('coupon_discount', 10, 2)->nullable();
+        Schema::table('orders', function (Blueprint $table) {
+            //
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order', function (Blueprint $table) {
-            $table->dropForeignIdFor('coupons');
-            $table->dropColumn('coupon_discount');
+        Schema::table('orders', function (Blueprint $table) {
+            //
         });
     }
 };

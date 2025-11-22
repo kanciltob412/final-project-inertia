@@ -1,7 +1,7 @@
 import React from "react";
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Order, Product, User } from "@/types";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import { Separator } from "@/components/ui/separator";
 import HeadingSmall from "@/components/heading-small";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "../../components/ui/checkbox";
 
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -365,7 +364,6 @@ export default function Form({ order, users, products }: Props) {
                         {data.items && data.items.length > 0 ? (
                             <div className="bg-gray-50 p-4 rounded-lg space-y-3">
                                 {data.items.map((item, index) => {
-                                    const currentProduct = products?.find(p => p.id === Number(item.product_id));
                                     const itemSubtotal = (Number(item.price) || 0) * (Number(item.quantity) || 0);
 
                                     return (
@@ -512,7 +510,7 @@ export default function Form({ order, users, products }: Props) {
                         <Button
                             type="submit"
                             disabled={processing}
-                            onClick={(e) => {
+                            onClick={() => {
                                 console.log('Update button clicked', {
                                     processing,
                                     order: !!order,

@@ -33,7 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(auth()->user()->getRedirectRoute());
+        // Redirect to intended route or fallback to home
+        return redirect()->intended('/');
     }
 
     /**

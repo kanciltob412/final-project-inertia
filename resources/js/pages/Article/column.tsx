@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy, Eye, EyeOff } from "lucide-react";
+import { MoreHorizontal, Copy } from "lucide-react";
 import { useState } from "react";
 import { Article } from "../../types";
 
@@ -131,47 +131,8 @@ export const columns: ColumnDef<Article>[] = [
         ),
     },
     {
-        accessorKey: "seo_keywords",
-        header: "SEO Keywords",
-        cell: ({ row }) => (
-            <div className="max-w-xs truncate text-sm text-gray-600">
-                {row.original.seo_keywords || "-"}
-            </div>
-        ),
-    },
-    {
-        id: "status",
-        header: "Status",
-        cell: ({ row }) => {
-            const isPublished = row.original.status === "published";
-            const handleToggle = () => {
-                router.patch(`/admin/articles/${row.original.id}`, {
-                    status: isPublished ? "draft" : "published"
-                }, {
-                    preserveScroll: true,
-                });
-            };
-            return (
-                <Button
-                    size="sm"
-                    variant={isPublished ? "default" : "outline"}
-                    onClick={handleToggle}
-                    className="gap-2"
-                >
-                    {isPublished ? (
-                        <>
-                            <Eye className="h-4 w-4" />
-                            Published
-                        </>
-                    ) : (
-                        <>
-                            <EyeOff className="h-4 w-4" />
-                            Draft
-                        </>
-                    )}
-                </Button>
-            );
-        },
+        accessorKey: "keywords",
+        header: "Keywords",
     },
     {
         accessorKey: "featured",
@@ -190,10 +151,10 @@ export const columns: ColumnDef<Article>[] = [
             return (
                 <img
                     src={
-                        featuredImage?.startsWith('http') 
-                            ? featuredImage 
-                            : featuredImage 
-                                ? `/storage/${featuredImage}` 
+                        featuredImage?.startsWith('http')
+                            ? featuredImage
+                            : featuredImage
+                                ? `/storage/${featuredImage}`
                                 : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100'
                     }
                     alt={row.original.title}

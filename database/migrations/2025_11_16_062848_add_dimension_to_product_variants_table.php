@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_variants', function (Blueprint $table) {
-            $table->string('dimension')->nullable()->after('price')->comment('Dimension in mm');
+            //
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_variants', function (Blueprint $table) {
-            $table->dropColumn('dimension');
+            //
         });
     }
 };

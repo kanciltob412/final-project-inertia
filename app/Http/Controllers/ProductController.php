@@ -11,6 +11,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -41,32 +42,24 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             "category_id" => "required|exists:categories,id",
+            "sku" => "required|string|max:255|unique:products,sku",
             "name" => "required|string|max:255",
             "description" => "required|string",
-            "dimension" => "nullable|string|max:255",
             "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
-            "discount" => "nullable|numeric|min:0",
-            "discount_type" => "nullable|in:fixed,percentage",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
 
         DB::transaction(function () use ($validated, $request) {
-            // Generate a unique SKU for the product
-            $productSku = 'PRD-' . strtoupper(uniqid());
-            
             // Create the base product (image will be set from first gallery image)
             $productData = [
-                'sku' => $productSku,
+                'sku' => $validated['sku'],
                 'category_id' => $validated['category_id'],
                 'name' => $validated['name'],
                 'description' => $validated['description'],
-                'dimension' => $validated['dimension'] ?? null,
                 'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
-                'discount' => $validated['discount'] ?? null,
-                'discount_type' => $validated['discount_type'] ?? null,
                 'image' => null, // Will be set from first gallery image
             ];
 
@@ -77,12 +70,12 @@ class ProductController extends Controller
                 foreach ($request->file('gallery_images') as $index => $imageFile) {
                     $imagePath = $imageFile->store('products', 'public');
                     $isFirst = $index === 0;
-                    
+
                     // Set first image as product's main image
                     if ($isFirst) {
                         $product->update(['image' => $imagePath]);
                     }
-                    
+
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image_path' => $imagePath,
@@ -124,13 +117,11 @@ class ProductController extends Controller
         $product = Product::with('variants')->findOrFail($id);
         $validated = $request->validate([
             "category_id" => "required|exists:categories,id",
+            "sku" => "required|string|max:255|unique:products,sku," . $id,
             "name" => "required|string|max:255",
             "description" => "required|string",
-            "dimension" => "nullable|string|max:255",
             "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
-            "discount" => "nullable|numeric|min:0",
-            "discount_type" => "nullable|in:fixed,percentage",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
@@ -138,14 +129,12 @@ class ProductController extends Controller
         DB::transaction(function () use ($validated, $request, $product) {
             // Update product base information
             $productData = [
+                'sku' => $validated['sku'],
                 'category_id' => $validated['category_id'],
                 'name' => $validated['name'],
                 'description' => $validated['description'],
-                'dimension' => $validated['dimension'] ?? null,
                 'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
-                'discount' => $validated['discount'] ?? null,
-                'discount_type' => $validated['discount_type'] ?? null,
             ];
 
             if ($request->hasFile('image')) {
@@ -171,12 +160,12 @@ class ProductController extends Controller
                 foreach ($request->file('gallery_images') as $index => $imageFile) {
                     $imagePath = $imageFile->store('products', 'public');
                     $isFirst = $index === 0;
-                    
+
                     // Set first image as product's main image
                     if ($isFirst) {
                         $product->update(['image' => $imagePath]);
                     }
-                    
+
                     ProductImage::create([
                         'product_id' => $product->id,
                         'image_path' => $imagePath,
@@ -212,8 +201,7 @@ class ProductController extends Controller
     public function bulkUpdate(Request $request)
     {
         Log::info('Bulk update request received', [
-            'request_data' => $request->all(),
-            'user_id' => auth()->user()->id ?? null
+            'user_id' => Auth::user() ? Auth::user()->id : null
         ]);
 
         $validated = $request->validate([
@@ -251,7 +239,7 @@ class ProductController extends Controller
         DB::transaction(function () use ($originalProduct) {
             // Generate a new unique SKU
             $newSku = 'PRD-' . strtoupper(uniqid());
-            
+
             $newProduct = Product::create([
                 'sku' => $newSku,
                 'category_id' => $originalProduct->category_id,
@@ -265,7 +253,6 @@ class ProductController extends Controller
                 'image' => $originalProduct->image,
                 'is_active' => $originalProduct->is_active,
             ]);
-
         });
 
         return back()->with('success', 'Product duplicated successfully.');

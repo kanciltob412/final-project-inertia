@@ -1,4 +1,4 @@
-import { formatPrice, calculateDiscountedPrice } from '@/utils/helper';
+import { formatPrice } from '@/utils/helper';
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
@@ -8,11 +8,12 @@ import Footer from '@/components/Footer';
 import ProductGallery from '@/components/ProductGallery';
 import { Product } from '@/types';
 
+
 export default function ProductDetail({ product }: { product: Product }) {
     const { addItem, items, updateItemQuantity } = useCart();
     const [quantity, setQuantity] = useState(1);
-    
-    // Use product-level stock and color directly (no variants)
+
+    // Calculate stock from product.stock
     const currentStock = product.stock || 0;
 
     if (!product) {
@@ -29,33 +30,36 @@ export default function ProductDetail({ product }: { product: Product }) {
 
     const handleAddToCart = () => {
         if (currentStock === 0) {
-            return; // Don't add to cart if no stock
+            return; // Don't add to cart if no variant selected or no stock
         }
 
         const quantityNumber = Number(quantity);
-        // Use product ID as cart identifier
-        const cartId = String(product.id);
+        // Use variant ID as unique identifier for cart
 
-        if (items.some((item) => item.id === cartId)) {
-            const existingItem = items.find((item) => item.id === cartId);
+        const cartId = product.id;
+
+        if (items.some((item) => Number(item.id) === Number(cartId))) {
+            const existingItem = items.find((item) => Number(item.id) === Number(cartId));
             const newQuantity = Number(existingItem?.quantity) + quantityNumber;
-            
+
             // Check if new quantity exceeds available stock
             if (newQuantity > currentStock) {
                 return; // Don't update if would exceed stock
             }
-            
-            updateItemQuantity(cartId, newQuantity);
+
+            updateItemQuantity(String(cartId), newQuantity);
         } else {
             // Check if requested quantity exceeds available stock
             if (quantityNumber > currentStock) {
                 return; // Don't add if exceeds stock
             }
-            
+
             addItem(
                 {
                     ...product,
-                    id: cartId,
+                    id: String(cartId),
+                    price: product.price,
+                    stock: product.stock
                 },
                 quantityNumber,
             );
@@ -93,55 +97,33 @@ export default function ProductDetail({ product }: { product: Product }) {
                                 productName={product.name}
                             />
                         </div>
-
                         <div>
                             <h1 className="mb-4 text-3xl font-bold">{product.name}</h1>
-                            <div className="mb-4">
-                                {product.discount && product.discount > 0 ? (
-                                    <div className="flex items-center gap-3">
-                                        <p className="text-lg text-gray-600 line-through">
-                                            {formatPrice(product.price)}
+                            {/* Product Details */}
+                            <div className="mb-6">
+                                <div className="space-y-2">
+                                    {product.sku && (
+                                        <p className="text-sm text-gray-600">
+                                            <span className="font-medium">SKU:</span> {product.sku}
                                         </p>
-                                        <p className="text-3xl font-bold text-green-600">
-                                            {formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type || 'fixed'))}
-                                        </p>
-                                        <span className="text-sm bg-green-100 text-green-800 px-3 py-1 rounded">
-                                            {product.discount_type === 'fixed' ? `-Rp ${Number(product.discount).toLocaleString('id-ID')}` : `-${Number(product.discount).toFixed(0)}%`}
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <p className="text-2xl text-gray-800">
-                                        {formatPrice(product.price)}
-                                    </p>
-                                )}
+                                    )}
+                                </div>
                             </div>
-                            
-            {/* Stock Information */}
-            <div className="mb-6">
-                <p className="text-sm text-gray-500">
-                    <span className="font-medium">Stock:</span> 
-                    <span className={`ml-1 ${
-                        currentStock === 0 ? 'text-red-600' : 
-                        (currentStock === 1 ? 'text-red-600' : 
-                        (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))
-                    }`}>
-                        {currentStock === 0 ? 'Out of stock' : 
-                         (currentStock === 1 ? 'Only 1 left' : 
-                         (currentStock <= 5 ? `Only ${currentStock} left` : 
-                         `${currentStock} available`))}
-                    </span>
-                </p>
-            </div>            {/* Product Details */}
-            <div className="mb-6">
-                <h2 className="mb-2 font-semibold">Product Details</h2>
-                <div className="space-y-2">
-                    {product.sku && (
-                        <p className="text-sm text-gray-600">
-                            <span className="font-medium">SKU:</span> {product.sku}
-                        </p>
-                    )}
-                </div>
-            </div>                            <div className="mb-6">
+                            <p className="mb-4 text-2xl text-gray-800">{formatPrice(product.price)}</p>
+                            {/* Stock Information */}
+                            <div className="mb-6">
+                                <p className="text-sm text-gray-500">
+                                    <span className="font-medium">Stock:</span>
+                                    <span className={`ml-1 ${currentStock === 0 ? 'text-red-600' :
+                                        (currentStock >= 1 && currentStock <= 3 ? 'text-red-600' :
+                                            (currentStock <= 5 ? 'text-orange-600' : 'text-green-600'))
+                                        }`}>
+                                        {currentStock === 0 ? 'Out of stock' :
+                                            (currentStock >= 1 && currentStock <= 3 ? `Only ${currentStock} left` :
+                                                `${currentStock} available`)}
+                                    </span>
+                                </p>
+                            </div>                            <div className="mb-6">
                                 <h2 className="mb-2 font-semibold">Description</h2>
                                 <div
                                     className="text-gray-600 prose prose-sm max-w-none"
@@ -149,42 +131,39 @@ export default function ProductDetail({ product }: { product: Product }) {
                                 />
                             </div>
 
-            <div className="mb-8">
-                <h2 className="mb-4 font-semibold">Quantity</h2>
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentStock === 0}
-                        className={`rounded-full p-2 ${
-                            currentStock === 0
-                                ? 'text-gray-400 cursor-not-allowed' 
-                                : 'hover:bg-gray-100'
-                        }`}
-                    >
-                        <Minus className="h-5 w-5" />
-                    </button>
-                    <span className="w-12 text-center text-xl font-medium">{quantity}</span>
-                    <button 
-                        onClick={() => setQuantity((prev) => Math.min(prev + 1, currentStock || 1))}
-                        disabled={currentStock === 0 || quantity >= currentStock}
-                        className={`rounded-full p-2 ${
-                            currentStock === 0 || quantity >= currentStock
-                                ? 'text-gray-400 cursor-not-allowed'
-                                : 'hover:bg-gray-100'
-                        }`}
-                    >
-                        <Plus className="h-5 w-5" />
-                    </button>
-                </div>
-            </div>                            <div className="space-y-3">
+                            <div className="mb-8">
+                                <h2 className="mb-4 font-semibold">Quantity</h2>
+                                <div className="flex items-center gap-4">
+                                    <button
+                                        onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+                                        disabled={currentStock === 0}
+                                        className={`rounded-full p-2 ${currentStock === 0
+                                            ? 'text-gray-400 cursor-not-allowed'
+                                            : 'hover:bg-gray-100'
+                                            }`}
+                                    >
+                                        <Minus className="h-5 w-5" />
+                                    </button>
+                                    <span className="w-12 text-center text-xl font-medium">{quantity}</span>
+                                    <button
+                                        onClick={() => setQuantity((prev) => Math.min(prev + 1, currentStock || 1))}
+                                        disabled={currentStock === 0 || quantity >= currentStock}
+                                        className={`rounded-full p-2 ${currentStock === 0 || quantity >= currentStock
+                                            ? 'text-gray-400 cursor-not-allowed'
+                                            : 'hover:bg-gray-100'
+                                            }`}
+                                    >
+                                        <Plus className="h-5 w-5" />
+                                    </button>
+                                </div>
+                            </div>                            <div className="space-y-3">
                                 <button
                                     onClick={handleAddToCart}
                                     disabled={currentStock === 0}
-                                    className={`flex w-full items-center justify-center gap-2 rounded-md py-4 transition-colors ${
-                                        currentStock === 0
-                                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
-                                            : 'bg-black text-white hover:bg-gray-800'
-                                    }`}
+                                    className={`flex w-full items-center justify-center gap-2 rounded-md py-4 transition-colors ${currentStock === 0
+                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                        : 'bg-black text-white hover:bg-gray-800'
+                                        }`}
                                 >
                                     <ShoppingCart className="h-5 w-5" />
                                     {currentStock === 0 ? 'Out of Stock' : 'Add to Cart'}

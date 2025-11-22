@@ -29,8 +29,10 @@ class Order extends Model
         'courier_name',
         'tracking_number',
         'shipped_at',
-        'coupon_id',
-        'coupon_discount',
+        'shipping_courier',
+        'shipping_service',
+        'shipping_cost',
+        'destination_city_id',
     ];
 
     protected $casts = [
@@ -46,10 +48,5 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
-    }
-
-    public function coupon(): BelongsTo
-    {
-        return $this->belongsTo(Coupon::class);
     }
 }

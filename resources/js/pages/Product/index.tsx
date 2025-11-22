@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { columns } from "./column";
 import HeadingSmall from "@/components/heading-small";
+import products from "../../routes/products";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -30,7 +31,7 @@ export default function Index({ data }: Props) {
                         description="Manage your products here"
                     />
                     <Button asChild>
-                        <Link href="/admin/products/create">
+                        <Link href={products.create().url}>
                             <Plus className="size-4" />
                             Create Product
                         </Link>

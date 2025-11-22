@@ -1,6 +1,6 @@
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem, Category, Product } from "@/types";
-import { Head, router, useForm } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import HeadingSmall from "@/components/heading-small";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TiptapEditor from "@/components/TiptapEditor";
 import MultiImageUpload from "@/components/MultiImageUpload";
+import { useForm } from "@inertiajs/react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -23,6 +24,20 @@ interface Props {
 }
 
 export default function Form({ categories, product }: Props) {
+    // Safe image mapping (no variant/color logic)
+    // Only use File[] for upload, metadata for display can be handled separately if needed
+    const initialGalleryFiles: File[] = [];
+
+    const { data, setData, processing, errors } = useForm({
+        sku: product?.sku || "",
+        category_id: product?.category_id?.toString() || "",
+        name: product?.name || "",
+        description: product?.description || "",
+        stock: product?.stock?.toString() || "",
+        price: product?.price?.toString() || "",
+        gallery_images: initialGalleryFiles,
+    });
+
     // Debug logging
     console.log('Product Form Loaded', { product, categories });
 
@@ -52,30 +67,6 @@ export default function Form({ categories, product }: Props) {
         );
     }
 
-    // Safe image mapping
-    const initialGalleryImages = product?.images && Array.isArray(product.images)
-        ? product.images.map((img: any) => ({
-            id: img.id,
-            url: img.image_path ? `/storage/${img.image_path}` : '',
-            alt_text: img.alt_text || '',
-            is_primary: img.is_primary || false,
-            sort_order: img.sort_order || 0
-        }))
-        : [];
-
-    const { data, setData, post, processing, errors, reset } = useForm({
-        sku: product?.sku || "",
-        category_id: product?.category_id?.toString() || "",
-        name: product?.name || "",
-        description: product?.description || "",
-        dimension: product?.dimension || "",
-        stock: product?.stock?.toString() || "",
-        price: product?.price?.toString() || "",
-        discount: product?.discount?.toString() || "0",
-        discount_type: product?.discount_type || "fixed",
-        gallery_images: initialGalleryImages,
-    });
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -83,24 +74,18 @@ export default function Form({ categories, product }: Props) {
         const formData = new FormData();
 
         // Add regular form fields - ALWAYS add these, even if empty
+        formData.append('sku', data.sku || '');
         formData.append('name', data.name || '');
         formData.append('description', data.description || '');
         formData.append('price', data.price?.toString() || '0');
         formData.append('category_id', data.category_id?.toString() || '');
-        
-        // Add product-level fields
-        formData.append('dimension', data.dimension || '');
         formData.append('stock', data.stock?.toString() || '0');
-        formData.append('discount', data.discount?.toString() || '0');
-        formData.append('discount_type', data.discount_type || 'fixed');
 
-        // Add gallery images (only new File objects)
+        // Add gallery images (File[])
         let galleryIndex = 0;
-        data.gallery_images?.forEach((image) => {
-            if (image.file) {
-                formData.append(`gallery_images[${galleryIndex}]`, image.file);
-                galleryIndex++;
-            }
+        data.gallery_images?.forEach((file) => {
+            formData.append(`gallery_images[${galleryIndex}]`, file);
+            galleryIndex++;
         });
 
         if (product) {
@@ -194,8 +179,8 @@ export default function Form({ categories, product }: Props) {
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="description">Description</Label>
                         <TiptapEditor
-                            value={data.description}
-                            onChange={(value: string) => setData("description", value)}
+                            content={data.description}
+                            onChange={(content: string) => setData("description", content)}
                             disabled={processing}
                         />
                         {errors.description && (
@@ -220,20 +205,7 @@ export default function Form({ categories, product }: Props) {
 
                         {/* Right Column - Details */}
                         <div className="space-y-6">
-                            {/* Dimension */}
-                            <div className="flex flex-col gap-y-2">
-                                <Label htmlFor="dimension">Dimension</Label>
-                                <Input
-                                    id="dimension"
-                                    value={data.dimension}
-                                    onChange={(e) => setData("dimension", e.target.value)}
-                                    disabled={processing}
-                                    placeholder="e.g., 100x200x50"
-                                />
-                                {errors.dimension && (
-                                    <p className="text-sm text-red-600">{errors.dimension}</p>
-                                )}
-                            </div>
+                            {/* Dimension field removed */}
 
                             {/* Stock */}
                             <div className="flex flex-col gap-y-2">
@@ -271,50 +243,10 @@ export default function Form({ categories, product }: Props) {
                             </div>
 
                             {/* Discount */}
-                            <div className="space-y-2">
-                                <Label htmlFor="discount">Discount</Label>
-                                <div className="flex gap-2">
-                                    <Input
-                                        id="discount"
-                                        type="number"
-                                        step="1"
-                                        value={data.discount}
-                                        onChange={(e) => setData("discount", e.target.value)}
-                                        disabled={processing}
-                                        placeholder="e.g., 10000"
-                                        min="0"
-                                        className="flex-1"
-                                    />
-                                    <Select
-                                        value={data.discount_type}
-                                        onValueChange={(value) => setData("discount_type", value as 'fixed' | 'percentage')}
-                                        disabled={processing}
-                                    >
-                                        <SelectTrigger className="w-40">
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="fixed">Fixed (Rp)</SelectItem>
-                                            <SelectItem value="percentage">Percentage (%)</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                {errors.discount && (
-                                    <p className="text-sm text-red-600">{errors.discount}</p>
-                                )}
-                                {/* Show calculated price */}
-                                {data.price && data.discount && (
-                                    <p className="text-sm text-gray-600">
-                                        {data.discount_type === 'fixed' 
-                                            ? `Final price: Rp ${(parseFloat(data.price) - parseFloat(data.discount)).toLocaleString('id-ID')}`
-                                            : `Final price: Rp ${(parseFloat(data.price) * (1 - parseFloat(data.discount) / 100)).toLocaleString('id-ID')}`
-                                        }
-                                    </p>
-                                )}
-                            </div>
+                            {/* Discount and Discount Type fields removed */}
                         </div>
                     </div>
-                    
+
                     {/* Submit */}
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={processing}>

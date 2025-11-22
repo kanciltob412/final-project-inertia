@@ -41,12 +41,16 @@ import { useState } from "react"
 import { router } from "@inertiajs/react"
 import { Product } from "@/types"
 
-interface ProductDataTableProps<TData, TValue> {
+interface ProductWithId {
+    id: string | number;
+}
+
+interface ProductDataTableProps<TData extends ProductWithId, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 
-export function ProductDataTable<TData, TValue>({
+export function ProductDataTable<TData extends ProductWithId, TValue>({
     columns,
     data,
 }: ProductDataTableProps<TData, TValue>) {
@@ -78,7 +82,7 @@ export function ProductDataTable<TData, TValue>({
     })
 
     const selectedRows = table.getFilteredSelectedRowModel().rows
-    const selectedIds = selectedRows.map((row) => (row.original as Product).id)
+    const selectedIds = selectedRows.map((row) => ((row.original as unknown) as Product).id)
 
     const handleBulkEdit = () => {
         if (selectedIds.length === 1) {

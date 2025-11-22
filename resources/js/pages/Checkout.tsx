@@ -1,36 +1,65 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { useForm, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, AlertCircle, CheckCircle } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Loader } from 'lucide-react';
 import { useCart } from 'react-use-cart';
-import { formatPrice, calculateDiscountedPrice } from '../utils/helper';
-import { validateCoupon, calculateCouponDiscount, formatCouponDiscount } from '../utils/coupon';
+import { formatPrice } from '../utils/helper';
 import { SharedData } from '@/types';
 import { useState, useEffect } from 'react';
 
-interface Coupon {
-    id: number;
-    code: string;
-    discount_type: 'fixed' | 'percentage';
-    discount_value: number;
-    usage_limit: number | null;
-    used_count: number;
-    expiry_date: string | null;
-    is_active: boolean;
+interface Province {
+    province_id: string;
+    province: string;
 }
 
+interface City {
+    city_id: string;
+    city_name: string;
+    type: string;
+    postal_code: string;
+}
+
+interface ShippingResponse {
+    error?: string;
+    results?: Array<{
+        costs: Array<{
+            service: string;
+            description: string;
+            cost: Array<{
+                value: number;
+                etd: string;
+            }>;
+        }>;
+    }>;
+}
+
+
 export default function Checkout() {
-    const { items, cartTotal, emptyCart } = useCart();
+    const { items, cartTotal } = useCart();
     const { auth } = usePage<SharedData>().props;
 
-    const [couponCode, setCouponCode] = useState('');
-    const [validatedCoupon, setValidatedCoupon] = useState<Coupon | null>(null);
-    const [couponError, setCouponError] = useState('');
-    const [couponLoading, setCouponLoading] = useState(false);
+    // Shipping state
+    const [provinces, setProvinces] = useState<Province[]>([]);
+    const [originCities, setOriginCities] = useState<City[]>([]);
+    const [destCities, setDestCities] = useState<City[]>([]);
+    const [couriers, setCouriers] = useState<Record<string, string>>({});
+
+    const [originProvince, setOriginProvince] = useState('');
+    const [originCity, setOriginCity] = useState('');
+    const [destProvince, setDestProvince] = useState('');
+    const [destCity, setDestCity] = useState('');
+    const [weight, setWeight] = useState('1000');
+    const [selectedCourier, setSelectedCourier] = useState('jne');
+
+    const [shippingCosts, setShippingCosts] = useState<Record<string, ShippingResponse> | null>(null);
+    const [shippingLoading, setShippingLoading] = useState(false);
+    const [shippingError, setShippingError] = useState('');
+    const [selectedShippingCost, setSelectedShippingCost] = useState<number | null>(null);
+    const [selectedShippingService, setSelectedShippingService] = useState<{ courier: string, service: string } | null>(null);
 
     const { data, setData, processing, errors } = useForm({
         full_name: '',
-        email: auth.user ? '' : '',
+        email: auth.user ? '' : '', // Email only needed for guest users
         password: '',
         create_account: false,
         phone: '',
@@ -38,109 +67,153 @@ export default function Checkout() {
         city: '',
         country: '',
         postal_code: '',
-        coupon_id: null as number | null,
+        shipping_cost: 0,
+        shipping_courier: '',
+        shipping_service: '',
+        destination_city_id: 0,
     });
 
-    // Calculate product-level discounts and subtotal with discounts applied
-    const calculateSubtotalWithDiscounts = () => {
-        return items.reduce((total, item) => {
-            const itemPrice = item.price || 0;
-            const itemQuantity = item.quantity || 1;
-            
-            if (item.discount && Number(item.discount) > 0) {
-                const discountedPrice = calculateDiscountedPrice(
-                    itemPrice,
-                    item.discount,
-                    item.discount_type || 'fixed'
-                );
-                return total + (discountedPrice * itemQuantity);
+    // Fetch provinces on mount
+    useEffect(() => {
+        fetchProvinces();
+        fetchCouriers();
+    }, []);
+
+    // Fetch cities when destination province changes
+    useEffect(() => {
+        if (destProvince) {
+            fetchCities(destProvince, 'dest');
+        }
+    }, [destProvince]);
+
+    const fetchProvinces = async () => {
+        try {
+            const response = await fetch('/api/shipping/provinces');
+            const result = await response.json();
+
+            if (result.success) {
+                setProvinces(result.data);
+            } else {
+                setShippingError(result.message || 'Failed to fetch provinces');
             }
-            return total + (itemPrice * itemQuantity);
-        }, 0);
+        } catch (err) {
+            setShippingError('Error fetching provinces: ' + (err instanceof Error ? err.message : 'Unknown error'));
+        }
     };
 
-    // Calculate original total (before product discounts)
-    const calculateOriginalTotal = () => {
-        return items.reduce((total, item) => {
-            return total + ((item.price || 0) * (item.quantity || 1));
-        }, 0);
+    const fetchCities = async (provinceId: string, type: 'origin' | 'dest') => {
+        try {
+            const response = await fetch('/api/shipping/cities', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ province_id: provinceId }),
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                if (type === 'origin') {
+                    setOriginCities(result.data);
+                } else {
+                    setDestCities(result.data);
+                }
+            } else {
+                setShippingError(result.message || 'Failed to fetch cities');
+            }
+        } catch (err) {
+            setShippingError('Error fetching cities: ' + (err instanceof Error ? err.message : 'Unknown error'));
+        }
     };
 
-    const subtotal = calculateSubtotalWithDiscounts();
-    const originalSubtotal = calculateOriginalTotal();
-    const productDiscountTotal = originalSubtotal - subtotal;
+    const fetchCouriers = async () => {
+        try {
+            const response = await fetch('/api/shipping/couriers');
+            const result = await response.json();
 
-    const couponDiscount = validatedCoupon
-        ? calculateCouponDiscount(subtotal, validatedCoupon)
-        : 0;
+            if (result.success) {
+                setCouriers(result.data);
+            } else {
+                setShippingError(result.message || 'Failed to fetch couriers');
+            }
+        } catch (err) {
+            setShippingError('Error fetching couriers: ' + (err instanceof Error ? err.message : 'Unknown error'));
+        }
+    };
 
-    const finalTotal = Math.max(0, subtotal - couponDiscount);
-
-    // Handle coupon validation
-    const handleApplyCoupon = async () => {
-        if (!couponCode.trim()) {
-            setCouponError('Please enter a coupon code');
+    const calculateShipping = async () => {
+        if (!destCity || !weight) {
+            setShippingError('Please select destination city and weight');
             return;
         }
 
-        setCouponLoading(true);
-        setCouponError('');
+        setShippingLoading(true);
+        setShippingError('');
+        setShippingCosts(null);
+        setSelectedShippingCost(null);
+        setSelectedShippingService(null);
 
-        const result = await validateCoupon(couponCode);
-        if (result.valid && result.coupon) {
-            setValidatedCoupon(result.coupon);
-            setData('coupon_id', result.coupon.id);
-            setCouponCode('');
-        } else {
-            setCouponError(result.message || 'Invalid coupon code');
-            setValidatedCoupon(null);
-            setData('coupon_id', null);
+        try {
+            // Use Bandung (165) as origin (shop location)
+            // Weight should be in grams, RajaOngkir will convert internally
+            const response = await fetch('/api/shipping/multiple-costs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    origin_city_id: 165, // Bandung as origin
+                    destination_city_id: parseInt(destCity),
+                    weight: Math.max(1000, parseInt(weight)), // Minimum 1000 grams
+                    couriers: Object.keys(couriers),
+                }),
+            });
+            const result = await response.json();
+
+            if (result.success) {
+                setShippingCosts(result.data);
+                setData('destination_city_id', parseInt(destCity));
+            } else {
+                setShippingError(result.message || 'Failed to calculate shipping');
+            }
+        } catch (err) {
+            setShippingError('Error calculating shipping: ' + (err instanceof Error ? err.message : 'Unknown error'));
+        } finally {
+            setShippingLoading(false);
         }
-
-        setCouponLoading(false);
     };
 
-    const handleRemoveCoupon = () => {
-        setValidatedCoupon(null);
-        setCouponCode('');
-        setCouponError('');
-        setData('coupon_id', null);
+    const selectShippingOption = (courier: string, service: string, cost: number) => {
+        setSelectedShippingCost(cost);
+        setSelectedShippingService({ courier, service });
+        setData('shipping_cost', cost);
+        setData('shipping_courier', courier);
+        setData('shipping_service', service);
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Build base payload
-        let payload: any = {
+        // Build products array (NOT JSON string)
+        const products = items.map((item) => ({
+            id: parseInt(item.id.includes('-') ? item.id.split('-')[0] : item.id, 10), // Base product ID as integer
+            variant_id: item.variantId ? parseInt(item.variantId.toString(), 10) : null, // Variant ID if exists
+            quantity: typeof item.quantity === 'number' ? item.quantity : (typeof item.quantity === 'string' ? parseInt(item.quantity, 10) : 1),
+        }));
+
+        const payload = {
             full_name: data.full_name,
             phone: data.phone,
             address: data.address,
             city: data.city,
             country: data.country,
             postal_code: data.postal_code,
-            coupon_id: data.coupon_id,
-            total: finalTotal,
-            products: items.map((item) => ({
-                id: item.id.includes('-') ? item.id.split('-')[0] : item.id, // Base product ID
-                variant_id: item.variantId || null, // Variant ID if exists
-                color: item.color || null, // Color information
-                quantity: item.quantity,
-            })),
+            shipping_cost: data.shipping_cost,
+            shipping_courier: data.shipping_courier,
+            shipping_service: data.shipping_service,
+            destination_city_id: data.destination_city_id,
+            products: products, // Send as array, not JSON string
+            email: !auth.user ? data.email : auth.user.email,
         };
 
-        // Add email for both user types
-        if (!auth.user) {
-            // For guest users, use form email (no account creation)
-            payload.email = data.email;
-            console.log('Guest user - email from form:', data.email);
-        } else {
-            // For authenticated users, use their email
-            payload.email = auth.user.email;
-            console.log('Authenticated user - email from auth:', auth.user.email);
-        }
-
         console.log('Auth user object:', auth.user);
-        console.log('Submitting payload with coupon:', payload);
+        console.log('Submitting payload:', payload);
 
         router.post('/orders/pay', payload, {
             onStart: () => {
@@ -153,7 +226,7 @@ export default function Checkout() {
             onError: (errors) => {
                 console.error('Order submission errors:', errors);
                 console.error('Full error object:', JSON.stringify(errors, null, 2));
-                
+
                 // Show user-friendly error message
                 let errorMessage = 'An error occurred during checkout.';
                 if (errors.checkout) {
@@ -161,7 +234,7 @@ export default function Checkout() {
                 } else if (errors.message) {
                     errorMessage = errors.message;
                 }
-                
+
                 alert(errorMessage);
             },
             onFinish: () => {
@@ -367,11 +440,183 @@ export default function Checkout() {
                         </div>
                     </div>
 
+                    {/* Shipping Calculator Section */}
+                    <div className="mt-8 pt-8 border-t">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Method</h3>
+
+                        {shippingError && (
+                            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
+                                <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+                                <p className="text-red-700 text-sm">{shippingError}</p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4 mb-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Destination Province
+                                </label>
+                                <select
+                                    value={destProvince}
+                                    onChange={(e) => {
+                                        setDestProvince(e.target.value);
+                                        setDestCity('');
+                                        setShippingCosts(null);
+                                    }}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                >
+                                    <option value="">Select Province</option>
+                                    {provinces.map((p) => (
+                                        <option key={p.province_id} value={p.province_id}>
+                                            {p.province}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Destination City
+                                </label>
+                                <select
+                                    value={destCity}
+                                    onChange={(e) => {
+                                        setDestCity(e.target.value);
+                                        setShippingCosts(null);
+                                    }}
+                                    disabled={!destProvince}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                >
+                                    <option value="">Select City</option>
+                                    {destCities.map((c) => (
+                                        <option key={c.city_id} value={c.city_id}>
+                                            {c.city_name} ({c.type})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Total Weight (grams)
+                                </label>
+                                <input
+                                    type="number"
+                                    value={weight}
+                                    onChange={(e) => {
+                                        setWeight(e.target.value);
+                                        setShippingCosts(null);
+                                    }}
+                                    min="1"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="1000"
+                                />
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={calculateShipping}
+                            disabled={shippingLoading || !destCity}
+                            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                        >
+                            {shippingLoading ? (
+                                <>
+                                    <Loader className="h-4 w-4 animate-spin" />
+                                    Calculating...
+                                </>
+                            ) : (
+                                'Calculate Shipping Cost'
+                            )}
+                        </button>
+
+                        {/* Shipping Options */}
+                        {shippingCosts && (
+                            <div className="mt-6 space-y-4 max-h-96 overflow-y-auto">
+                                <h4 className="font-semibold text-gray-900">Select Shipping Option:</h4>
+
+                                {Object.entries(shippingCosts).map(([courier, response]) => {
+                                    const courierName = couriers[courier] || courier.toUpperCase();
+                                    const hasError = response && 'error' in response;
+
+                                    if (hasError) {
+                                        return (
+                                            <div
+                                                key={courier}
+                                                className="p-3 bg-yellow-50 border border-yellow-200 rounded-md"
+                                            >
+                                                <p className="text-yellow-800 font-semibold text-sm">{courierName}</p>
+                                                <p className="text-yellow-700 text-xs">
+                                                    {response && 'error' in response ? response.error : 'Not available for this route'}
+                                                </p>
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <div key={courier} className="border border-gray-200 rounded-md overflow-hidden">
+                                            <div className="bg-gray-50 px-3 py-2">
+                                                <h5 className="font-semibold text-gray-900 text-sm">{courierName}</h5>
+                                            </div>
+                                            <div className="p-3 space-y-2">
+                                                {response && 'results' in response && response.results?.[0]?.costs?.map(
+                                                    (cost: { service: string; description: string; cost: Array<{ value: number; etd: string }> }, idx: number) => (
+                                                        <button
+                                                            key={idx}
+                                                            type="button"
+                                                            onClick={() =>
+                                                                selectShippingOption(
+                                                                    courier,
+                                                                    cost.service,
+                                                                    cost.cost?.[0]?.value || 0
+                                                                )
+                                                            }
+                                                            className={`w-full p-3 text-left rounded-md border-2 transition-colors ${selectedShippingService?.courier === courier &&
+                                                                selectedShippingService?.service === cost.service
+                                                                ? 'border-blue-600 bg-blue-50'
+                                                                : 'border-gray-200 hover:border-gray-300'
+                                                                }`}
+                                                        >
+                                                            <div className="flex justify-between items-start">
+                                                                <div className="text-left">
+                                                                    <p className="font-semibold text-gray-900 text-sm">{cost.service}</p>
+                                                                    <p className="text-xs text-gray-600">{cost.description}</p>
+                                                                    <p className="text-xs text-gray-500 mt-1">
+                                                                        Estimasi: {cost.cost?.[0]?.etd || '2-3 hari'}
+                                                                    </p>
+                                                                </div>
+                                                                <div className="text-right">
+                                                                    <p className="font-semibold text-blue-600">
+                                                                        Rp {(cost.cost?.[0]?.value || 0).toLocaleString('id-ID')}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </button>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {selectedShippingService && (
+                            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                                <p className="text-green-800 text-sm">
+                                    <span className="font-semibold">Shipping Selected:</span> {couriers[selectedShippingService.courier]} - {selectedShippingService.service}
+                                    <br />
+                                    <span className="font-semibold">Cost:</span> Rp {selectedShippingCost?.toLocaleString('id-ID')}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
                     <button
                         type="submit"
-                        disabled={processing}
-                        className="w-full rounded-md bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50"
-                        onClick={() => console.log('Place Order button clicked')}
+                        disabled={processing || !selectedShippingCost}
+                        className="w-full rounded-md bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        title={!selectedShippingCost ? 'Please select a shipping method' : ''}
                     >
                         {processing ? 'Processing...' : 'Place Order'}
                     </button>
@@ -402,116 +647,29 @@ export default function Checkout() {
                                     </p>
                                 </div>
                                 <span className="font-semibold">
-                                    {item.discount && Number(item.discount) > 0 ? (
-                                        <div className="text-right">
-                                            <p className="text-sm text-gray-600 line-through">
-                                                {formatPrice((item.price || 0) * (item.quantity || 1))}
-                                            </p>
-                                            <p className="text-green-600">
-                                                {formatPrice(
-                                                    calculateDiscountedPrice(
-                                                        item.price || 0,
-                                                        item.discount,
-                                                        item.discount_type || 'fixed'
-                                                    ) * (item.quantity || 1)
-                                                )}
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        formatPrice((item.price || 0) * (item.quantity || 1))
-                                    )}
+                                    {formatPrice(item.itemTotal || 0)}
                                 </span>
                             </div>
                         ))}
                         <hr className="my-4" />
-
-                        {/* Subtotal */}
-                        <div className="flex justify-between">
-                            <span>Subtotal</span>
-                            <span>{formatPrice(originalSubtotal)}</span>
-                        </div>
-
-                        {/* Product Discounts */}
-                        {productDiscountTotal > 0 && (
-                            <div className="flex justify-between text-green-600">
-                                <span>Product Discounts</span>
-                                <span>-{formatPrice(productDiscountTotal)}</span>
+                        <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <span>Subtotal</span>
+                                <span>{formatPrice(cartTotal)}</span>
                             </div>
-                        )}
-
-                        {/* Coupon Section */}
-                        <div className="mt-4 pt-4 border-t">
-                            {!validatedCoupon ? (
-                                <div className="space-y-2">
-                                    <label htmlFor="coupon_code" className="block text-sm font-medium text-gray-700">
-                                        Coupon Code (Optional)
-                                    </label>
-                                    <div className="flex gap-2">
-                                        <input
-                                            id="coupon_code"
-                                            type="text"
-                                            value={couponCode}
-                                            onChange={(e) => setCouponCode(e.target.value)}
-                                            placeholder="Enter coupon code"
-                                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            onKeyPress={(e) => e.key === 'Enter' && handleApplyCoupon()}
-                                            disabled={couponLoading}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={handleApplyCoupon}
-                                            disabled={couponLoading}
-                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 text-sm font-medium transition-colors"
-                                        >
-                                            {couponLoading ? 'Validating...' : 'Apply'}
-                                        </button>
-                                    </div>
-                                    {couponError && (
-                                        <div className="flex gap-2 text-sm text-red-600 mt-2">
-                                            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                                            <span>{couponError}</span>
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="bg-green-50 border border-green-200 rounded-md p-3">
-                                    <div className="flex items-start justify-between gap-3">
-                                        <div className="flex gap-2">
-                                            <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                                            <div>
-                                                <p className="font-medium text-green-900">Coupon Applied</p>
-                                                <p className="text-sm text-green-700">{validatedCoupon.code}</p>
-                                                <p className="text-xs text-green-600 mt-1">
-                                                    Discount: {formatCouponDiscount(validatedCoupon)}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={handleRemoveCoupon}
-                                            className="text-sm text-red-600 hover:text-red-700 font-medium"
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Coupon Discount */}
-                        {couponDiscount > 0 && (
-                            <div className="flex justify-between text-green-600">
-                                <span>Coupon Discount ({formatCouponDiscount(validatedCoupon!)})</span>
-                                <span>-{formatPrice(couponDiscount)}</span>
+                            <div className="flex justify-between">
+                                <span>Shipping</span>
+                                <span className={selectedShippingCost ? 'font-semibold text-blue-600' : 'text-gray-500'}>
+                                    {selectedShippingCost ? formatPrice(selectedShippingCost) : '-'}
+                                </span>
                             </div>
-                        )}
-
+                        </div>
                         <hr className="my-4" />
-
-                        {/* Final Total */}
                         <div className="flex justify-between text-lg font-semibold">
                             <span>Total</span>
-                            <span className="text-xl">{formatPrice(finalTotal)}</span>
+                            <span className={selectedShippingCost ? 'text-blue-600' : ''}>
+                                {formatPrice(cartTotal + (selectedShippingCost || 0))}
+                            </span>
                         </div>
                     </div>
                 </div>

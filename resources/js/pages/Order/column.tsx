@@ -27,11 +27,11 @@ function ActionsCell({ order }: { order: Order }) {
     const [deleteOpen, setDeleteOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(orders.edit.url(order.id));
+        router.visit(orders.edit(order.id));
     };
 
     const handleDelete = () => {
-        router.delete(orders.destroy.url(order.id));
+        router.delete(orders.destroy(order.id));
         setDeleteOpen(false);
     };
 
@@ -136,7 +136,7 @@ export const columns: ColumnDef<Order>[] = [
             }
             return (
                 <div className="max-w-xs space-y-1">
-                    {order.items.map((item, index) => {
+                    {order.items.map((item) => {
                         // Clean product name (remove color if it's at the end)
                         const cleanName = item.product?.name?.replace(/\s+(Black|White|Red|Blue|Green|Yellow|Orange|Purple|Pink|Brown|Gray|Grey|Cream|Indigo|Matte\s+\w+)\s*$/i, '') || item.product?.name || 'Product';
 
@@ -148,81 +148,6 @@ export const columns: ColumnDef<Order>[] = [
                                 <div className="text-xs text-gray-500">
                                     SKU: {item.product?.sku || 'N/A'}
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "discount",
-        header: "Original Price",
-        cell: ({ row }) => {
-            const order = row.original;
-            if (!order.items || order.items.length === 0) {
-                return <div>-</div>;
-            }
-            return (
-                <div>
-                    {order.items.map((item) => {
-                        const unitPrice = item.price / item.quantity;
-                        const product = item.product;
-                        let originalUnitPrice = unitPrice;
-
-                        if (product && product.discount && Number(product.discount) > 0) {
-                            if (product.discount_type === 'fixed') {
-                                originalUnitPrice = unitPrice + Number(product.discount);
-                            } else { // percentage
-                                originalUnitPrice = unitPrice / (1 - Number(product.discount) / 100);
-                            }
-                        }
-
-                        return (
-                            <div key={item.id} className="mb-1 text-sm">
-                                {new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    maximumFractionDigits: 0
-                                }).format(originalUnitPrice)}
-                            </div>
-                        );
-                    })}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "discount_amount",
-        header: "Discount",
-        cell: ({ row }) => {
-            const order = row.original;
-            if (!order.items || order.items.length === 0) {
-                return <div>-</div>;
-            }
-            return (
-                <div>
-                    {order.items.map((item) => {
-                        const unitPrice = item.price / item.quantity;
-                        const product = item.product;
-                        let discountAmount = 0;
-
-                        if (product && product.discount && Number(product.discount) > 0) {
-                            if (product.discount_type === 'fixed') {
-                                discountAmount = Number(product.discount) * item.quantity;
-                            } else { // percentage
-                                const originalUnitPrice = unitPrice / (1 - Number(product.discount) / 100);
-                                discountAmount = (originalUnitPrice * item.quantity) - item.price;
-                            }
-                        }
-
-                        return (
-                            <div key={item.id} className={`mb-1 text-sm ${discountAmount > 0 ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
-                                {discountAmount > 0 ? '-' : ''}{new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    maximumFractionDigits: 0
-                                }).format(discountAmount)}
                             </div>
                         );
                     })}
@@ -250,8 +175,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "subtotal",
-        header: "Sub Total",
+        accessorKey: "price",
+        header: "Price",
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -273,35 +198,60 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "coupon",
-        header: "Coupon Applied",
+        accessorKey: "subtotal",
+        header: "Sub Total",
         cell: ({ row }) => {
             const order = row.original;
-            if (order.coupon_discount && order.coupon_discount > 0) {
-                return (
-                    <div className="text-sm space-y-1">
-                        {order.coupon && (
-                            <div className="font-medium text-gray-900">
-                                Code: {order.coupon.code}
-                            </div>
-                        )}
-                        <div className="text-green-600 font-medium">
-                            -{new Intl.NumberFormat('id-ID', {
+            if (!order.items || order.items.length === 0) {
+                return <div>-</div>;
+            }
+            return (
+                <div>
+                    {order.items.map((item) => (
+                        <div key={item.id} className="mb-1 text-sm">
+                            {new Intl.NumberFormat('id-ID', {
                                 style: 'currency',
                                 currency: 'IDR',
                                 maximumFractionDigits: 0
-                            }).format(Number(order.coupon_discount))}
+                            }).format(item.price * item.quantity)}
                         </div>
+                    ))}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "shipping_cost",
+        header: "Shipping",
+        cell: ({ row }) => {
+            const order = row.original;
+            const shippingCost = order.shipping_cost || 0;
+
+            if (shippingCost > 0) {
+                return (
+                    <div className="text-sm space-y-1">
+                        <div className="font-medium text-gray-900">
+                            {new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                maximumFractionDigits: 0
+                            }).format(shippingCost)}
+                        </div>
+                        {order.shipping_courier && (
+                            <div className="text-xs text-gray-500">
+                                {order.shipping_courier.toUpperCase()} - {order.shipping_service}
+                            </div>
+                        )}
                     </div>
                 );
             }
-            return <span className="text-gray-400 text-sm">-</span>;
+            return <span className="text-gray-400 text-sm">Free</span>;
         },
     },
     {
         accessorKey: "total",
         header: "Total",
-        cell: ({ row }) => <span className="font-bold text-gray-900">{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
+        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
         accessorKey: "created_at",
@@ -348,31 +298,6 @@ export const columns: ColumnDef<Order>[] = [
                     {config.text}
                 </span>
             );
-        },
-    },
-    {
-        accessorKey: "shipping",
-        header: "Shipping Info",
-        cell: ({ row }) => {
-            const order = row.original;
-            if (order.status === 'SHIPPED' && order.courier_name && order.tracking_number) {
-                return (
-                    <div className="text-sm space-y-1">
-                        <div className="font-medium text-gray-900">
-                            {order.courier_name}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                            Tracking: {order.tracking_number}
-                        </div>
-                        {order.shipped_at && (
-                            <div className="text-xs text-gray-400">
-                                Shipped: {new Date(order.shipped_at).toLocaleDateString()}
-                            </div>
-                        )}
-                    </div>
-                );
-            }
-            return <span className="text-gray-400 text-sm">-</span>;
         },
     },
     {

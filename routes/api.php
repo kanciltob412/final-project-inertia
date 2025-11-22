@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\NewsletterController;
-use App\Http\Controllers\CouponController;
+use App\Http\Controllers\RajaOngkirController;
 
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
@@ -19,5 +19,11 @@ Route::post('webhook/orders', [PaymentController::class, 'webhookPayment'])->nam
 // Newsletter subscription
 Route::post('newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
 
-// Coupon validation
-Route::post('coupons/validate', [CouponController::class, 'validate'])->name('api.coupons.validate');
+// RajaOngkir Shipping API routes (public, no auth required)
+Route::prefix('shipping')->group(function () {
+    Route::get('provinces', [RajaOngkirController::class, 'getProvinces'])->name('shipping.provinces');
+    Route::post('cities', [RajaOngkirController::class, 'getCities'])->name('shipping.cities');
+    Route::post('calculate', [RajaOngkirController::class, 'calculateShipping'])->name('shipping.calculate');
+    Route::post('multiple-costs', [RajaOngkirController::class, 'getMultipleShippingCosts'])->name('shipping.multiple-costs');
+    Route::get('couriers', [RajaOngkirController::class, 'getAvailableCouriers'])->name('shipping.couriers');
+});

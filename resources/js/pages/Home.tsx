@@ -14,14 +14,7 @@ const fadeIn = {
     transition: { duration: 1 },
 };
 
-const staggerContainer = {
-    initial: {},
-    animate: {
-        transition: {
-            staggerChildren: 0.3,
-        },
-    },
-};
+
 
 export default function Home() {
     return (
@@ -46,7 +39,7 @@ export default function Home() {
                         initial="initial"
                         whileInView="animate"
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 via-gray-950 to-gray-800 p-12 text-center text-white shadow-2xl"
+                        className="relative overflow-hidden rounded-2xl bg-linear-to-br from-gray-900 via-gray-950 to-gray-800 p-12 text-center text-white shadow-2xl"
                     >
                         <motion.div initial={{ scale: 0.8, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ duration: 0.6 }}>
                             <NewsletterSubscription />

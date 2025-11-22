@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,7 @@ class OrderController extends Controller
     public function index()
     {
         return Inertia::render("Order/index", [
-            "data" => Order::with('user', 'items', 'items.product')->get()
+            "data" => Order::with('user', 'items', 'items.product', 'items.productVariant')->get()
         ]);
     }
 
@@ -34,7 +35,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'coupon')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
 
         return Inertia::render("Order/show", [
             "data" => $order
@@ -42,7 +43,7 @@ class OrderController extends Controller
     }
     public function edit($id)
     {
-        $order = Order::with('user', 'items', 'items.product')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
 
         return Inertia::render("Order/form", [
             "order" => $order,
@@ -98,6 +99,20 @@ class OrderController extends Controller
             $wasShipped = $order->status === 'SHIPPED';
             $isBecomingShipped = $validated['status'] === 'SHIPPED' && !$wasShipped;
 
+            // Check if status is changing to cancelled
+            $wasCancelled = $order->status === 'CANCELLED';
+            $isBecomingCancelled = $validated['status'] === 'CANCELLED' && !$wasCancelled;
+
+            // Restore stock if order is being cancelled
+            if ($isBecomingCancelled) {
+                foreach ($order->items as $item) {
+                    $product = Product::find($item->product_id);
+                    if ($product) {
+                        $product->increment('stock', $item->quantity);
+                    }
+                }
+            }
+
             // Set shipped_at timestamp if becoming shipped
             if ($isBecomingShipped) {
                 $validated['shipped_at'] = now();
@@ -123,11 +138,24 @@ class OrderController extends Controller
 
             // Update order items if provided
             if (isset($validated['items'])) {
+                // Restore stock for deleted items
+                foreach ($order->items as $item) {
+                    $product = Product::find($item->product_id);
+                    if ($product) {
+                        $product->increment('stock', $item->quantity);
+                    }
+                }
+
                 // Delete existing items
                 $order->items()->delete();
 
                 // Create new items
                 foreach ($validated['items'] as $itemData) {
+                    $product = Product::find($itemData['product_id']);
+                    if ($product) {
+                        $product->decrement('stock', $itemData['quantity']);
+                    }
+
                     OrderItem::create([
                         'order_id' => $order->id,
                         'product_id' => $itemData['product_id'],
@@ -158,7 +186,15 @@ class OrderController extends Controller
     {
         // Logic to delete the order
         $order = Order::findOrFail($id);
-        // This is a placeholder implementation
+
+        // Restore stock for all order items before deleting
+        foreach ($order->items as $item) {
+            $product = Product::find($item->product_id);
+            if ($product) {
+                $product->increment('stock', $item->quantity);
+            }
+        }
+
         // Delete order...
         $order->delete();
 
@@ -203,9 +239,14 @@ class OrderController extends Controller
             'city' => ['required', 'string'],
             'country' => ['required', 'string'],
             'postal_code' => ['required', 'string'],
-            'coupon_id' => ['nullable', 'exists:coupons,id'],
-            'total' => ['required', 'numeric', 'min:0'],
+            'shipping_cost' => ['required', 'numeric', 'min:0'],
+            'shipping_courier' => ['required', 'string'],
+            'shipping_service' => ['required', 'string'],
+            'destination_city_id' => ['required', 'integer'],
+            'products' => ['required', 'array'],
             'products.*.id' => ['required', 'exists:products,id'],
+            'products.*.variant_id' => ['nullable', 'exists:product_variants,id'],
+            'products.*.color' => ['nullable', 'string'],
             'products.*.quantity' => ['required', 'integer', 'min:1'],
         ]);
 
@@ -226,18 +267,6 @@ class OrderController extends Controller
                 );
             }
 
-            // Validate coupon if provided
-            $coupon = null;
-            $couponDiscount = 0;
-            if ($request->coupon_id) {
-                $coupon = \App\Models\Coupon::findOrFail($request->coupon_id);
-                
-                // Check coupon validity
-                if (!$coupon->isValid()) {
-                    throw new Exception("Coupon is not valid: " . ($coupon->getValidationError() ?? 'Unknown error'));
-                }
-            }
-
             $order = Order::create([
                 'user_id' => $user->id,
                 'address' => $request->address,
@@ -245,56 +274,43 @@ class OrderController extends Controller
                 'city' => $request->city,
                 'country' => $request->country,
                 'postal_code' => $request->postal_code,
-                'coupon_id' => $request->coupon_id,
+                'shipping_courier' => $request->shipping_courier,
+                'shipping_service' => $request->shipping_service,
+                'shipping_cost' => (int) $request->shipping_cost,
+                'destination_city_id' => (int) $request->destination_city_id,
             ]);
 
             $total = 0;
 
-            foreach ($request->products as $productData) {
-                $product = Product::find($productData['id']);
+            if (is_array($request->products)) {
+                foreach ($request->products as $productData) {
+                    $product = Product::find($productData['id']);
 
-                // Check if product has enough stock
-                if ($product->stock < $productData['quantity']) {
-                    throw new Exception("Product '{$product->name}' does not have enough stock. Available: {$product->stock}, Requested: {$productData['quantity']}");
-                }
-
-                // Calculate product price with discount applied
-                $itemPrice = $product->price;
-                if ($product->discount && $product->discount > 0) {
-                    if ($product->discount_type === 'fixed') {
-                        $itemPrice = max(0, $product->price - $product->discount);
-                    } else { // percentage
-                        $itemPrice = $product->price * (1 - $product->discount / 100);
+                    // Check if product has enough stock
+                    if (!$product || $product->stock < $productData['quantity']) {
+                        throw new Exception("Product '{$product->name}' is out of stock.");
                     }
+
+                    // Decrement product stock
+                    $product->decrement('stock', $productData['quantity']);
+
+                    $lineTotal = $product->price * $productData['quantity'];
+
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'product_variant_id' => null,
+                        'quantity' => $productData['quantity'],
+                        'price' => $product->price,
+                    ]);
+
+                    $total += $lineTotal;
                 }
-
-                // Decrement product stock
-                $product->decrement('stock', $productData['quantity']);
-
-                $price = $itemPrice * $productData['quantity'];
-
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $product->id,
-                    'quantity' => $productData['quantity'],
-                    'price' => $price,
-                ]);
-
-                $total += $price;
             }
 
-            // Calculate coupon discount and final total (Total = amount customer pays)
-            $finalTotal = $total;
-            if ($coupon) {
-                $couponDiscount = $coupon->calculateDiscount($total);
-                $finalTotal = max(0, $total - $couponDiscount);
-                $order->update([
-                    'coupon_discount' => $couponDiscount,
-                    'total' => $finalTotal,  // Final amount customer pays after coupon
-                ]);
-            } else {
-                $order->update(['total' => $total]);  // Total = subtotal (no coupon)
-            }
+            // Add shipping cost to total
+            $total += (int) $request->shipping_cost;
+            $order->update(['total' => $total]);
 
             // Reuse existing invoice if available
             if ($order->url) {
@@ -504,20 +520,10 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product', 'coupon'])->find($orderId);
+            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
             if ($order) {
                 // Update order status to paid
-                $order->update(['status' => 'PAID', 'paid_at' => now()]);
-
-                // Increment coupon usage if coupon was applied
-                if ($order->coupon_id && $order->coupon) {
-                    $order->coupon->incrementUsage();
-                    Log::info('Coupon usage incremented', [
-                        'coupon_id' => $order->coupon_id,
-                        'coupon_code' => $order->coupon->code,
-                        'new_count' => $order->coupon->used_count + 1,
-                    ]);
-                }
+                $order->update(['status' => 'PAID']);
 
                 // Send confirmation email to customer
                 try {
@@ -559,7 +565,7 @@ class OrderController extends Controller
         $orderId = $request->get('order_id');
 
         if ($orderId) {
-            $order = Order::with(['user', 'items.product'])->find($orderId);
+            $order = Order::with(['user', 'items.product', 'items.productVariant'])->find($orderId);
             if ($order) {
                 // Send failed payment email to customer
                 try {

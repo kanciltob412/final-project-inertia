@@ -14,12 +14,8 @@ class ProductVariant extends Model
         'product_id',
         'name',
         'sku',
-        'color',
-        'dimension',
-        'stock',
-        'stock_quantity',
-        'image',
         'price',
+        'stock_quantity',
         'is_active',
     ];
 
@@ -28,22 +24,12 @@ class ProductVariant extends Model
         'is_active' => 'boolean',
     ];
 
-    protected $appends = ['effective_price'];
-
     /**
      * Get the product that owns the variant.
      */
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    /**
-     * Get the effective price (variant price if set, otherwise product price).
-     */
-    public function getEffectivePriceAttribute()
-    {
-        return $this->price ?? $this->product->price;
     }
 
     /**

@@ -62,9 +62,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultRed
             localStorage.setItem('user', JSON.stringify(data));
             setUser(data);
             router.visit(getRedirectPathFromUrl(defaultRedirectPath), { replace: true });
-        } catch (err: any) {
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err) && err.response) {
+                setError(err.response.data?.message || 'Login failed');
+            } else {
+                setError('Login failed');
+            }
             console.error(err);
-            setError(err?.response?.data?.message || 'Login failed');
         } finally {
             setLoading(false);
         }

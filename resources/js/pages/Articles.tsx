@@ -122,7 +122,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                             <div className="grid gap-8 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2">
                                 <Link
                                     href={`/articles/${featuredArticle.id}`}
-                                    className="relative h-[560px] block hover:opacity-90 transition-opacity"
+                                    className="relative h-[400px] md:h-auto block hover:opacity-90 transition-opacity"
                                 >
                                     <img
                                         src={
@@ -133,7 +133,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                                     : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
                                         }
                                         alt={featuredArticle.title}
-                                        className="absolute inset-0 h-full w-full object-cover"
+                                        className="relative inset-0 h-full w-full object-cover"
                                     />
                                 </Link>
                                 <div className="flex flex-col justify-between p-8">
@@ -177,7 +177,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                 <div key={article.id} className="group overflow-hidden rounded-lg bg-white shadow-md">
                                     <Link
                                         href={`/articles/${article.id}`}
-                                        className="relative h-[30vh] overflow-hidden block"
+                                        className="relative h-48 overflow-hidden block"
                                     >
                                         <img
                                             src={
@@ -250,8 +250,8 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                                 key={page}
                                                 onClick={() => handlePageClick(page)}
                                                 className={`px-3 py-2 text-sm font-medium rounded-md ${page === articles.current_page
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                                                     }`}
                                             >
                                                 {page}

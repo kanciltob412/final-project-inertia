@@ -21,12 +21,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Copy } from "lucide-react";
 import { useState } from "react";
 import { Product } from "@/types";
+import products from "../../routes/products";
+
 
 function ActionsCell({ product }: { product: Product }) {
     const [open, setOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(`/admin/products/${product.id}/edit`);
+        router.visit(products.edit(product.id));
     };
 
     const handleDuplicate = () => {
@@ -41,7 +43,7 @@ function ActionsCell({ product }: { product: Product }) {
     };
 
     const handleDelete = () => {
-        router.delete(`/admin/products/${product.id}`);
+        router.delete(products.destroy(product.id));
         setOpen(false);
     };
 
@@ -128,34 +130,8 @@ export const columns: ColumnDef<Product>[] = [
         ),
     },
     {
-        accessorKey: "sku",
-        header: "SKU",
-    },
-    {
-        accessorKey: "category.name",
-        header: "Category",
-    },
-    {
         accessorKey: "name",
-        header: "Product Name",
-    },
-    {
-        accessorKey: "description",
-        header: "Description",
-        cell: ({ row }) => (
-            <div className="max-w-xs">
-                <p className="truncate text-sm text-gray-600" title={row.original.description}>
-                    {row.original.description}
-                </p>
-            </div>
-        ),
-    },
-    {
-        accessorKey: "stock",
-        header: "Stock",
-        cell: ({ row }) => (
-            <span className="font-medium text-gray-900">{row.original.stock || 0}</span>
-        ),
+        header: "Name",
     },
     {
         accessorKey: "price",
@@ -163,20 +139,18 @@ export const columns: ColumnDef<Product>[] = [
         cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.price)}</span>,
     },
     {
-        accessorKey: "discount",
-        header: "Discount",
+        accessorKey: "stock",
+        header: "Stock",
         cell: ({ row }) => {
-            const discount = row.original.discount || 0;
-            const discountType = row.original.discount_type || 'fixed';
-            if (discount === 0) {
-                return <span className="text-gray-400">—</span>;
-            }
-            return (
-                <span className="text-sm font-medium text-green-600">
-                    {discountType === 'fixed' 
-                        ? `Rp ${parseFloat(discount).toLocaleString('id-ID')}`
-                        : `${parseFloat(discount).toFixed(0)}%`
-                    }
+            const stock = row.original.stock || 0;
+            return (                                
+                <span className={`font-medium ${stock === 0 ? 'text-red-600' :
+                    (stock >= 1 && stock <= 3 ? 'text-red-600' :
+                        (stock <= 5 ? 'text-orange-600' : 'text-green-600'))
+                    }`}>
+                    {stock === 0 ? 'Out of stock' :
+                        (stock >= 1 && stock <= 3 ? `Only ${stock} left` :
+                            `${stock} available`)}
                 </span>
             );
         },
@@ -196,22 +170,7 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "image",
         header: "Image",
-        cell: ({ row }) => (
-            <div className="h-12 w-12 bg-gray-100 rounded flex items-center justify-center">
-                {row.original.image ? (
-                    <img 
-                        src={`/storage/${row.original.image}`} 
-                        alt={row.original.name} 
-                        className="h-12 w-12 object-cover rounded" 
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/images/placeholder.png';
-                        }}
-                    />
-                ) : (
-                    <span className="text-gray-400 text-xs">No image</span>
-                )}
-            </div>
-        ),
+        cell: ({ row }) => <img src={`../../storage/${row.original.image}`} alt={row.original.name} className="h-12 w-12 object-cover" />,
     },
     {
         id: "actions",

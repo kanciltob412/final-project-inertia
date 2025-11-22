@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import HeadingSmall from "@/components/heading-small";
 import { Textarea } from "@/components/ui/textarea";
+import TiptapEditor from "@/components/TiptapEditor";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ImageUpload from "@/components/ImageUpload";
-import TiptapEditor from "@/components/TiptapEditor";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -20,10 +20,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 interface Props {
     article?: Article;
-    categories?: any[];
+    categories?: { id: number; name: string }[];
 }
 
-export default function Form({ article, categories }: Props) {
+export default function Form({ article }: Props) {
     const { data, setData, post, processing, errors, reset } = useForm<{
         title: string;
         slug: string;
@@ -60,19 +60,13 @@ export default function Form({ article, categories }: Props) {
                 _method: "put",
             }, {
                 preserveScroll: true,
-                onSuccess: () => {
-                    reset();
-                    router.visit("/admin/articles");
-                },
+                onSuccess: () => reset(),
                 forceFormData: true,
             });
         } else {
             post("/admin/articles", {
                 preserveScroll: true,
-                onSuccess: () => {
-                    reset();
-                    router.visit("/admin/articles");
-                },
+                onSuccess: () => reset(),
                 forceFormData: true,
             });
         }
@@ -141,10 +135,9 @@ export default function Form({ article, categories }: Props) {
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="content">Content</Label>
                         <TiptapEditor
-                            value={data.content}
+                            content={data.content}
                             onChange={(content) => setData("content", content)}
                             disabled={processing}
-                            placeholder="Write your article content here..."
                         />
                         {errors.content && (
                             <p className="text-sm text-red-600">{errors.content}</p>
@@ -161,7 +154,6 @@ export default function Form({ article, categories }: Props) {
                         currentImage={article?.featured_image}
                         currentImageAlt={article?.title || "Article featured image"}
                         error={errors.featured_image}
-                        maxSize={2}
                     />
 
                     {/* Category */}

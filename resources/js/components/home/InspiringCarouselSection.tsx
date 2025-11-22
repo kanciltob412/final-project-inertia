@@ -16,7 +16,6 @@ const slides = [
 
 export default function InspiringCarouselSection() {
     const [current, setCurrent] = useState(0);
-    const total = slides.length;
 
     return (
         <section className="w-full bg-white py-16">

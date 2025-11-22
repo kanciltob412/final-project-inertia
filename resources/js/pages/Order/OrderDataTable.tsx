@@ -36,7 +36,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { ChevronDown, Edit, Trash2, CheckCircle, Clock, XCircle, Truck } from "lucide-react"
+import { ChevronDown, Edit, Trash2, CheckCircle, Clock, XCircle} from "lucide-react"
 import { useState } from "react"
 import { router } from "@inertiajs/react"
 import { Order } from "@/types"

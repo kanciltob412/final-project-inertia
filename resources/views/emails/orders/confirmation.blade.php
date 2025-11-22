@@ -182,71 +182,37 @@
 
         <div class="order-items">
             <h3>Items Ordered</h3>
-            @php
-                $subtotal = 0;
-                $totalProductDiscounts = 0;
-            @endphp
             @foreach($order->items as $item)
-                @php
-                    $product = $item->product;
-                    $qty = $item->quantity;
-                    $unitPrice = $item->price / $qty;
-                    $itemSubtotal = $unitPrice * $qty;
-                    $subtotal += $itemSubtotal;
-                    
-                    // Calculate product discount for this item
-                    $itemDiscount = 0;
-                    if($product->discount && $product->discount > 0) {
-                        if($product->discount_type === 'percentage') {
-                            $itemDiscount = ($itemSubtotal * $product->discount) / 100;
-                        } else {
-                            $itemDiscount = $product->discount * $qty;
-                        }
-                        $totalProductDiscounts += $itemDiscount;
-                    }
-                @endphp
-                <div class="item">
-                    <div style="flex: 1;">
-                        <strong>{{ $product->name }}</strong>
-                        @if($item->productVariant)
-                            <br><small>{{ $item->productVariant->name }}</small>
-                        @endif
-                        <br><small>Unit Price: Rp {{ number_format($unitPrice, 0, ',', '.') }}</small>
-                        <br><small>Quantity: {{ $qty }}</small>
-                        @if($product->discount && $product->discount > 0)
-                            <br><small style="color: #28a745; font-weight: bold;">
-                                @if($product->discount_type === 'percentage')
-                                    Discount: {{ $product->discount }}% (-Rp {{ number_format($itemDiscount, 0, ',', '.') }})
-                                @else
-                                    Discount: -Rp {{ number_format($itemDiscount, 0, ',', '.') }}
-                                @endif
-                            </small>
-                        @endif
-                    </div>
-                    <div style="font-weight: bold;">
-                        Rp {{ number_format($item->price, 0, ',', '.') }}
-                    </div>
+            <div class="item">
+                <div style="flex: 1;">
+                    <strong>{{ $item->product->name }}</strong>
+                    @if($item->productVariant)
+                        <br><small>{{ $item->productVariant->name }}</small>
+                    @endif
+                    <br><small>Unit Price: Rp {{ number_format($item->price / $item->quantity, 0, ',', '.') }}</small>
+                    <br><small>Quantity: {{ $item->quantity }}</small>
                 </div>
+                <div style="font-weight: bold;">
+                    Subtotal: Rp {{ number_format($item->price, 0, ',', '.') }}
+                </div>
+            </div>
             @endforeach
         </div>
 
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">Subtotal:</span>
-                <span style="font-weight: bold;">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #555;">Subtotal:</span>
+                <span style="color: #333;">Rp {{ number_format($order->total - ($order->shipping_cost ?? 0), 0, ',', '.') }}</span>
             </div>
-            
-            @if($totalProductDiscounts > 0)
-            <div style="display: flex; justify-content: space-between; color: #28a745; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">Product Discounts:</span>
-                <span style="font-weight: bold;">-Rp {{ number_format($totalProductDiscounts, 0, ',', '.') }}</span>
-            </div>
-            @endif
-            
-            @if($order->coupon_discount && $order->coupon_discount > 0)
-            <div style="display: flex; justify-content: space-between; color: #28a745; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #dee2e6;">
-                <span style="font-weight: bold;">🎫 Coupon Discount:</span>
-                <span style="font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
+            @if($order->shipping_cost)
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #555;">
+                    <strong>Shipping:</strong>
+                    @if($order->shipping_courier)
+                    <br><small>({{ strtoupper($order->shipping_courier) }} - {{ $order->shipping_service }})</small>
+                    @endif
+                </span>
+                <span style="color: #333; font-weight: bold;">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
             </div>
             @endif
         </div>
@@ -259,7 +225,8 @@
 
         <div class="shipping-info">
             <h4 style="margin-top: 0; color: #856404;">📦 Shipping Information</h4>
-            <p style="margin-bottom: 0; color: #856404;">
+            <p style="margin-bottom: 10px; color: #856404;">
+                <strong>Recipient Name:</strong> {{ $order->user->name }}<br>
                 <strong>Shipping Address:</strong><br>
                 {{ $order->address }}<br>
                 {{ $order->city }}, {{ $order->postal_code }}<br>

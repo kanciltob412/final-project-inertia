@@ -22,7 +22,6 @@ interface FilterModalProps extends FilterSidebarProps {
 }
 
 export const FilterModal = ({
-  isFilterMenuOpen,
   setIsFilterMenuOpen,
   searchQuery,
   setSearchQuery,

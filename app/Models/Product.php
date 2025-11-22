@@ -16,13 +16,10 @@ class Product extends Model
         'name',
         'category_id',
         'description',
-        'dimension',
-        'stock',
         'price',
+        'stock',
         'image',
         'is_active',
-        'discount',
-        'discount_type',
     ];
 
     protected $casts = [
@@ -61,34 +58,16 @@ class Product extends Model
         return $this->variants()->sum('stock');
     }
 
+    // Helper method to get available colors
+    public function getAvailableColors(): array
+    {
+        return $this->activeVariants()->pluck('color')->toArray();
+    }
+
     // Helper method to check if product has any stock
     public function hasStock(): bool
     {
         return $this->getTotalStock() > 0;
-    }
-
-    // Helper method to check if product has variants
-    public function hasVariants(): bool
-    {
-        return $this->variants()->count() > 0;
-    }
-
-    // Get effective values (from variant if exists, otherwise from product)
-    public function getEffectivePrice()
-    {
-        if ($this->hasVariants()) {
-            // Return null or range - frontend should use variant prices
-            return null;
-        }
-        return $this->price;
-    }
-
-    public function getEffectiveStock()
-    {
-        if ($this->hasVariants()) {
-            return $this->getTotalStock();
-        }
-        return $this->stock;
     }
 
     protected static function boot()
