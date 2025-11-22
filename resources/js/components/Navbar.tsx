@@ -2,6 +2,7 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { Menu, ShoppingCart, X, ChevronDown, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
+import axios from 'axios';
 import { SharedData } from '@/types';
 import { logout } from '@/routes';
 
@@ -29,11 +30,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
         if (!user) return;
         setLoadingWishlist(true);
         try {
-            const response = await fetch('/api/wishlist');
-            if (response.ok) {
-                const data = await response.json();
-                setWishlistItems(data);
-            }
+            const response = await axios.get('/api/wishlist');
+            setWishlistItems(response.data);
         } catch (error) {
             console.error('Failed to load wishlist:', error);
         } finally {

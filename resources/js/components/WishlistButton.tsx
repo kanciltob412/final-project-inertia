@@ -44,16 +44,16 @@ export default function WishlistButton({ productId, className = '' }: WishlistBu
         setLoading(true);
         try {
             if (isInWishlist) {
-                await axios.delete(`/api/wishlist/${productId}`);
-                setIsInWishlist(false);
-                // Refresh to update navbar
-                router.reload();
+                const response = await axios.delete(`/api/wishlist/${productId}`);
+                if (response.status === 200) {
+                    setIsInWishlist(false);
+                }
             } else {
                 try {
-                    await axios.post('/api/wishlist', { product_id: productId });
-                    setIsInWishlist(true);
-                    // Refresh to update navbar
-                    router.reload();
+                    const response = await axios.post('/api/wishlist', { product_id: productId });
+                    if (response.status === 200) {
+                        setIsInWishlist(true);
+                    }
                 } catch (error) {
                     if (axios.isAxiosError(error) && error.response?.status === 409) {
                         // Already in wishlist

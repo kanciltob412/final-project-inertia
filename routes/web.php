@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PageController;
@@ -72,6 +73,14 @@ Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('ord
 // Customer order view route
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.order.show');
+
+    // Wishlist routes for authenticated customers
+    Route::prefix('api/wishlist')->group(function () {
+        Route::get('/', [WishlistController::class, 'index'])->name('wishlist.index');
+        Route::post('/', [WishlistController::class, 'store'])->name('wishlist.store');
+        Route::delete('/{productId}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+        Route::get('/check/{productId}', [WishlistController::class, 'check'])->name('wishlist.check');
+    });
 });
 
 // Payment callback routes (no auth required for Xendit callbacks)
