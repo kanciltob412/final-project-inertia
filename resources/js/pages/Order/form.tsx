@@ -39,6 +39,8 @@ export default function Form({ order, users, products }: Props) {
         url: string;
         courier_name?: string;
         tracking_number?: string;
+        coupon_id?: number | string;
+        coupon_discount?: number | string;
         items?: {
             product_id: number | string;
             quantity: number | string;
@@ -58,6 +60,8 @@ export default function Form({ order, users, products }: Props) {
         url: order ? order.url || "" : "",
         courier_name: order ? order.courier_name || "" : "",
         tracking_number: order ? order.tracking_number || "" : "",
+        coupon_id: order ? order.coupon_id || "" : "",
+        coupon_discount: order ? order.coupon_discount || "" : "",
         items: order && order.items ? order.items.map(item => ({
             product_id: item.product_id,
             quantity: item.quantity,
@@ -240,6 +244,23 @@ export default function Form({ order, users, products }: Props) {
                             />
                             {errors.total && (
                                 <p className="text-sm text-red-600">{errors.total}</p>
+                            )}
+                        </div>
+
+                        {/* Coupon Discount */}
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="coupon_discount">Coupon Discount (Rp)</Label>
+                            <Input
+                                id="coupon_discount"
+                                type="number"
+                                step="0.01"
+                                value={data.coupon_discount}
+                                onChange={(e) => setData("coupon_discount", parseFloat(e.target.value) || 0)}
+                                disabled={processing}
+                                placeholder="0"
+                            />
+                            {errors.coupon_discount && (
+                                <p className="text-sm text-red-600">{errors.coupon_discount}</p>
                             )}
                         </div>
 

@@ -95,7 +95,7 @@ export default function Cart() {
                                         {item.color && (
                                             <p className="text-sm text-gray-500 flex items-center gap-2 mt-1">
                                                 <span className="font-medium">Color:</span>
-                                                <div 
+                                                <div
                                                     className="w-5 h-5 rounded border border-gray-300 shadow-sm"
                                                     style={{ backgroundColor: item.color }}
                                                 />
@@ -110,14 +110,13 @@ export default function Cart() {
                                         {/* Stock information - use variant stock */}
                                         <p className="text-xs text-gray-500">
                                             <span className="font-medium">Stock:</span>
-                                            <span className={`ml-1 ${
-                                                (item.stock || 0) === 0 ? 'text-red-600' :
-                                                ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? 'text-red-600' :
-                                                ((item.stock || 0) <= 5 ? 'text-orange-600' : 'text-green-600'))
-                                            }`}>
+                                            <span className={`ml-1 ${(item.stock || 0) === 0 ? 'text-red-600' :
+                                                    ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? 'text-red-600' :
+                                                        ((item.stock || 0) <= 5 ? 'text-orange-600' : 'text-green-600'))
+                                                }`}>
                                                 {(item.stock || 0) === 0 ? 'Out of stock' :
-                                                 ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? `Only ${item.stock} left` :
-                                                 `${item.stock} available`)}
+                                                    ((item.stock || 0) >= 1 && (item.stock || 0) <= 3 ? `Only ${item.stock} left` :
+                                                        `${item.stock} available`)}
                                             </span>
                                         </p>
                                         {/* Warning for quantity exceeding stock */}
@@ -147,13 +146,12 @@ export default function Cart() {
                                         <button
                                             onClick={() => updateItemQuantity(item.id, item.quantity! + 1)}
                                             disabled={(item.stock || 0) === 0 || (item.quantity! >= (item.stock || 0))}
-                                            className={`rounded-md border p-1 ${
-                                                (item.stock || 0) === 0 || (item.quantity! >= (item.stock || 0))
+                                            className={`rounded-md border p-1 ${(item.stock || 0) === 0 || (item.quantity! >= (item.stock || 0))
                                                     ? 'opacity-50 cursor-not-allowed text-gray-400'
                                                     : 'hover:bg-gray-100'
-                                            }`}
-                                            title={(item.stock || 0) === 0 ? 'Out of stock' : 
-                                                   (item.quantity! >= (item.stock || 0)) ? 'Maximum stock reached' : 'Increase quantity'}
+                                                }`}
+                                            title={(item.stock || 0) === 0 ? 'Out of stock' :
+                                                (item.quantity! >= (item.stock || 0)) ? 'Maximum stock reached' : 'Increase quantity'}
                                         >
                                             <Plus size={16} />
                                         </button>
@@ -162,6 +160,11 @@ export default function Cart() {
                                     <p className="font-semibold text-gray-800">
                                         {formatPrice(item.itemTotal || 0)}
                                     </p>
+                                    {item.discount && item.discount > 0 && (
+                                        <p className="text-sm text-green-600 font-semibold">
+                                            {item.discount_type === 'percentage' ? `${item.discount}% off` : `Save ${formatPrice(item.discount)}`}
+                                        </p>
+                                    )}
 
                                     <button
                                         onClick={() => removeItem(item.id)}

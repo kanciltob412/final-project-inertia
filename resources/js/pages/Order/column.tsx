@@ -198,8 +198,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "subtotal",
-        header: "Sub Total",
+        accessorKey: "discount",
+        header: "Discount",
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -207,17 +207,97 @@ export const columns: ColumnDef<Order>[] = [
             }
             return (
                 <div>
-                    {order.items.map((item) => (
-                        <div key={item.id} className="mb-1 text-sm">
-                            {new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                maximumFractionDigits: 0
-                            }).format(item.price * item.quantity)}
-                        </div>
-                    ))}
+                    {order.items.map((item) => {
+                        const product = item.product || {};
+                        const discount = product.discount || 0;
+                        const discountType = product.discount_type || 'fixed';
+                        let discountAmount = 0;
+
+                        if (discount > 0) {
+                            if (discountType === 'percentage') {
+                                discountAmount = item.price * (discount / 100);
+                            } else {
+                                discountAmount = discount;
+                            }
+                        }
+
+                        // Multiply discount by quantity to get total discount for this item
+                        const totalDiscountAmount = discountAmount * item.quantity;
+
+                        return (
+                            <div key={item.id} className="mb-1 text-sm text-red-600 font-medium">
+                                {totalDiscountAmount > 0
+                                    ? `-Rp ${new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(totalDiscountAmount)}`
+                                    : '-'}
+                            </div>
+                        );
+                    })}
                 </div>
             );
+        },
+    },
+    {
+        accessorKey: "subtotal",
+        header: "Subtotal",
+        cell: ({ row }) => {
+            const order = row.original;
+            if (!order.items || order.items.length === 0) {
+                return <div>-</div>;
+            }
+            return (
+                <div>
+                    {order.items.map((item) => {
+                        const product = item.product || {};
+                        const discount = product.discount || 0;
+                        const discountType = product.discount_type || 'fixed';
+                        let discountAmount = 0;
+
+                        if (discount > 0) {
+                            if (discountType === 'percentage') {
+                                discountAmount = item.price * (discount / 100);
+                            } else {
+                                discountAmount = discount;
+                            }
+                        }
+
+                        const discountedPrice = item.price - discountAmount;
+                        return (
+                            <div key={item.id} className="mb-1 text-sm font-semibold">
+                                {new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0
+                                }).format(discountedPrice * item.quantity)}
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        },
+    },
+    {
+        accessorKey: "coupon_id",
+        header: "Coupon",
+        cell: ({ row }) => {
+            const order = row.original;
+
+            if (order.coupon && order.coupon_id) {
+                return (
+                    <div className="text-sm space-y-1">
+                        <div className="font-mono font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                            {order.coupon.code}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                            {order.coupon.discount_type === 'percentage'
+                                ? `${order.coupon.discount_value}% off`
+                                : `Rp ${new Intl.NumberFormat('id-ID', {
+                                    maximumFractionDigits: 0
+                                }).format(order.coupon.discount_value)}`}
+                        </div>
+                    </div>
+                );
+            }
+            return <span className="text-gray-400 text-sm">-</span>;
         },
     },
     {
@@ -227,19 +307,27 @@ export const columns: ColumnDef<Order>[] = [
             const order = row.original;
             const shippingCost = order.shipping_cost || 0;
 
-            if (shippingCost > 0) {
+            if (shippingCost > 0 || order.shipping_courier) {
                 return (
                     <div className="text-sm space-y-1">
                         <div className="font-medium text-gray-900">
-                            {new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                maximumFractionDigits: 0
-                            }).format(shippingCost)}
+                            {shippingCost > 0
+                                ? new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0
+                                }).format(shippingCost)
+                                : 'Free'
+                            }
                         </div>
                         {order.shipping_courier && (
                             <div className="text-xs text-gray-500">
                                 {order.shipping_courier.toUpperCase()} - {order.shipping_service}
+                            </div>
+                        )}
+                        {order.tracking_number && (
+                            <div className="text-xs text-gray-600 font-mono bg-gray-50 px-2 py-1 rounded">
+                                Track: {order.tracking_number}
                             </div>
                         )}
                     </div>
@@ -251,7 +339,15 @@ export const columns: ColumnDef<Order>[] = [
     {
         accessorKey: "total",
         header: "Total",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
+        cell: ({ row }) => (
+            <span className="font-bold text-lg">
+                {new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    maximumFractionDigits: 0
+                }).format(row.original.total)}
+            </span>
+        ),
     },
     {
         accessorKey: "created_at",

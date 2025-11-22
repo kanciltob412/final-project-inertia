@@ -7,6 +7,7 @@ use App\Http\Controllers\GetInTouchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RajaOngkirController;
+use App\Http\Controllers\CouponController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PageController;
@@ -47,6 +48,9 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
     Route::post('orders/duplicate', [OrderController::class, 'duplicate'])->name('orders.duplicate');
     Route::patch('orders/bulk-update', [OrderController::class, 'bulkUpdate'])->name('orders.bulk-update');
     Route::resource('orders', OrderController::class);
+
+    // Coupon Management
+    Route::resource('coupons', CouponController::class);
 
     // Newsletter Management
     Route::get('newsletter', [NewsletterController::class, 'index'])->name('newsletter.index');

@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\OrderItem;
 use App\Models\User;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class OrderController extends Controller
     public function index()
     {
         return Inertia::render("Order/index", [
-            "data" => Order::with('user', 'items', 'items.product', 'items.productVariant')->get()
+            "data" => Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->get()
         ]);
     }
 
@@ -35,7 +36,7 @@ class OrderController extends Controller
     }
     public function show($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->findOrFail($id);
 
         return Inertia::render("Order/show", [
             "data" => $order
@@ -43,7 +44,7 @@ class OrderController extends Controller
     }
     public function edit($id)
     {
-        $order = Order::with('user', 'items', 'items.product', 'items.productVariant')->findOrFail($id);
+        $order = Order::with('user', 'items', 'items.product', 'items.productVariant', 'coupon')->findOrFail($id);
 
         return Inertia::render("Order/form", [
             "order" => $order,
@@ -243,6 +244,8 @@ class OrderController extends Controller
             'shipping_courier' => ['required', 'string'],
             'shipping_service' => ['required', 'string'],
             'destination_city_id' => ['required', 'integer'],
+            'coupon_id' => ['nullable', 'integer', 'exists:coupons,id'],
+            'coupon_discount' => ['nullable', 'numeric', 'min:0'],
             'products' => ['required', 'array'],
             'products.*.id' => ['required', 'exists:products,id'],
             'products.*.variant_id' => ['nullable', 'exists:product_variants,id'],
@@ -278,6 +281,8 @@ class OrderController extends Controller
                 'shipping_service' => $request->shipping_service,
                 'shipping_cost' => (int) $request->shipping_cost,
                 'destination_city_id' => (int) $request->destination_city_id,
+                'coupon_id' => $request->coupon_id ? (int) $request->coupon_id : null,
+                'coupon_discount' => $request->coupon_discount ? (float) $request->coupon_discount : 0,
             ]);
 
             $total = 0;
@@ -294,7 +299,20 @@ class OrderController extends Controller
                     // Decrement product stock
                     $product->decrement('stock', $productData['quantity']);
 
-                    $lineTotal = $product->price * $productData['quantity'];
+                    // Calculate price after product discount
+                    $discountAmount = 0;
+                    $finalPrice = $product->price;
+
+                    if ($product->discount && $product->discount > 0) {
+                        if ($product->discount_type === 'percentage') {
+                            $discountAmount = $product->price * ($product->discount / 100);
+                        } else {
+                            $discountAmount = $product->discount;
+                        }
+                        $finalPrice = $product->price - $discountAmount;
+                    }
+
+                    $lineTotal = $finalPrice * $productData['quantity'];
 
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -310,6 +328,16 @@ class OrderController extends Controller
 
             // Add shipping cost to total
             $total += (int) $request->shipping_cost;
+
+            // Subtract discount if applied
+            if ($request->coupon_discount) {
+                $total -= (float) $request->coupon_discount;
+                // Increment coupon usage count
+                if ($request->coupon_id) {
+                    Coupon::find($request->coupon_id)?->increment('used_count');
+                }
+            }
+
             $order->update(['total' => $total]);
 
             // Reuse existing invoice if available

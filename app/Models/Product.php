@@ -17,6 +17,8 @@ class Product extends Model
         'category_id',
         'description',
         'price',
+        'discount',
+        'discount_type',
         'stock',
         'image',
         'is_active',
@@ -25,6 +27,7 @@ class Product extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'price' => 'decimal:2',
+        'discount' => 'decimal:2',
     ];
 
     public function category(): BelongsTo

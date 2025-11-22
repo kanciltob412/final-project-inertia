@@ -35,6 +35,8 @@ export default function Form({ categories, product }: Props) {
         description: product?.description || "",
         stock: product?.stock?.toString() || "",
         price: product?.price?.toString() || "",
+        discount: product?.discount?.toString() || "",
+        discount_type: product?.discount_type || "fixed",
         gallery_images: initialGalleryFiles,
     });
 
@@ -78,6 +80,8 @@ export default function Form({ categories, product }: Props) {
         formData.append('name', data.name || '');
         formData.append('description', data.description || '');
         formData.append('price', data.price?.toString() || '0');
+        formData.append('discount', data.discount?.toString() || '0');
+        formData.append('discount_type', data.discount_type || 'fixed');
         formData.append('category_id', data.category_id?.toString() || '');
         formData.append('stock', data.stock?.toString() || '0');
 
@@ -242,8 +246,44 @@ export default function Form({ categories, product }: Props) {
                                 )}
                             </div>
 
+                            {/* Discount Type */}
+                            <div className="flex flex-col gap-y-2">
+                                <Label htmlFor="discount_type">Discount Type</Label>
+                                <Select
+                                    value={data.discount_type}
+                                    onValueChange={(value) => setData("discount_type", value)}
+                                    disabled={processing}
+                                >
+                                    <SelectTrigger id="discount_type">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="fixed">Fixed Amount</SelectItem>
+                                        <SelectItem value="percentage">Percentage</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                {errors.discount_type && (
+                                    <p className="text-sm text-red-600">{errors.discount_type}</p>
+                                )}
+                            </div>
+
                             {/* Discount */}
-                            {/* Discount and Discount Type fields removed */}
+                            <div className="flex flex-col gap-y-2">
+                                <Label htmlFor="discount">Discount {data.discount_type === 'percentage' ? '(%)' : '(Amount)'}</Label>
+                                <Input
+                                    id="discount"
+                                    type="number"
+                                    step="0.01"
+                                    value={data.discount}
+                                    onChange={(e) => setData("discount", e.target.value)}
+                                    disabled={processing}
+                                    placeholder={data.discount_type === 'percentage' ? 'e.g., 10' : 'e.g., 9.99'}
+                                    min="0"
+                                />
+                                {errors.discount && (
+                                    <p className="text-sm text-red-600">{errors.discount}</p>
+                                )}
+                            </div>
                         </div>
                     </div>
 

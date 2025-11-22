@@ -79,6 +79,8 @@ export interface Product {
     image: string;
     description: string;
     price: number;
+    discount?: number;
+    discount_type?: 'fixed' | 'percentage';
     is_active: boolean;
     created_at: string;
     updated_at: string;
@@ -134,6 +136,8 @@ export interface Order {
     shipping_courier?: string;
     shipping_service?: string;
     destination_city_id?: number;
+    coupon_id?: number;
+    coupon_discount?: number;
     created_at: string;
     updated_at: string;
 
@@ -142,6 +146,8 @@ export interface Order {
     user: User;
     // Relation to Order Items
     items: OrderItem[];
+    // Relation to Coupon
+    coupon?: Coupon;
 
 }
 export interface OrderItem {
@@ -157,4 +163,18 @@ export interface OrderItem {
     // Relations
     product: Product;
     product_variant?: ProductVariant;
+}
+
+export interface Coupon {
+    id: number;
+    code: string;
+    discount_type: 'fixed' | 'percentage';
+    discount_value: number;
+    expiry_date: string | null;
+    usage_limit: number | null;
+    used_count: number;
+    is_active: boolean;
+    description?: string;
+    created_at: string;
+    updated_at: string;
 }

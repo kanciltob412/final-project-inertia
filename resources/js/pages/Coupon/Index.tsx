@@ -1,17 +1,46 @@
-import AppLayout from '@/layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import AppLayout from "@/layouts/app-layout";
+import { BreadcrumbItem, Coupon } from "@/types";
+import { Head, router } from "@inertiajs/react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import HeadingSmall from "@/components/heading-small";
+import { CouponDataTable } from "./CouponDataTable";
+import { Plus } from "lucide-react";
 
-export default function CouponIndex() {
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: "Coupons",
+        href: "/admin/coupons",
+    },
+];
+
+interface Props {
+    coupons: Coupon[];
+}
+
+export default function CouponIndex({ coupons }: Props) {
     return (
-        <AppLayout breadcrumbs={[{ title: 'Coupons', href: '/admin/coupons' }]}>
-            <Head title="Coupons" />
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Manage Coupons" />
+
             <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                    <h1 className="text-2xl font-bold">Coupons</h1>
-                    <Link href="/admin/coupons/create" className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition">Create Coupon</Link>
+                <div className="flex items-center justify-between">
+                    <HeadingSmall
+                        title="Coupons"
+                        description="Manage promotional coupons and discount codes."
+                    />
+                    <Button
+                        onClick={() => router.visit('/admin/coupons/create')}
+                        className="bg-black hover:bg-gray-800"
+                    >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Coupon
+                    </Button>
                 </div>
-                {/* Coupon list table goes here */}
-                <div className="bg-white rounded shadow p-4 text-center text-gray-500">No coupons found.</div>
+
+                <Separator className="my-8" />
+
+                <CouponDataTable data={coupons} />
             </div>
         </AppLayout>
     );

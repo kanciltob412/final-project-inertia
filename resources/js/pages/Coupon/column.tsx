@@ -18,32 +18,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { router } from "@inertiajs/react";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
-import { Product } from "@/types";
-import products from "../../routes/products";
+import { Coupon } from "@/types";
 
-
-function ActionsCell({ product }: { product: Product }) {
+function ActionsCell({ coupon }: { coupon: Coupon }) {
     const [open, setOpen] = useState(false);
 
     const handleEdit = () => {
-        router.visit(products.edit(product.id));
-    };
-
-    const handleDuplicate = () => {
-        router.post('/admin/products/duplicate', {
-            id: product.id
-        }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Optionally show a success message
-            }
-        });
+        router.visit(`/admin/coupons/${coupon.id}/edit`);
     };
 
     const handleDelete = () => {
-        router.delete(products.destroy(product.id));
+        router.delete(`/admin/coupons/${coupon.id}`);
         setOpen(false);
     };
 
@@ -58,10 +45,6 @@ function ActionsCell({ product }: { product: Product }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleDuplicate}>
-                        <Copy className="h-4 w-4 mr-2" />
-                        Duplicate
-                    </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={() => {
                             setTimeout(() => {
@@ -79,7 +62,7 @@ function ActionsCell({ product }: { product: Product }) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will delete <strong>{product.name}</strong> permanently.
+                            This will delete coupon <strong>{coupon.code}</strong> permanently.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -92,7 +75,7 @@ function ActionsCell({ product }: { product: Product }) {
     );
 }
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Coupon>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -121,54 +104,58 @@ export const columns: ColumnDef<Product>[] = [
         size: 40,
     },
     {
-        accessorKey: "id",
-        header: "ID",
+        accessorKey: "code",
+        header: "Code",
         cell: ({ row }) => (
-            <span className="font-mono text-sm text-gray-700">
-                #{row.original.id}
+            <span className="font-mono text-sm font-semibold text-black">
+                {row.original.code}
             </span>
         ),
     },
     {
-        accessorKey: "name",
-        header: "Name",
+        accessorKey: "discount_type",
+        header: "Type",
+        cell: ({ row }) => (
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${row.original.discount_type === 'percentage'
+                ? 'bg-blue-100 text-blue-800'
+                : 'bg-purple-100 text-purple-800'
+                }`}>
+                {row.original.discount_type === 'percentage' ? 'Percentage' : 'Fixed Amount'}
+            </span>
+        ),
     },
     {
-        accessorKey: "price",
-        header: "Price",
-        cell: ({ row }) => <span>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.price)}</span>,
+        accessorKey: "discount_value",
+        header: "Discount Value",
+        cell: ({ row }) => (
+            <span className="font-semibold">
+                {row.original.discount_type === 'percentage'
+                    ? `${row.original.discount_value}%`
+                    : `Rp ${Number(row.original.discount_value).toLocaleString()}`}
+            </span>
+        ),
     },
     {
-        accessorKey: "discount",
-        header: "Discount",
+        accessorKey: "used_count",
+        header: "Used / Limit",
+        cell: ({ row }) => (
+            <span className="text-sm">
+                {row.original.used_count} {row.original.usage_limit ? `/ ${row.original.usage_limit}` : '/ Unlimited'}
+            </span>
+        ),
+    },
+    {
+        accessorKey: "expiry_date",
+        header: "Expires",
         cell: ({ row }) => {
-            const discount = row.original.discount || 0;
-            const discountType = row.original.discount_type || 'fixed';
-
-            if (discount === 0) {
-                return <span className="text-gray-500">No discount</span>;
+            if (!row.original.expiry_date) {
+                return <span className="text-gray-500">Never</span>;
             }
-
+            const expiryDate = new Date(row.original.expiry_date);
+            const isExpired = expiryDate < new Date();
             return (
-                <span className="text-green-600 font-medium">
-                    {discountType === 'percentage' ? `${discount}%` : new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(discount)}
-                </span>
-            );
-        },
-    },
-    {
-        accessorKey: "stock",
-        header: "Stock",
-        cell: ({ row }) => {
-            const stock = row.original.stock || 0;
-            return (
-                <span className={`font-medium ${stock === 0 ? 'text-red-600' :
-                    (stock >= 1 && stock <= 3 ? 'text-red-600' :
-                        (stock <= 5 ? 'text-orange-600' : 'text-green-600'))
-                    }`}>
-                    {stock === 0 ? 'Out of stock' :
-                        (stock >= 1 && stock <= 3 ? `Only ${stock} left` :
-                            `${stock} available`)}
+                <span className={isExpired ? 'text-red-600 font-semibold' : 'text-gray-700'}>
+                    {expiryDate.toLocaleDateString('id-ID')}
                 </span>
             );
         },
@@ -186,13 +173,8 @@ export const columns: ColumnDef<Product>[] = [
         ),
     },
     {
-        accessorKey: "image",
-        header: "Image",
-        cell: ({ row }) => <img src={`../../storage/${row.original.image}`} alt={row.original.name} className="h-12 w-12 object-cover" />,
-    },
-    {
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => <ActionsCell product={row.original} />,
+        cell: ({ row }) => <ActionsCell coupon={row.original} />,
     },
 ];

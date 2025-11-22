@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            //
+            $table->decimal('discount', 10, 2)->default(0)->comment('Discount amount or percentage');
+            $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed')->comment('Type of discount');
         });
     }
 
@@ -22,7 +23,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            //
+            $table->dropColumn(['discount', 'discount_type']);
         });
     }
 };

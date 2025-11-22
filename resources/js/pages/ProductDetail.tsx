@@ -8,6 +8,15 @@ import Footer from '@/components/Footer';
 import ProductGallery from '@/components/ProductGallery';
 import { Product } from '@/types';
 
+// Helper function to calculate discounted price
+const calculateDiscountedPrice = (price: number, discount?: number, discountType?: string): number => {
+    if (!discount || discount === 0) return price;
+    if (discountType === 'percentage') {
+        return price - (price * (discount / 100));
+    }
+    return price - discount;
+};
+
 
 export default function ProductDetail({ product }: { product: Product }) {
     const { addItem, items, updateItemQuantity } = useCart();
@@ -37,6 +46,7 @@ export default function ProductDetail({ product }: { product: Product }) {
         // Use variant ID as unique identifier for cart
 
         const cartId = product.id;
+        const discountedPrice = calculateDiscountedPrice(product.price, product.discount, product.discount_type);
 
         if (items.some((item) => Number(item.id) === Number(cartId))) {
             const existingItem = items.find((item) => Number(item.id) === Number(cartId));
@@ -58,7 +68,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                 {
                     ...product,
                     id: String(cartId),
-                    price: product.price,
+                    price: discountedPrice,
                     stock: product.stock
                 },
                 quantityNumber,
@@ -109,7 +119,19 @@ export default function ProductDetail({ product }: { product: Product }) {
                                     )}
                                 </div>
                             </div>
-                            <p className="mb-4 text-2xl text-gray-800">{formatPrice(product.price)}</p>
+                            {product.discount && product.discount > 0 ? (
+                                <div className="mb-4">
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-2xl text-gray-500 line-through">{formatPrice(product.price)}</span>
+                                        <span className="text-3xl font-bold text-green-600">{formatPrice(calculateDiscountedPrice(product.price, product.discount, product.discount_type))}</span>
+                                    </div>
+                                    <p className="mt-2 text-sm text-green-600 font-semibold">
+                                        {product.discount_type === 'percentage' ? `Save ${product.discount}%` : `Save ${formatPrice(product.discount)}`}
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="mb-4 text-2xl text-gray-800">{formatPrice(product.price)}</p>
+                            )}
                             {/* Stock Information */}
                             <div className="mb-6">
                                 <p className="text-sm text-gray-500">

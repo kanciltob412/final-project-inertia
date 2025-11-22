@@ -12,6 +12,31 @@ const stripHtmlAndTruncateByWords = (html: string, maxWords: number = 20) => {
     return words.length > maxWords ? words.slice(0, maxWords).join(' ') + '...' : stripped;
 };
 
+// Helper function to calculate discounted price
+const calculateDiscountedPrice = (price: number, discount?: number, discountType?: string): number => {
+    if (!discount || discount === 0) return price;
+    if (discountType === 'percentage') {
+        return price - (price * (discount / 100));
+    }
+    return price - discount;
+};
+
+// Helper function to format price display with discount
+const formatPriceWithDiscount = (price: number, discount?: number, discountType?: string) => {
+    if (!discount || discount === 0) return formatPrice(price);
+
+    const discountedPrice = calculateDiscountedPrice(price, discount, discountType);
+    return (
+        <div className="flex items-center gap-2">
+            <span className="text-gray-500 line-through text-sm">{formatPrice(price)}</span>
+            <span className="text-green-600 font-semibold">{formatPrice(discountedPrice)}</span>
+            <span className="text-green-600 text-xs bg-green-100 px-2 py-1 rounded">
+                {discountType === 'percentage' ? `${discount}% off` : `Save ${formatPrice(discount)}`}
+            </span>
+        </div>
+    );
+};
+
 
 
 export default function ProductCard({ product, viewMode = 'grid' }: { product: Product; viewMode?: 'grid' | 'list' }) {
@@ -32,6 +57,8 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
         }
 
         const productId = String(product.id);
+        const discountedPrice = calculateDiscountedPrice(product.price, product.discount, product.discount_type);
+
         if (items.some((item) => item.id === productId)) {
             const existingItem = items.find((item) => item.id === productId);
             const newQuantity = Number(existingItem?.quantity) + 1;
@@ -44,7 +71,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                 {
                     ...product,
                     id: productId,
-                    price: product.price,
+                    price: discountedPrice,
                     stock: product.stock
                 },
                 1,
@@ -63,7 +90,13 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     <div className="flex flex-1 flex-col justify-between p-6">
                         <div>
                             <h3 className="mb-2 text-xl font-semibold text-black">{product.name}</h3>
-                            <p className="mb-2 text-gray-600">{formatPrice(product.price)}</p>
+                            {product.discount && product.discount > 0 ? (
+                                <div className="mb-2">
+                                    {formatPriceWithDiscount(product.price, product.discount, product.discount_type)}
+                                </div>
+                            ) : (
+                                <p className="mb-2 text-gray-600">{formatPrice(product.price)}</p>
+                            )}
                             <div className="mb-4 space-y-2">
                                 {product.sku && (
                                     <p className="text-sm text-gray-500">
@@ -91,8 +124,8 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                                 onClick={handleAddToCart}
                                 disabled={currentStock === 0}
                                 className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
-                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                        : 'bg-black text-white hover:bg-gray-800'
+                                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                    : 'bg-black text-white hover:bg-gray-800'
                                     }`}
                                 title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
                             >
@@ -135,7 +168,13 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                             {product.name}
                         </Link>
                     </h3>
-                    <p className="mt-1 text-gray-600">{formatPrice(product.price)}</p>
+                    {product.discount && product.discount > 0 ? (
+                        <div className="mt-1">
+                            {formatPriceWithDiscount(product.price, product.discount, product.discount_type)}
+                        </div>
+                    ) : (
+                        <p className="mt-1 text-gray-600">{formatPrice(product.price)}</p>
+                    )}
                     <div className="mt-2 space-y-2">
                         {product.sku && (
                             <p className="text-xs text-gray-500">
@@ -156,8 +195,8 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                         onClick={handleAddToCart}
                         disabled={currentStock === 0}
                         className={`flex items-center gap-2 rounded-md px-4 py-2 transition-colors ${currentStock === 0
-                                ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                : 'bg-black text-white hover:bg-gray-800'
+                            ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                            : 'bg-black text-white hover:bg-gray-800'
                             }`}
                         title={currentStock === 0 ? "Out of Stock" : "Add to Cart"}
                     >

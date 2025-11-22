@@ -57,6 +57,13 @@ export default function Checkout() {
     const [selectedShippingCost, setSelectedShippingCost] = useState<number | null>(null);
     const [selectedShippingService, setSelectedShippingService] = useState<{ courier: string, service: string } | null>(null);
 
+    // Coupon state
+    const [couponCode, setCouponCode] = useState('');
+    const [couponError, setCouponError] = useState('');
+    const [appliedCoupon, setAppliedCoupon] = useState<{ id: number; code: string; discount_type: string; discount_value: number } | null>(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
+    const [couponLoading, setCouponLoading] = useState(false);
+
     const { data, setData, processing, errors } = useForm({
         full_name: '',
         email: auth.user ? '' : '', // Email only needed for guest users
@@ -71,6 +78,8 @@ export default function Checkout() {
         shipping_courier: '',
         shipping_service: '',
         destination_city_id: 0,
+        coupon_id: 0,
+        coupon_discount: 0,
     });
 
     // Fetch provinces on mount
@@ -187,6 +196,54 @@ export default function Checkout() {
         setData('shipping_service', service);
     };
 
+    const applyCoupon = async () => {
+        if (!couponCode) {
+            setCouponError('Please enter a coupon code');
+            return;
+        }
+
+        setCouponLoading(true);
+        setCouponError('');
+
+        try {
+            const subtotal = cartTotal - (selectedShippingCost || 0);
+            const response = await fetch('/api/coupons/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: couponCode, subtotal }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                setAppliedCoupon(result.coupon);
+                setDiscountAmount(result.discount);
+                setData('coupon_id', result.coupon.id);
+                setData('coupon_discount', result.discount);
+                setCouponError('');
+            } else {
+                setCouponError(result.message || 'Invalid coupon code');
+                setAppliedCoupon(null);
+                setDiscountAmount(0);
+                setData('coupon_id', 0);
+                setData('coupon_discount', 0);
+            }
+        } catch (err) {
+            setCouponError('Error validating coupon: ' + (err instanceof Error ? err.message : 'Unknown error'));
+        } finally {
+            setCouponLoading(false);
+        }
+    };
+
+    const removeCoupon = () => {
+        setAppliedCoupon(null);
+        setCouponCode('');
+        setDiscountAmount(0);
+        setCouponError('');
+        setData('coupon_id', 0);
+        setData('coupon_discount', 0);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -208,6 +265,8 @@ export default function Checkout() {
             shipping_courier: data.shipping_courier,
             shipping_service: data.shipping_service,
             destination_city_id: data.destination_city_id,
+            coupon_id: data.coupon_id,
+            coupon_discount: data.coupon_discount,
             products: products, // Send as array, not JSON string
             email: !auth.user ? data.email : auth.user.email,
         };
@@ -289,22 +348,22 @@ export default function Checkout() {
 
                         {/* Login/Register Options for Guest Users */}
                         {!auth.user && (
-                            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                                <p className="text-sm text-blue-800 mb-3">
+                            <div className="mb-6 p-4 bg-gray-100 border border-gray-300 rounded-lg">
+                                <p className="text-sm text-gray-800 mb-3">
                                     Already have an account? Login for faster checkout or continue as guest.
                                 </p>
                                 <div className="flex gap-3">
                                     <button
                                         type="button"
                                         onClick={() => router.visit('/login')}
-                                        className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
+                                        className="flex-1 px-4 py-2 bg-black text-white rounded-md hover:bg-gray-900 transition-colors text-sm"
                                     >
                                         Login
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => router.visit('/register')}
-                                        className="flex-1 px-4 py-2 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors text-sm"
+                                        className="flex-1 px-4 py-2 border border-black text-black rounded-md hover:bg-gray-50 transition-colors text-sm"
                                     >
                                         Register
                                     </button>
@@ -518,7 +577,7 @@ export default function Checkout() {
                             type="button"
                             onClick={calculateShipping}
                             disabled={shippingLoading || !destCity}
-                            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                            className="w-full bg-black text-white font-semibold py-2 rounded-md hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                         >
                             {shippingLoading ? (
                                 <>
@@ -543,10 +602,10 @@ export default function Checkout() {
                                         return (
                                             <div
                                                 key={courier}
-                                                className="p-3 bg-yellow-50 border border-yellow-200 rounded-md"
+                                                className="p-3 bg-gray-100 border border-gray-300 rounded-md"
                                             >
-                                                <p className="text-yellow-800 font-semibold text-sm">{courierName}</p>
-                                                <p className="text-yellow-700 text-xs">
+                                                <p className="text-gray-800 font-semibold text-sm">{courierName}</p>
+                                                <p className="text-gray-600 text-xs">
                                                     {response && 'error' in response ? response.error : 'Not available for this route'}
                                                 </p>
                                             </div>
@@ -573,7 +632,7 @@ export default function Checkout() {
                                                             }
                                                             className={`w-full p-3 text-left rounded-md border-2 transition-colors ${selectedShippingService?.courier === courier &&
                                                                 selectedShippingService?.service === cost.service
-                                                                ? 'border-blue-600 bg-blue-50'
+                                                                ? 'border-black bg-gray-100'
                                                                 : 'border-gray-200 hover:border-gray-300'
                                                                 }`}
                                                         >
@@ -586,7 +645,7 @@ export default function Checkout() {
                                                                     </p>
                                                                 </div>
                                                                 <div className="text-right">
-                                                                    <p className="font-semibold text-blue-600">
+                                                                    <p className="font-semibold text-black">
                                                                         Rp {(cost.cost?.[0]?.value || 0).toLocaleString('id-ID')}
                                                                     </p>
                                                                 </div>
@@ -602,8 +661,8 @@ export default function Checkout() {
                         )}
 
                         {selectedShippingService && (
-                            <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                                <p className="text-green-800 text-sm">
+                            <div className="mt-4 p-3 bg-gray-100 border border-gray-300 rounded-md">
+                                <p className="text-gray-800 text-sm">
                                     <span className="font-semibold">Shipping Selected:</span> {couriers[selectedShippingService.courier]} - {selectedShippingService.service}
                                     <br />
                                     <span className="font-semibold">Cost:</span> Rp {selectedShippingCost?.toLocaleString('id-ID')}
@@ -612,10 +671,59 @@ export default function Checkout() {
                         )}
                     </div>
 
+                    {/* Coupon Section */}
+                    <div className="mt-8 pt-8 border-t">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Promo Code</h3>
+
+                        {appliedCoupon ? (
+                            <div className="mb-4 p-3 bg-gray-100 border border-gray-300 rounded-md">
+                                <p className="text-gray-800 text-sm mb-2">
+                                    <span className="font-semibold">Applied:</span> {appliedCoupon.code}
+                                    <br />
+                                    <span className="font-semibold">Discount:</span> {appliedCoupon.discount_type === 'percentage' ? `${appliedCoupon.discount_value}%` : `Rp ${appliedCoupon.discount_value.toLocaleString('id-ID')}`}
+                                    <br />
+                                    <span className="font-semibold">You save:</span> Rp {discountAmount.toLocaleString('id-ID')}
+                                </p>
+                                <button
+                                    type="button"
+                                    onClick={removeCoupon}
+                                    className="mt-2 px-3 py-1 text-sm bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition-colors"
+                                >
+                                    Remove Coupon
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={couponCode}
+                                    onChange={(e) => setCouponCode(e.target.value)}
+                                    placeholder="Enter coupon code"
+                                    className="flex-1 px-4 py-2 border-b border-gray-300 focus:ring-0 focus:outline-none"
+                                    disabled={couponLoading}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={applyCoupon}
+                                    disabled={couponLoading || !couponCode}
+                                    className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 disabled:bg-gray-400 transition-colors text-sm"
+                                >
+                                    {couponLoading ? 'Applying...' : 'Apply'}
+                                </button>
+                            </div>
+                        )}
+
+                        {couponError && (
+                            <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-md">
+                                <p className="text-red-700 text-sm">{couponError}</p>
+                            </div>
+                        )}
+                    </div>
+
                     <button
                         type="submit"
                         disabled={processing || !selectedShippingCost}
-                        className="w-full rounded-md bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="mt-8 w-full rounded-md bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         title={!selectedShippingCost ? 'Please select a shipping method' : ''}
                     >
                         {processing ? 'Processing...' : 'Place Order'}
@@ -639,37 +747,58 @@ export default function Checkout() {
                     <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                     <div className="space-y-4">
                         {items.map((item) => (
-                            <div key={item.id} className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">{item.name}</p>
-                                    <p className="text-sm text-gray-500">
-                                        Qty: {item.quantity}
-                                    </p>
+                            <div key={item.id}>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-medium">{item.name}</p>
+                                        <p className="text-sm text-gray-500">
+                                            Qty: {item.quantity}
+                                        </p>
+                                        {item.discount && item.discount > 0 && (
+                                            <p className="text-xs text-green-600 font-semibold mt-1">
+                                                {item.discount_type === 'percentage' ? `Product discount: ${item.discount}%` : `Product discount: ${formatPrice(item.discount)}`}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <span className="font-semibold">
+                                        {formatPrice(item.itemTotal || 0)}
+                                    </span>
                                 </div>
-                                <span className="font-semibold">
-                                    {formatPrice(item.itemTotal || 0)}
-                                </span>
                             </div>
                         ))}
                         <hr className="my-4" />
                         <div className="space-y-2">
-                            <div className="flex justify-between">
-                                <span>Subtotal</span>
-                                <span>{formatPrice(cartTotal)}</span>
-                            </div>
-                            <div className="flex justify-between">
-                                <span>Shipping</span>
-                                <span className={selectedShippingCost ? 'font-semibold text-blue-600' : 'text-gray-500'}>
-                                    {selectedShippingCost ? formatPrice(selectedShippingCost) : '-'}
-                                </span>
-                            </div>
-                        </div>
-                        <hr className="my-4" />
-                        <div className="flex justify-between text-lg font-semibold">
-                            <span>Total</span>
-                            <span className={selectedShippingCost ? 'text-blue-600' : ''}>
-                                {formatPrice(cartTotal + (selectedShippingCost || 0))}
-                            </span>
+                            {(() => {
+                                // Calculate subtotal with product discounts included
+                                const subtotalWithDiscounts = items.reduce((sum, item) => sum + (item.itemTotal || 0), 0);
+                                return (
+                                    <>
+                                        <div className="flex justify-between">
+                                            <span>Subtotal</span>
+                                            <span>{formatPrice(subtotalWithDiscounts)}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Shipping</span>
+                                            <span className={selectedShippingCost ? 'font-semibold text-black' : 'text-gray-500'}>
+                                                {selectedShippingCost ? formatPrice(selectedShippingCost) : '-'}
+                                            </span>
+                                        </div>
+                                        {appliedCoupon && discountAmount > 0 && (
+                                            <div className="flex justify-between">
+                                                <span className="text-green-600">Coupon ({appliedCoupon.code})</span>
+                                                <span className="font-semibold text-green-600">-Rp {discountAmount.toLocaleString('id-ID')}</span>
+                                            </div>
+                                        )}
+                                        <hr className="my-4" />
+                                        <div className="flex justify-between text-lg font-semibold">
+                                            <span>Total</span>
+                                            <span className="text-black">
+                                                {formatPrice(subtotalWithDiscounts + (selectedShippingCost || 0) - discountAmount)}
+                                            </span>
+                                        </div>
+                                    </>
+                                );
+                            })()}
                         </div>
                     </div>
                 </div>

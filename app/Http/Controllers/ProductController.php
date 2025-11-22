@@ -47,6 +47,8 @@ class ProductController extends Controller
             "description" => "required|string",
             "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
+            "discount" => "nullable|numeric|min:0",
+            "discount_type" => "nullable|in:fixed,percentage",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
@@ -60,6 +62,8 @@ class ProductController extends Controller
                 'description' => $validated['description'],
                 'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
+                'discount' => $validated['discount'] ?? 0,
+                'discount_type' => $validated['discount_type'] ?? 'fixed',
                 'image' => null, // Will be set from first gallery image
             ];
 
@@ -122,6 +126,8 @@ class ProductController extends Controller
             "description" => "required|string",
             "stock" => "nullable|integer|min:0",
             "price" => "required|numeric|min:0",
+            "discount" => "nullable|numeric|min:0",
+            "discount_type" => "nullable|in:fixed,percentage",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
@@ -135,6 +141,8 @@ class ProductController extends Controller
                 'description' => $validated['description'],
                 'stock' => $validated['stock'] ?? 0,
                 'price' => $validated['price'],
+                'discount' => $validated['discount'] ?? 0,
+                'discount_type' => $validated['discount_type'] ?? 'fixed',
             ];
 
             if ($request->hasFile('image')) {

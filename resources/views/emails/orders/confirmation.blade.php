@@ -202,7 +202,7 @@
         <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                 <span style="color: #555;">Subtotal:</span>
-                <span style="color: #333;">Rp {{ number_format($order->total - ($order->shipping_cost ?? 0), 0, ',', '.') }}</span>
+                <span style="color: #333;">Rp {{ number_format($order->total + ($order->coupon_discount ?? 0) - ($order->shipping_cost ?? 0), 0, ',', '.') }}</span>
             </div>
             @if($order->shipping_cost)
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
@@ -213,6 +213,14 @@
                     @endif
                 </span>
                 <span style="color: #333; font-weight: bold;">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+            </div>
+            @endif
+            @if($order->coupon_discount)
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span style="color: #28a745;">
+                    <strong>Discount ({{ $order->coupon?->code }}):</strong>
+                </span>
+                <span style="color: #28a745; font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
             </div>
             @endif
         </div>
