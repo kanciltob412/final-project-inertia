@@ -69,8 +69,9 @@ Route::post('orders/pay', [OrderController::class, 'payOrder'])->name('orders.pa
 // Allow guests to view their orders
 Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('orders.show')->withoutMiddleware(['auth', 'verified', 'checkAdmin']);
 
+// Customer order view route
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Other authenticated routes can be added here
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.order.show');
 });
 
 // Payment callback routes (no auth required for Xendit callbacks)
