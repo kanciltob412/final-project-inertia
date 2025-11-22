@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { Menu, ShoppingCart, X } from 'lucide-react';
+import { Menu, ShoppingCart, X, ChevronDown } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
 import { SharedData } from '@/types';
@@ -11,8 +11,10 @@ interface NavbarProps {
 
 export default function Navbar({ forceBlack = false }: NavbarProps) {
     const user = usePage<SharedData>().props.auth.user;
+    const userOrders = usePage<SharedData>().props.userOrders || [];
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
+    const [isOrderMenuOpen, setIsOrderMenuOpen] = useState<boolean>(false);
     const { items, emptyCart } = useCart();
 
     const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
@@ -79,9 +81,55 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                         </Link>
                         {user ? (
                             <>
-                                <a href={user.role === 'ADMIN' ? '/admin/dashboard' : '/cart'} className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
-                                    Hello, {user.name}
-                                </a>
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setIsOrderMenuOpen(!isOrderMenuOpen)}
+                                        className={`flex items-center gap-1 transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                                    >
+                                        Hello, {user.name}
+                                        <ChevronDown className="h-4 w-4" />
+                                    </button>
+
+                                    {isOrderMenuOpen && (
+                                        <div className="absolute right-0 mt-2 w-80 rounded-lg bg-white shadow-lg z-50">
+                                            <div className="p-4 border-b border-gray-200">
+                                                <h3 className="font-semibold text-gray-900">Your Orders</h3>
+                                            </div>
+                                            <div className="max-h-96 overflow-y-auto">
+                                                {userOrders && userOrders.length > 0 ? (
+                                                    <div className="divide-y">
+                                                        {userOrders.map((order: any) => (
+                                                            <Link
+                                                                key={order.id}
+                                                                href={`/orders/${order.id}`}
+                                                                className="block p-4 hover:bg-gray-50 transition-colors"
+                                                            >
+                                                                <div className="flex justify-between items-start mb-2">
+                                                                    <span className="font-medium text-gray-900">Order #{order.id}</span>
+                                                                    <span className={`text-xs font-semibold px-2 py-1 rounded ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                                                                        order.status === 'SHIPPED' ? 'bg-blue-100 text-blue-800' :
+                                                                            'bg-yellow-100 text-yellow-800'
+                                                                        }`}>
+                                                                        {order.status}
+                                                                    </span>
+                                                                </div>
+                                                                <p className="text-sm text-gray-600">Rp {order.total?.toLocaleString('id-ID')}</p>
+                                                                <p className="text-xs text-gray-500 mt-1">{new Date(order.created_at).toLocaleDateString('id-ID')}</p>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className="p-6 text-center">
+                                                        <p className="text-gray-600 mb-3">You have not made any orders yet</p>
+                                                        <Link href="/products" className="inline-block bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors text-sm">
+                                                            Go to Shopping
+                                                        </Link>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
                                 <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                                     Logout
                                 </div>
@@ -127,9 +175,45 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                 <ShoppingCart className="mr-2 h-6 w-6" />
                                 <span>Cart ({totalItems})</span>
                             </Link>
-                            <Link href="/login" className="text-black hover:opacity-75">
-                                Login
-                            </Link>
+                            {user ? (
+                                <>
+                                    <div className="border-t pt-4">
+                                        <p className="font-semibold text-black mb-3">Hello, {user.name}</p>
+                                        {userOrders && userOrders.length > 0 ? (
+                                            <div className="space-y-2 mb-3">
+                                                <p className="text-sm text-gray-600 font-medium">Your Orders:</p>
+                                                {userOrders.map((order: any) => (
+                                                    <Link
+                                                        key={order.id}
+                                                        href={`/orders/${order.id}`}
+                                                        className="block p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
+                                                    >
+                                                        <div className="flex justify-between items-center">
+                                                            <span className="text-sm font-medium text-gray-900">Order #{order.id}</span>
+                                                            <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{order.status}</span>
+                                                        </div>
+                                                        <p className="text-xs text-gray-600">Rp {order.total?.toLocaleString('id-ID')}</p>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="mb-3 p-3 bg-gray-50 rounded">
+                                                <p className="text-sm text-gray-600 mb-2">You have not made any orders yet</p>
+                                                <Link href="/products" className="inline-block text-xs bg-black text-white px-3 py-1 rounded hover:bg-gray-800">
+                                                    Go to Shopping
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div onClick={handleLogout} className="cursor-pointer text-black hover:opacity-75 border-t pt-4">
+                                        Logout
+                                    </div>
+                                </>
+                            ) : (
+                                <Link href="/login" className="text-black hover:opacity-75">
+                                    Login
+                                </Link>
+                            )}
                         </div>
                     </div>
                 )}

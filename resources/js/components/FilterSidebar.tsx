@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import type { PriceRange } from '../context/FilterContext';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 interface FilterSidebarProps {
     searchQuery: string;

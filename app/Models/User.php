@@ -57,4 +57,9 @@ class User extends Authenticatable implements MustVerifyEmail
             default => '/',
         };
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
