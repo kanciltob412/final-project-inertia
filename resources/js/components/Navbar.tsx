@@ -43,7 +43,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
 
     const handleTabChange = (tab: 'orders' | 'wishlist') => {
         setActiveTab(tab);
-        if (tab === 'wishlist' && wishlistItems.length === 0) {
+        // Always reload wishlist when switching to the wishlist tab
+        if (tab === 'wishlist') {
             loadWishlist();
         }
     };
@@ -289,8 +290,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                     <button
                                                         onClick={() => handleTabChange('orders')}
                                                         className={`flex-1 py-2 text-xs font-medium transition-colors ${activeTab === 'orders'
-                                                                ? 'border-b-2 border-black text-black'
-                                                                : 'text-gray-600 hover:text-gray-900'
+                                                            ? 'border-b-2 border-black text-black'
+                                                            : 'text-gray-600 hover:text-gray-900'
                                                             }`}
                                                     >
                                                         My Orders
@@ -298,8 +299,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                     <button
                                                         onClick={() => handleTabChange('wishlist')}
                                                         className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1 ${activeTab === 'wishlist'
-                                                                ? 'border-b-2 border-black text-black'
-                                                                : 'text-gray-600 hover:text-gray-900'
+                                                            ? 'border-b-2 border-black text-black'
+                                                            : 'text-gray-600 hover:text-gray-900'
                                                             }`}
                                                     >
                                                         <Heart className="h-3 w-3" />

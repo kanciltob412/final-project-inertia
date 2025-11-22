@@ -1,7 +1,8 @@
 import { Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
 import { SharedData } from '@/types';
+import axios from 'axios';
 
 interface WishlistButtonProps {
     productId: number;
@@ -9,7 +10,8 @@ interface WishlistButtonProps {
 }
 
 export default function WishlistButton({ productId, className = '' }: WishlistButtonProps) {
-    const user = usePage<SharedData>().props.auth.user;
+    const page = usePage<SharedData>();
+    const user = page.props.auth.user;
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -19,11 +21,8 @@ export default function WishlistButton({ productId, className = '' }: WishlistBu
 
         const checkWishlist = async () => {
             try {
-                const response = await fetch(`/api/wishlist/check/${productId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setIsInWishlist(data.inWishlist);
-                }
+                const response = await axios.get(`/api/wishlist/check/${productId}`);
+                setIsInWishlist(response.data.inWishlist);
             } catch (error) {
                 console.error('Failed to check wishlist:', error);
             }
@@ -37,30 +36,31 @@ export default function WishlistButton({ productId, className = '' }: WishlistBu
         e.stopPropagation();
 
         if (!user) {
-            window.location.href = '/login';
+            // Redirect to login if not authenticated
+            router.visit('/login');
             return;
         }
 
         setLoading(true);
         try {
             if (isInWishlist) {
-                const response = await fetch(`/api/wishlist/${productId}`, {
-                    method: 'DELETE',
-                });
-                if (response.ok) {
-                    setIsInWishlist(false);
-                }
+                await axios.delete(`/api/wishlist/${productId}`);
+                setIsInWishlist(false);
+                // Refresh to update navbar
+                router.reload();
             } else {
-                const response = await fetch('/api/wishlist', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                    },
-                    body: JSON.stringify({ product_id: productId }),
-                });
-                if (response.ok) {
+                try {
+                    await axios.post('/api/wishlist', { product_id: productId });
                     setIsInWishlist(true);
+                    // Refresh to update navbar
+                    router.reload();
+                } catch (error) {
+                    if (axios.isAxiosError(error) && error.response?.status === 409) {
+                        // Already in wishlist
+                        setIsInWishlist(true);
+                    } else {
+                        console.error('Failed to add to wishlist:', error);
+                    }
                 }
             }
         } catch (error) {
