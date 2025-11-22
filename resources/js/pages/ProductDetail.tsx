@@ -119,13 +119,13 @@ export default function ProductDetail({ product }: { product: Product }) {
                                         </p>
                                     )}
                                     {product.dimension && (
-                                <div className="mb-6">
-                                    <p className="text-sm text-gray-500">
-                                        <span className="font-medium">Dimension:</span>
-                                        <span className="ml-1">{product.dimension}</span>
-                                    </p>
-                                </div>
-                            )}
+                                        <div className="mb-6">
+                                            <p className="text-sm text-gray-500">
+                                                <span className="font-medium">Dimension:</span>
+                                                <span className="ml-1">{product.dimension}</span>
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             {product.discount && product.discount > 0 ? (
@@ -155,7 +155,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                                     </span>
                                 </p>
                             </div>
-                            
+
                             <div className="mb-6">
                                 <h2 className="mb-2 font-semibold">Description</h2>
                                 <div
