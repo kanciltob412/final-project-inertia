@@ -61,14 +61,14 @@ export default function Products({ products, categories, filters }: ProductsProp
     const applyFilters = (newFilters: Partial<ProductFilters>) => {
         const updatedFilters = { ...localFilters, ...newFilters };
         setLocalFilters(updatedFilters);
-        
+
         const queryParams = new URLSearchParams();
         if (updatedFilters.search) queryParams.set('search', updatedFilters.search);
         if (updatedFilters.category && updatedFilters.category !== 'All') queryParams.set('category', updatedFilters.category);
         if (updatedFilters.min_price) queryParams.set('min_price', updatedFilters.min_price);
         if (updatedFilters.max_price) queryParams.set('max_price', updatedFilters.max_price);
         if (updatedFilters.sort) queryParams.set('sort', updatedFilters.sort);
-        
+
         const queryString = queryParams.toString();
         router.visit(`/products${queryString ? '?' + queryString : ''}`);
     };
@@ -108,11 +108,11 @@ export default function Products({ products, categories, filters }: ProductsProp
             <Navbar />
             <div>
                 <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                    <img 
-                        src="/inspire-8.jpg" 
-                        alt="Products banner" 
-                        className="absolute w-full h-full object-cover object-center" 
-                        style={{ filter: 'brightness(0.6)' }} 
+                    <img
+                        src="/inspire-8.jpg"
+                        alt="Products banner"
+                        className="absolute w-full h-full object-cover object-center"
+                        style={{ filter: 'brightness(0.6)' }}
                     />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
@@ -131,18 +131,18 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 selectedCategory={localFilters.category || 'All'}
                                 setSelectedCategory={handleCategoryFilter}
                                 categories={['All', ...categories.map(c => c.name)]}
-                                priceRange={{ 
-                                    min: parseInt(localFilters.min_price || '0'), 
-                                    max: parseInt(localFilters.max_price || '999999') 
+                                priceRange={{
+                                    min: parseInt(localFilters.min_price || '0'),
+                                    max: parseInt(localFilters.max_price || '999999')
                                 }}
-                                setPriceRange={(range) => applyFilters({ 
-                                    min_price: range.min.toString(), 
-                                    max_price: range.max.toString() 
+                                setPriceRange={(range) => applyFilters({
+                                    min_price: range.min.toString(),
+                                    max_price: range.max.toString()
                                 })}
                                 sortBy={localFilters.sort || 'name'}
                                 setSortBy={handleSortChange}
                                 clearFilters={clearFilters}
-                                setCurrentPage={() => {}}
+                                setCurrentPage={() => { }}
                             />
                         </div>
 
@@ -162,13 +162,13 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 <div className="flex border border-gray-300 rounded-lg">
                                     <button
                                         onClick={() => setViewMode('grid')}
-                                        className={`p-2 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 ${viewMode === 'grid' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <Grid className="h-5 w-5" />
                                     </button>
                                     <button
                                         onClick={() => setViewMode('list')}
-                                        className={`p-2 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 ${viewMode === 'list' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <List className="h-5 w-5" />
                                     </button>
@@ -182,18 +182,18 @@ export default function Products({ products, categories, filters }: ProductsProp
                                     {Math.min(products.current_page * products.per_page, products.total)} of{' '}
                                     {products.total} products
                                 </div>
-                                
+
                                 {/* View Mode Toggle */}
                                 <div className="flex border border-gray-300 rounded-lg">
                                     <button
                                         onClick={() => setViewMode('grid')}
-                                        className={`p-2 ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 ${viewMode === 'grid' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <Grid className="h-5 w-5" />
                                     </button>
                                     <button
                                         onClick={() => setViewMode('list')}
-                                        className={`p-2 ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 ${viewMode === 'list' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <List className="h-5 w-5" />
                                     </button>
@@ -201,10 +201,10 @@ export default function Products({ products, categories, filters }: ProductsProp
                             </div>
 
                             {/* Products Grid */}
-                            <div className={`gap-6 mb-8 ${viewMode === 'grid' 
-                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr' 
+                            <div className={`gap-6 mb-8 ${viewMode === 'grid'
+                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr'
                                 : 'flex flex-col space-y-4'
-                            }`}>
+                                }`}>
                                 {products.data.map((product: Product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
@@ -216,7 +216,7 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 <div className="text-sm text-gray-600">
                                     Page {products.current_page} of {products.last_page} | {products.total} total products
                                 </div>
-                                
+
                                 {products.last_page > 1 && (
                                     <div className="flex justify-center items-center space-x-2">
                                         {/* Previous Button */}
@@ -235,11 +235,10 @@ export default function Products({ products, categories, filters }: ProductsProp
                                                 <button
                                                     key={page}
                                                     onClick={() => handlePageClick(page)}
-                                                    className={`px-3 py-2 text-sm font-medium rounded-md ${
-                                                        page === products.current_page
+                                                    className={`px-3 py-2 text-sm font-medium rounded-md ${page === products.current_page
                                                             ? 'bg-blue-600 text-white'
                                                             : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {page}
                                                 </button>
@@ -285,7 +284,7 @@ export default function Products({ products, categories, filters }: ProductsProp
                     sortBy={localFilters.sort || 'name'}
                     setSortBy={handleSortChange}
                     clearFilters={clearFilters}
-                    setCurrentPage={() => {}}
+                    setCurrentPage={() => { }}
                 />
             </div>
             <Footer />
