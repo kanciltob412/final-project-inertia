@@ -35,7 +35,7 @@ export default function Form({ categories, product }: Props) {
         stock: product?.stock?.toString() || "",
         dimension: product?.dimension || "",
         price: product?.price?.toString() || "",
-        discount: product?.discount?.toString() || "",
+        discount: product?.discount ? Math.round(Number(product.discount)).toString() : "",
         discount_type: product?.discount_type || "fixed",
         gallery_images: initialGalleryFiles,
     });
@@ -288,11 +288,11 @@ export default function Form({ categories, product }: Props) {
                                 <Input
                                     id="discount"
                                     type="number"
-                                    step="0.01"
+                                    step="1"
                                     value={data.discount}
                                     onChange={(e) => setData("discount", e.target.value)}
                                     disabled={processing}
-                                    placeholder={data.discount_type === 'percentage' ? 'e.g., 10' : 'e.g., 9.99'}
+                                    placeholder={data.discount_type === 'percentage' ? 'e.g., 10' : 'e.g., 10000'}
                                     min="0"
                                 />
                                 {errors.discount && (

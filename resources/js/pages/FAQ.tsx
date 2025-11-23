@@ -1,6 +1,5 @@
-import { Head } from '@inertiajs/react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { Head, Link } from '@inertiajs/react';
+import CustomerLayout from '@/layouts/customer-layout';
 import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
@@ -64,28 +63,24 @@ export default function FAQ() {
     };
 
     return (
-        <div>
+        <CustomerLayout title="Frequently Asked Questions">
             <Head title="Frequently Asked Questions" />
-            <Navbar />
+            <div className="space-y-6 p-4 md:p-8 max-w-4xl mx-auto">
+                {/* Back Link */}
+                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                    <span>←</span>
+                    <span>Back to Dashboard</span>
+                </Link>
 
-
-            {/* Hero Banner */}
-            <div className="relative h-[400px] md:h-[420px] overflow-hidden">
-                <img src="/inspire-1.jpg" alt="FAQ" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 flex items-center">
-                    <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
-                        <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">FREQUENTLY ASKED QUESTIONS</h1>
-                    </div>
-                </div>
-            </div>
-
-            <main className="max-w-4xl mx-auto py-16 px-4">
-                <div className="text-center mb-12">
-                    <p className="text-lg text-gray-700">
+                {/* Header */}
+                <div>
+                    <h1 className="text-4xl font-bold mb-2">Frequently Asked Questions</h1>
+                    <p className="text-gray-600">
                         Find answers to common questions about our ceramics, shipping, and policies.
                     </p>
                 </div>
 
+                {/* FAQ Items */}
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                     <div className="divide-y divide-gray-200">
                         {faqData.map((item, index) => (
@@ -115,22 +110,20 @@ export default function FAQ() {
                     </div>
                 </div>
 
-                <div className="mt-12 text-center">
-                    <div className="bg-gray-50 rounded-lg p-8">
-                        <h3 className="text-2xl font-medium mb-3">Still have questions?</h3>
-                        <p className="text-gray-700 mb-6 leading-relaxed">
-                            Can't find what you're looking for? Our customer service team is here to help.
-                        </p>
-                        <a
-                            href="/contact"
-                            className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
-                        >
-                            Contact Us
-                        </a>
-                    </div>
+                {/* Contact Support */}
+                <div className="bg-gray-50 rounded-lg p-8 text-center">
+                    <h3 className="text-2xl font-medium mb-3">Still have questions?</h3>
+                    <p className="text-gray-700 mb-6 leading-relaxed">
+                        Can't find what you're looking for? Our customer service team is here to help.
+                    </p>
+                    <a
+                        href="/contact"
+                        className="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200"
+                    >
+                        Contact Us
+                    </a>
                 </div>
-            </main>
-            <Footer />
-        </div>
+            </div>
+        </CustomerLayout>
     );
 }

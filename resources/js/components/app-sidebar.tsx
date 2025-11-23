@@ -4,12 +4,8 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Coffee, Banknote, LayoutGrid, NotebookPen, Tag, Mail, Ticket } from 'lucide-react';
+import { Coffee, Banknote, LayoutGrid, NotebookPen, Tag, Mail, Ticket, Users, Layers } from 'lucide-react';
 import AppLogo from './app-logo';
-import categories from '../routes/categories';
-import products from '../routes/products';
-import articles from '../routes/articles';
-import orders from '../routes/orders';
 
 
 const mainNavItems: NavItem[] = [
@@ -19,23 +15,33 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
+        title: 'Customer Dashboards',
+        href: '/admin/customer-dashboards',
+        icon: Users,
+    },
+    {
+        title: 'Dashboard Content',
+        href: '/admin/dashboard-content',
+        icon: Layers,
+    },
+    {
         title: 'Categories',
-        href: categories.index().url,
+        href: '/admin/categories',
         icon: Tag,
     },
     {
         title: 'Products',
-        href: products.index().url,
+        href: '/admin/products',
         icon: Coffee,
     },
     {
         title: 'Articles',
-        href: articles.index().url,
+        href: '/admin/articles',
         icon: NotebookPen,
     },
     {
         title: 'Orders',
-        href: orders.index().url,
+        href: '/admin/orders',
         icon: Banknote,
     },
     {

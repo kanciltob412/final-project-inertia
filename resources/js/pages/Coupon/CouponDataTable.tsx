@@ -20,9 +20,20 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { columns } from "./column";
 import { Coupon } from "@/types";
+import { router } from "@inertiajs/react";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface CouponDataTableProps {
     data: Coupon[];
@@ -33,6 +44,7 @@ export function CouponDataTable({ data }: CouponDataTableProps) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
     const table = useReactTable({
         data,
@@ -53,9 +65,23 @@ export function CouponDataTable({ data }: CouponDataTableProps) {
         },
     });
 
+    const handleBulkDelete = () => {
+        const selectedRows = table.getFilteredSelectedRowModel().rows;
+        const ids = selectedRows.map(row => row.original.id);
+
+        router.delete('/admin/coupons/bulk', {
+            data: { ids },
+            preserveScroll: true,
+            onSuccess: () => {
+                setRowSelection({});
+                setShowDeleteDialog(false);
+            },
+        });
+    };
+
     return (
         <div className="space-y-4">
-            <div className="flex items-center py-4">
+            <div className="flex items-center justify-between py-4">
                 <Input
                     placeholder="Filter by coupon code..."
                     value={(table.getColumn("code")?.getFilterValue() as string) ?? ""}
@@ -64,6 +90,16 @@ export function CouponDataTable({ data }: CouponDataTableProps) {
                     }
                     className="max-w-sm"
                 />
+                {table.getFilteredSelectedRowModel().rows.length > 0 && (
+                    <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setShowDeleteDialog(true)}
+                    >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete ({table.getFilteredSelectedRowModel().rows.length})
+                    </Button>
+                )}
             </div>
             <div className="rounded-md border overflow-hidden">
                 <Table>
@@ -145,6 +181,24 @@ export function CouponDataTable({ data }: CouponDataTableProps) {
                     </Button>
                 </div>
             </div>
+
+            <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This will permanently delete {table.getFilteredSelectedRowModel().rows.length} selected coupon(s).
+                            This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleBulkDelete} className="bg-red-600 hover:bg-red-700">
+                            Delete
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

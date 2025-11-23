@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
 import axios from 'axios';
 import { SharedData } from '@/types';
-import { logout } from '@/routes';
+import { logout, dashboard } from '@/routes';
 
 interface NavbarProps {
     forceBlack?: boolean;
@@ -108,7 +108,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                             <>
                                 {user.role === 'ADMIN' ? (
                                     <>
-                                        <Link href="/admin/dashboard" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                                        <Link href={dashboard()} className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`} prefetch>
                                             Admin Dashboard
                                         </Link>
                                         <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
@@ -117,116 +117,9 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                     </>
                                 ) : (
                                     <>
-                                        <div className="relative">
-                                            <button
-                                                onClick={() => setIsOrderMenuOpen(!isOrderMenuOpen)}
-                                                className={`flex items-center gap-1 transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
-                                            >
-                                                Hello, {user.name}
-                                                <ChevronDown className="h-4 w-4" />
-                                            </button>
-
-                                            {isOrderMenuOpen && (
-                                                <div className="absolute right-0 mt-2 w-96 rounded-lg bg-white shadow-lg z-50 overflow-hidden">
-                                                    {/* Tab Headers */}
-                                                    <div className="flex border-b border-gray-200">
-                                                        <button
-                                                            onClick={() => handleTabChange('orders')}
-                                                            className={`flex-1 py-3 text-sm font-medium transition-colors ${activeTab === 'orders'
-                                                                ? 'border-b-2 border-black text-black bg-gray-50'
-                                                                : 'text-gray-600 hover:text-gray-900'
-                                                                }`}
-                                                        >
-                                                            My Orders
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleTabChange('wishlist')}
-                                                            className={`flex-1 py-3 text-sm font-medium transition-colors flex items-center justify-center gap-1 ${activeTab === 'wishlist'
-                                                                ? 'border-b-2 border-black text-black bg-gray-50'
-                                                                : 'text-gray-600 hover:text-gray-900'
-                                                                }`}
-                                                        >
-                                                            <Heart className="h-4 w-4" />
-                                                            My Wishlist
-                                                        </button>
-                                                    </div>
-
-                                                    {/* Tab Content */}
-                                                    <div className="max-h-96 overflow-y-auto">
-                                                        {activeTab === 'orders' ? (
-                                                            userOrders && userOrders.length > 0 ? (
-                                                                <div className="divide-y">
-                                                                    {userOrders.map((order: any) => (
-                                                                        <Link
-                                                                            key={order.id}
-                                                                            href={`/orders/${order.id}`}
-                                                                            className="block p-4 hover:bg-gray-50 transition-colors"
-                                                                        >
-                                                                            <div className="flex justify-between items-start mb-2">
-                                                                                <span className="font-medium text-gray-900">Order #{order.id}</span>
-                                                                                <span className={`text-xs font-semibold px-2 py-1 rounded ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                                                                                    order.status === 'SHIPPED' ? 'bg-blue-100 text-blue-800' :
-                                                                                        'bg-yellow-100 text-yellow-800'
-                                                                                    }`}>
-                                                                                    {order.status}
-                                                                                </span>
-                                                                            </div>
-                                                                            <p className="text-sm text-gray-600">Rp {order.total?.toLocaleString('id-ID')}</p>
-                                                                            <p className="text-xs text-gray-500 mt-1">{new Date(order.created_at).toLocaleDateString('id-ID')}</p>
-                                                                        </Link>
-                                                                    ))}
-                                                                </div>
-                                                            ) : (
-                                                                <div className="p-6 text-center">
-                                                                    <p className="text-gray-600 mb-3">You have not made any orders yet</p>
-                                                                    <Link href="/products" className="inline-block bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors text-sm">
-                                                                        Go to Shopping
-                                                                    </Link>
-                                                                </div>
-                                                            )
-                                                        ) : (
-                                                            loadingWishlist ? (
-                                                                <div className="p-6 text-center">
-                                                                    <p className="text-gray-600">Loading...</p>
-                                                                </div>
-                                                            ) : wishlistItems.length > 0 ? (
-                                                                <div className="divide-y">
-                                                                    {wishlistItems.map((item: any) => (
-                                                                        <Link
-                                                                            key={item.id}
-                                                                            href={`/products/${item.product.id}`}
-                                                                            className="block p-4 hover:bg-gray-50 transition-colors"
-                                                                        >
-                                                                            <div className="flex gap-3">
-                                                                                {item.product.image && (
-                                                                                    <img
-                                                                                        src={`/storage/${item.product.image}`}
-                                                                                        alt={item.product.name}
-                                                                                        className="h-12 w-12 object-cover rounded"
-                                                                                    />
-                                                                                )}
-                                                                                <div className="flex-1">
-                                                                                    <p className="font-medium text-gray-900 text-sm">{item.product.name}</p>
-                                                                                    <p className="text-sm text-gray-600">Rp {item.product.price?.toLocaleString('id-ID')}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </Link>
-                                                                    ))}
-                                                                </div>
-                                                            ) : (
-                                                                <div className="p-6 text-center">
-                                                                    <Heart className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                                                                    <p className="text-gray-600">Your wishlist is empty</p>
-                                                                    <Link href="/products" className="inline-block bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors text-sm mt-3">
-                                                                        Add Items
-                                                                    </Link>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
+                                        <Link href="/customer/dashboard" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`} prefetch>
+                                            Hello, {user.name}
+                                        </Link>
                                         <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                                             Logout
                                         </div>
@@ -279,7 +172,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                     <div className="border-t pt-4">
                                         <p className="font-semibold text-black mb-3">Hello, {user.name}</p>
                                         {user.role === 'ADMIN' ? (
-                                            <Link href="/admin/dashboard" className="block p-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm text-center mb-3">
+                                            <Link href={dashboard()} className="block p-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm text-center mb-3" prefetch>
                                                 Admin Dashboard
                                             </Link>
                                         ) : (

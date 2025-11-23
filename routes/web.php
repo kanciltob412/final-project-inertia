@@ -9,6 +9,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CustomerDashboardController;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\MemberPromoController;
+use App\Http\Controllers\Customer\OrdersController;
+use App\Http\Controllers\Customer\WishlistsController;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfileController;
+use App\Http\Controllers\Admin\AdminMemberPromoController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\PageController;
@@ -51,6 +58,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
     Route::resource('orders', OrderController::class);
 
     // Coupon Management
+    Route::delete('coupons/bulk', [CouponController::class, 'bulkDelete'])->name('coupons.bulk-delete');
     Route::resource('coupons', CouponController::class);
 
     // Newsletter Management
@@ -63,6 +71,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(fu
 
     // Individual newsletter subscription routes (parameterized routes last)
     Route::delete('newsletter/{subscription}', [NewsletterController::class, 'destroy'])->name('newsletter.destroy');
+
+    // Member Promo Management
+    Route::resource('member-promos', AdminMemberPromoController::class);
+    Route::post('member-promos/bulk-delete', [AdminMemberPromoController::class, 'bulkDelete'])->name('member-promos.bulk-delete');
 });
 
 // Guest checkout allowed - no auth required
@@ -72,6 +84,30 @@ Route::get('/admin/orders/{order}', [OrderController::class, 'show'])->name('ord
 
 // Customer order view route
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Customer Dashboard
+    Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
+
+    // Customer Pages
+    Route::get('/customer/orders', [OrdersController::class, 'index'])->name('customer.orders');
+
+    Route::get('/customer/wishlists', [WishlistsController::class, 'index'])->name('customer.wishlists');
+
+    Route::get('/customer/profile', [CustomerProfileController::class, 'show'])->name('customer.profile');
+    Route::patch('/customer/profile', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
+    Route::delete('/customer/profile', [CustomerProfileController::class, 'destroy'])->name('customer.profile.destroy');
+
+    Route::get('/customer/change-password', function () {
+        return Inertia::render('Customer/ChangePassword');
+    })->name('customer.change-password');
+
+    // Customer Addresses
+    Route::resource('customer/addresses', AddressController::class, ['as' => 'customer']);
+    Route::post('customer/addresses/{address}/set-default', [AddressController::class, 'setDefault'])->name('customer.addresses.set-default');
+    Route::get('/api/customer/addresses', [AddressController::class, 'list'])->name('api.customer.addresses');
+
+    // Member Promos (public viewing)
+    Route::get('/customer/member-promos', [MemberPromoController::class, 'index'])->name('customer.member-promos.index');
+
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.order.show');
 
     // Wishlist routes for authenticated customers
@@ -145,5 +181,6 @@ if (config('app.debug')) {
     });
 }
 
+require __DIR__ . '/admin.php';
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

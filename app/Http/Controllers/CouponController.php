@@ -74,6 +74,18 @@ class CouponController extends Controller
         return redirect('/admin/coupons')->with('success', 'Coupon deleted successfully');
     }
 
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:coupons,id'
+        ]);
+
+        $count = Coupon::whereIn('id', $validated['ids'])->delete();
+
+        return redirect('/admin/coupons')->with('success', "$count coupon(s) deleted successfully");
+    }
+
     public function validate(Request $request)
     {
         $code = $request->input('code');

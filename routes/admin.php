@@ -3,16 +3,11 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\CategoryController;
 
 Route::prefix('admin')->group(function () {
 
-    Route::get('/categories', function () {
-        return 'Admin - Categories Page';
-    });
-
-    Route::get('/products', function () {
-        return 'Admin - Products Page';
-    });
+    Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
 
     Route::get('/users/{namauser}', function ($namauser) {
         return 'Admin - User: ' . e($namauser);
@@ -26,4 +21,16 @@ Route::prefix('admin')->group(function () {
 
     // Order shipping routes
     Route::post('/orders/{id}/ship', [\App\Http\Controllers\OrderController::class, 'markAsShipped'])->name('admin.orders.ship');
+
+    // Customer dashboards routes
+    Route::delete('/customer-dashboards/bulk', [\App\Http\Controllers\Admin\CustomerDashboardsController::class, 'bulkDelete'])->name('admin.customer-dashboards.bulk-delete');
+    Route::post('/customer-dashboards/{user}/reset-password', [\App\Http\Controllers\Admin\CustomerDashboardsController::class, 'resetPassword'])->name('admin.customer-dashboards.reset-password');
+    Route::get('/customer-dashboards', [\App\Http\Controllers\Admin\CustomerDashboardsController::class, 'index'])->name('admin.customer-dashboards.index');
+    Route::get('/customer-dashboards/{user}', [\App\Http\Controllers\Admin\CustomerDashboardsController::class, 'show'])->name('admin.customer-dashboards.show');
+
+    // Dashboard content management routes
+    Route::get('/dashboard-content', [\App\Http\Controllers\Admin\DashboardContentController::class, 'index'])->name('admin.dashboard-content.index');
+    Route::post('/dashboard-content', [\App\Http\Controllers\Admin\DashboardContentController::class, 'store'])->name('admin.dashboard-content.store');
+    Route::put('/dashboard-content/{dashboardContent}', [\App\Http\Controllers\Admin\DashboardContentController::class, 'update'])->name('admin.dashboard-content.update');
+    Route::delete('/dashboard-content/{dashboardContent}', [\App\Http\Controllers\Admin\DashboardContentController::class, 'destroy'])->name('admin.dashboard-content.destroy');
 });

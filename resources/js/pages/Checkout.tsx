@@ -6,6 +6,8 @@ import { useCart } from 'react-use-cart';
 import { formatPrice } from '../utils/helper';
 import { SharedData } from '@/types';
 import { useState, useEffect } from 'react';
+import SavedAddressSelector from '@/components/checkout/SavedAddressSelector';
+import { useSavedAddresses, type SavedAddress } from '@/hooks/useSavedAddresses';
 
 interface Province {
     province_id: string;
@@ -37,6 +39,10 @@ interface ShippingResponse {
 export default function Checkout() {
     const { items, cartTotal } = useCart();
     const { auth } = usePage<SharedData>().props;
+    const { addresses } = useSavedAddresses();
+
+    // Saved address state
+    const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
 
     // Shipping state
     const [provinces, setProvinces] = useState<Province[]>([]);
@@ -241,6 +247,17 @@ export default function Checkout() {
         setData('coupon_discount', 0);
     };
 
+    const handleAddressSelect = (address: SavedAddress) => {
+        setSelectedAddressId(address.id);
+        // Auto-fill form with selected address
+        setData('full_name', address.recipient_name);
+        setData('phone', address.phone);
+        setData('address', address.street_address);
+        setData('city', address.city);
+        setData('country', address.country);
+        setData('postal_code', address.postal_code);
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -339,6 +356,15 @@ export default function Checkout() {
             <div className="mx-auto w-full max-w-7xl px-4 py-16 grid gap-8 md:grid-cols-2">
                 {/* Checkout Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Show saved addresses if user is logged in */}
+                    {auth.user && addresses.length > 0 && (
+                        <SavedAddressSelector
+                            addresses={addresses}
+                            onAddressSelect={handleAddressSelect}
+                            currentAddressId={selectedAddressId}
+                        />
+                    )}
+
                     <div className="mb-8">
                         <h2 className="text-2xl font-semibold text-gray-900 mb-6">Shipping Details</h2>
 

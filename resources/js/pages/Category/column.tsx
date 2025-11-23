@@ -114,6 +114,20 @@ export const columns: ColumnDef<Category>[] = [
     {
         accessorKey: "created_at",
         header: "Created At",
+        cell: ({ row }) => {
+            const date = new Date(row.original.created_at);
+            return (
+                <span>
+                    {date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}
+                </span>
+            );
+        },
     },
     {
         id: "actions",

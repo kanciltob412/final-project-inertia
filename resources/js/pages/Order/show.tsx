@@ -8,6 +8,8 @@ interface OrderItem {
     product_id: number;
     quantity: number;
     price: number;
+    discount?: number;
+    discount_type?: 'fixed' | 'percentage';
     product: {
         id: number;
         name: string;
@@ -76,23 +78,21 @@ export default function OrderShow() {
 
     const statusColor = statusColors[order.status] || 'bg-gray-100 text-gray-800';
 
-    // Calculate subtotal from items with product discounts
+    // Get values from order data
     const shippingCost = order.shipping_cost || 0;
     const couponDiscount = order.coupon_discount || 0;
-    const subtotal = order.items?.reduce((sum, item) => {
-        const product = item.product;
-        let discountedPrice = item.price;
 
-        if (product?.discount && product.discount > 0) {
-            if (product.discount_type === 'percentage') {
-                discountedPrice = item.price - (item.price * (product.discount / 100));
-            } else {
-                discountedPrice = item.price - product.discount;
-            }
-        }
-
-        return sum + (discountedPrice * item.quantity);
-    }, 0) || 0;
+    // Calculate subtotal from order items
+    // Handle both old orders (where price = line total) and new orders (where price = per unit)
+    let subtotal = 0;
+    if (order.items && order.items.length > 0) {
+        subtotal = order.items.reduce((sum, item) => {
+            // Check if price seems to be line total (old data) vs per unit (new data)
+            // If price * quantity is much larger than expected, it's old data
+            const pricePerUnit = item.price / item.quantity;
+            return sum + (pricePerUnit * item.quantity);
+        }, 0);
+    }
 
     return (
         <>
@@ -150,21 +150,27 @@ export default function OrderShow() {
                             <div className="space-y-3">
                                 {order.items && order.items.length > 0 ? (
                                     order.items.map((item) => {
-                                        // Calculate discounted price based on product discount
+                                        // Handle both old and new data formats
+                                        // Old: item.price = line total, item.discount = total discount  
+                                        // New: item.price = per-unit, item.discount = per-unit discount
+
+                                        // Check if stored price divided by quantity gives clean result
+                                        // Old data will have line total that divides evenly
+                                        const testPerUnit = item.price / item.quantity;
+                                        const isProbablyLineTotal = item.quantity > 1 &&
+                                            Math.abs((testPerUnit * item.quantity) - item.price) < 0.01;
+
+                                        const pricePerUnit = isProbablyLineTotal ? testPerUnit : item.price;
+
                                         const product = item.product;
-                                        let discountAmount = 0;
-                                        let discountedPrice = item.price;
 
-                                        if (product?.discount && product.discount > 0) {
-                                            if (product.discount_type === 'percentage') {
-                                                discountAmount = item.price * (product.discount / 100);
-                                            } else {
-                                                discountAmount = product.discount;
-                                            }
-                                            discountedPrice = item.price - discountAmount;
-                                        }
+                                        // item.discount: divide by quantity if it's old data
+                                        const discountAmountPerUnit = isProbablyLineTotal
+                                            ? (item.discount || 0) / item.quantity
+                                            : (item.discount || 0);
 
-                                        const lineTotal = discountedPrice * item.quantity;
+                                        // Original price per unit = discounted price + discount amount
+                                        const originalPricePerUnit = pricePerUnit + discountAmountPerUnit;
 
                                         return (
                                             <div key={item.id} className="flex justify-between items-center pb-3 border-b last:border-0">
@@ -175,30 +181,30 @@ export default function OrderShow() {
                                                         <p className="text-sm text-gray-600">Dimension: {product.dimension}</p>
                                                     )}
                                                     <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
-                                                    {discountAmount > 0 && (
+                                                    {discountAmountPerUnit > 0 && (
                                                         <p className="text-xs text-green-600 font-semibold mt-1">
-                                                            {product?.discount_type === 'percentage'
-                                                                ? `Product discount: ${product.discount}%`
-                                                                : `Product discount: Rp ${discountAmount.toLocaleString('id-ID')}`}
+                                                            {item.discount_type === 'percentage'
+                                                                ? `Discount: ${Number(product?.discount || 0)}%`
+                                                                : `Discount: Rp ${discountAmountPerUnit.toLocaleString('id-ID')}`}
                                                         </p>
                                                     )}
                                                 </div>
                                                 <div className="text-right">
                                                     <p className="font-semibold text-green-600">
-                                                        Rp {lineTotal.toLocaleString('id-ID')}
+                                                        Rp {pricePerUnit.toLocaleString('id-ID')}
                                                     </p>
-                                                    {discountAmount > 0 ? (
+                                                    {discountAmountPerUnit > 0 ? (
                                                         <>
                                                             <p className="text-sm text-gray-500 line-through">
-                                                                Rp {(item.price * item.quantity).toLocaleString('id-ID')}
+                                                                Rp {originalPricePerUnit.toLocaleString('id-ID')}
                                                             </p>
                                                             <p className="text-sm text-gray-600">
-                                                                Rp {discountedPrice.toLocaleString('id-ID')} × {item.quantity}
+                                                                Rp {pricePerUnit.toLocaleString('id-ID')} × {item.quantity}
                                                             </p>
                                                         </>
                                                     ) : (
                                                         <p className="text-sm text-gray-600">
-                                                            Rp {item.price.toLocaleString('id-ID')} × {item.quantity}
+                                                            Rp {pricePerUnit.toLocaleString('id-ID')} × {item.quantity}
                                                         </p>
                                                     )}
                                                 </div>
@@ -244,13 +250,13 @@ export default function OrderShow() {
                                     </span>
                                 </div>
                                 {couponDiscount > 0 && (
-                                    <div className="flex justify-between">
-                                        <span className="text-green-600">Coupon ({order.coupon?.code}):</span>
-                                        <span className="font-semibold text-green-600">-Rp {couponDiscount.toLocaleString('id-ID')}</span>
+                                    <div className="flex justify-between text-red-600">
+                                        <span>Coupon Discount ({order.coupon?.code}):</span>
+                                        <span className="font-semibold">-Rp {couponDiscount.toLocaleString('id-ID')}</span>
                                     </div>
                                 )}
-                                <div className="border-t pt-2 mt-2">
-                                    <div className="flex justify-between text-xl font-bold">
+                                <div className="border-t pt-3 mt-3">
+                                    <div className="flex justify-between text-lg font-bold">
                                         <span>Total:</span>
                                         <span>Rp {order.total.toLocaleString('id-ID')}</span>
                                     </div>
@@ -278,10 +284,17 @@ export default function OrderShow() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="border-t pt-8">
+                <div className="border-t pt-8 flex gap-4 mb-8">
+                    <Link
+                        href="/customer/dashboard"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors cursor-pointer"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to Dashboard
+                    </Link>
                     <Link
                         href="/products"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                        className="inline-flex items-center gap-2 px-6 py-3 border border-black text-black rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
                     >
                         Continue Shopping
                     </Link>

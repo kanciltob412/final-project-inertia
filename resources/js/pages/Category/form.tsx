@@ -6,12 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import HeadingSmall from "@/components/heading-small";
-import categories from "@/routes/categories";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: "Categories",
-        href: categories.index().url,
+        href: "/admin/categories",
     },
 ];
 
@@ -27,12 +26,12 @@ export default function Form({ category }: Props) {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (category) {
-            patch(categories.update(category.id).url, {
+            patch(`/admin/categories/${category.id}`, {
                 preserveScroll: true,
                 onSuccess: () => reset(),
             });
         } else {
-            post(categories.store().url, {
+            post('/admin/categories', {
                 preserveScroll: true,
                 onSuccess: () => reset(),
             });

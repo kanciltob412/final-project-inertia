@@ -4,7 +4,6 @@ import { Head, Link } from "@inertiajs/react";
 import { CategoryDataTable } from "./CategoryDataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import categories from "@/routes/categories";
 import { columns } from "./column";
 import HeadingSmall from "@/components/heading-small";
 
@@ -25,13 +24,13 @@ export default function Index({ data }: Props) {
             <Head title="Categories List" />
 
             <div className="space-y-6 p-6">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-8">
                     <HeadingSmall
                         title="Categories List"
                         description="Manage your categories here"
                     />
-                    <Button asChild>
-                        <Link href={categories.create().url}>
+                    <Button asChild className="cursor-pointer relative z-10">
+                        <Link href="/admin/categories/create">
                             <Plus className="size-4" />
                             Create Category
                         </Link>

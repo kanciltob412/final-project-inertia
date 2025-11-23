@@ -159,6 +159,33 @@ export const columns: ColumnDef<Product>[] = [
         },
     },
     {
+        id: "final_price",
+        header: "Final Price",
+        cell: ({ row }) => {
+            const price = row.original.price;
+            const discount = row.original.discount;
+            const discountType = row.original.discount_type || 'fixed';
+            const discountNum = Number(discount);
+
+            let finalPrice = price;
+
+            // Calculate final price if there's a discount
+            if (discount && discountNum > 0) {
+                if (discountType === 'percentage') {
+                    finalPrice = price - (price * discountNum / 100);
+                } else {
+                    finalPrice = price - discountNum;
+                }
+            }
+
+            return (
+                <span>
+                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(finalPrice)}
+                </span>
+            );
+        },
+    },
+    {
         accessorKey: "stock",
         header: "Stock",
         cell: ({ row }) => {

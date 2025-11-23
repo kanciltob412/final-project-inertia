@@ -204,11 +204,18 @@
                 <div>
                     @if($item->discount && $item->discount > 0)
                     <div style="font-size: 0.9em; color: #999; text-decoration: line-through;">
-                        @if($item->discount_type === 'percentage')
-                            Rp {{ number_format(($item->price * $item->quantity) / (1 - ($item->discount / $item->quantity) / 100), 0, ',', '.') }}
-                        @else
-                            Rp {{ number_format($item->price + $item->discount, 0, ',', '.') }}
-                        @endif
+                        @php
+                            $discountPerItem = $item->discount / $item->quantity;
+                            if($item->discount_type === 'percentage') {
+                                // Calculate original price: current price / (1 - discount%)
+                                $originalPricePerItem = ($item->price / $item->quantity) / (1 - $discountPerItem / 100);
+                                $originalTotal = $originalPricePerItem * $item->quantity;
+                            } else {
+                                // For fixed discount, add the discount back
+                                $originalTotal = $item->price + $item->discount;
+                            }
+                        @endphp
+                        Rp {{ number_format($originalTotal, 0, ',', '.') }}
                     </div>
                     @endif
                     <div style="font-weight: bold;">
