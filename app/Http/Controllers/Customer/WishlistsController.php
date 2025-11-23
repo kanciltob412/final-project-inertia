@@ -14,7 +14,9 @@ class WishlistsController extends Controller
      */
     public function index(): Response
     {
-        $wishlists = Auth::user()->wishlists()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $wishlists = $user->wishlists()
             ->with('product')
             ->orderBy('created_at', 'desc')
             ->get();

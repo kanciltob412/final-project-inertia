@@ -36,6 +36,7 @@ class ProfileController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email,' . Auth::id()],
         ]);
 
+        /** @var \App\Models\User $user */
         $user = Auth::user();
         $user->fill($validated);
 
@@ -53,6 +54,7 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         Auth::logout();

@@ -11,7 +11,9 @@ class AddressController extends Controller
 {
     public function index()
     {
-        $addresses = Auth::user()->addresses()->orderBy('is_default', 'desc')->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $addresses = $user->addresses()->orderBy('is_default', 'desc')->get();
 
         return Inertia::render('Customer/Addresses', [
             'addresses' => $addresses,
@@ -21,7 +23,9 @@ class AddressController extends Controller
     public function list()
     {
         // API endpoint for getting user's addresses (for checkout page)
-        $addresses = Auth::user()->addresses()->get();
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $addresses = $user->addresses()->get();
 
         return response()->json($addresses);
     }
@@ -41,12 +45,15 @@ class AddressController extends Controller
             'is_default' => 'boolean',
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         // If setting as default, unset other defaults
         if ($request->boolean('is_default')) {
-            Auth::user()->addresses()->update(['is_default' => false]);
+            $user->addresses()->update(['is_default' => false]);
         }
 
-        $address = Auth::user()->addresses()->create($validated);
+        $address = $user->addresses()->create($validated);
 
         return redirect()->route('customer.addresses.index')->with('success', 'Address created successfully.');
     }
@@ -71,9 +78,12 @@ class AddressController extends Controller
             'is_default' => 'boolean',
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
         // If setting as default, unset other defaults
         if ($request->boolean('is_default')) {
-            Auth::user()->addresses()->update(['is_default' => false]);
+            $user->addresses()->update(['is_default' => false]);
         }
 
         $address->update($validated);
@@ -100,7 +110,9 @@ class AddressController extends Controller
             abort(403);
         }
 
-        Auth::user()->addresses()->update(['is_default' => false]);
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $user->addresses()->update(['is_default' => false]);
         $address->update(['is_default' => true]);
 
         return redirect()->route('customer.addresses.index')->with('success', 'Default address updated.');

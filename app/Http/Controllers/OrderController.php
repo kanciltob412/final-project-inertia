@@ -408,7 +408,9 @@ class OrderController extends Controller
 
                 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             } finally {
-                curl_close($ch);
+                if (is_resource($ch)) {
+                    curl_close($ch);
+                }
             }
 
             // Log the response for debugging

@@ -14,7 +14,9 @@ class OrdersController extends Controller
      */
     public function index(): Response
     {
-        $orders = Auth::user()->orders()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        $orders = $user->orders()
             ->with('items.product')
             ->orderBy('created_at', 'desc')
             ->get();
