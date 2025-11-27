@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import type { PriceRange } from '../context/FilterContext';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface FilterSidebarProps {
     searchQuery: string;
@@ -30,10 +30,20 @@ export const FilterSidebar = ({
     clearFilters,
     setCurrentPage,
 }: FilterSidebarProps) => {
-    const [localMinPrice, setLocalMinPrice] = useState(priceRange.min !== undefined ? String(priceRange.min) : '');
-    const [localMaxPrice, setLocalMaxPrice] = useState(priceRange.max === Infinity || priceRange.max === undefined ? '' : String(priceRange.max));
+    const [localMinPrice, setLocalMinPrice] = useState('');
+    const [localMaxPrice, setLocalMaxPrice] = useState('');
     const minPriceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const maxPriceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Sync local state with priceRange prop when it changes (only if there's an actual filter value)
+    useEffect(() => {
+        if (priceRange.min && priceRange.min > 0 && localMinPrice === '') {
+            setLocalMinPrice(String(priceRange.min));
+        }
+        if (priceRange.max && priceRange.max !== Infinity && localMaxPrice === '') {
+            setLocalMaxPrice(String(priceRange.max));
+        }
+    }, [priceRange]);
 
     const handleMinPriceChange = (value: string) => {
         setLocalMinPrice(value);

@@ -214,7 +214,14 @@
                     @if($item->discount && $item->discount > 0)
                     <br><small style="color: #28a745;"><strong>Discount: 
                         @if($item->discount_type === 'percentage')
-                            {{ round($item->discount / $item->quantity) }}%
+                            @php
+                                // Calculate percentage from discount amount and price
+                                $pricePerItem = $item->price / $item->quantity;
+                                $discountPerItem = $item->discount / $item->quantity;
+                                $priceBeforeDiscount = $pricePerItem + $discountPerItem;
+                                $discountPercentage = ($discountPerItem / $priceBeforeDiscount) * 100;
+                            @endphp
+                            {{ number_format($discountPercentage, 0) }}%
                         @else
                             Rp {{ number_format($item->discount / $item->quantity, 0, ',', '.') }} per item
                         @endif
@@ -224,11 +231,12 @@
                 <div>
                     @if($item->discount && $item->discount > 0)
                     <div style="font-size: 0.9em; color: #999; text-decoration: line-through;">
-                        @if($item->discount_type === 'percentage')
-                            Rp {{ number_format(($item->price * $item->quantity) / (1 - ($item->discount / $item->quantity) / 100), 0, ',', '.') }}
-                        @else
-                            Rp {{ number_format($item->price + $item->discount, 0, ',', '.') }}
-                        @endif
+                        @php
+                            // $item->discount is the discount AMOUNT (already calculated)
+                            // Original price = Final price + discount amount
+                            $originalTotal = $item->price + $item->discount;
+                        @endphp
+                        Rp {{ number_format($originalTotal, 0, ',', '.') }}
                     </div>
                     @endif
                     <div style="font-weight: bold;">

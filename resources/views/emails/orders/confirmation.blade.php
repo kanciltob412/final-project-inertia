@@ -194,7 +194,14 @@
                     @if($item->discount && $item->discount > 0)
                     <br><small style="color: #28a745;"><strong>Discount: 
                         @if($item->discount_type === 'percentage')
-                            {{ round($item->discount / $item->quantity) }}%
+                            @php
+                                // Calculate percentage from discount amount and price
+                                $pricePerItem = $item->price / $item->quantity;
+                                $discountPerItem = $item->discount / $item->quantity;
+                                $priceBeforeDiscount = $pricePerItem + $discountPerItem;
+                                $discountPercentage = ($discountPerItem / $priceBeforeDiscount) * 100;
+                            @endphp
+                            {{ number_format($discountPercentage, 0) }}%
                         @else
                             Rp {{ number_format($item->discount / $item->quantity, 0, ',', '.') }} per item
                         @endif
@@ -205,15 +212,9 @@
                     @if($item->discount && $item->discount > 0)
                     <div style="font-size: 0.9em; color: #999; text-decoration: line-through;">
                         @php
-                            $discountPerItem = $item->discount / $item->quantity;
-                            if($item->discount_type === 'percentage') {
-                                // Calculate original price: current price / (1 - discount%)
-                                $originalPricePerItem = ($item->price / $item->quantity) / (1 - $discountPerItem / 100);
-                                $originalTotal = $originalPricePerItem * $item->quantity;
-                            } else {
-                                // For fixed discount, add the discount back
-                                $originalTotal = $item->price + $item->discount;
-                            }
+                            // $item->discount is the discount AMOUNT (already calculated)
+                            // Original price = Final price + discount amount
+                            $originalTotal = $item->price + $item->discount;
                         @endphp
                         Rp {{ number_format($originalTotal, 0, ',', '.') }}
                     </div>
@@ -245,7 +246,7 @@
             @if($order->coupon_discount)
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                 <span style="color: #28a745;">
-                    <strong>Discount ({{ $order->coupon?->code }}):</strong>
+                    <strong>Coupon ({{ $order->coupon?->code }}):</strong>
                 </span>
                 <span style="color: #28a745; font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
             </div>

@@ -103,12 +103,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Customer Addresses
     Route::resource('customer/addresses', AddressController::class, ['as' => 'customer']);
     Route::post('customer/addresses/{address}/set-default', [AddressController::class, 'setDefault'])->name('customer.addresses.set-default');
-    Route::get('/api/customer/addresses', [AddressController::class, 'list'])->name('api.customer.addresses');
 
     // Member Promos (public viewing)
     Route::get('/customer/member-promos', [MemberPromoController::class, 'index'])->name('customer.member-promos.index');
-
-    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.order.show');
 
     // Wishlist routes for authenticated customers
     Route::prefix('api/wishlist')->group(function () {
@@ -122,6 +119,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // Payment callback routes (no auth required for Xendit callbacks)
 Route::get('/payment-success', [OrderController::class, 'paymentSuccess'])->name('payment.success');
 Route::get('/payment-failed', [OrderController::class, 'paymentFailed'])->name('payment.failed');
+
+// Customer order view route - accessible to authenticated customers and guests (authorization handled in controller)
+Route::get('/orders/{order}', [OrderController::class, 'show'])->name('customer.order.show');
 
 Route::get('/user', [UserController::class, 'index']);
 Route::get('/user/{id}', [UserController::class, 'show']);

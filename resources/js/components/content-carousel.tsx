@@ -43,20 +43,21 @@ export default function ContentCarousel({ items, autoPlay = true, interval = 500
     };
 
     return (
-        <div className="relative w-full h-64 md:h-80 rounded-lg overflow-hidden bg-gray-200 group">
+        <div className="relative w-full h-56 sm:h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden bg-gray-200 group">
             {/* Image or Gradient Background */}
             {current.image_url ? (
                 <img
                     src={current.image_url}
                     alt={current.title}
                     className="w-full h-full object-cover transition-transform duration-500"
+                    style={{ objectPosition: 'center' }}
                 />
             ) : (
                 <div className="w-full h-full bg-linear-to-r from-blue-400 to-purple-600 flex items-center justify-center">
-                    <div className="text-center text-white px-4">
-                        <h2 className="text-2xl md:text-4xl font-bold mb-2">{current.title}</h2>
+                    <div className="text-center text-white px-2 sm:px-4">
+                        <h2 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">{current.title}</h2>
                         {current.description && (
-                            <p className="text-sm md:text-lg">{current.description}</p>
+                            <p className="text-xs sm:text-sm md:text-lg">{current.description}</p>
                         )}
                     </div>
                 </div>
@@ -77,14 +78,14 @@ export default function ContentCarousel({ items, autoPlay = true, interval = 500
                 <>
                     <button
                         onClick={goToPrevious}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-1 sm:p-2 md:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label="Previous"
                     >
                         <ChevronLeft className="h-5 w-5" />
                     </button>
                     <button
                         onClick={goToNext}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-1 sm:p-2 md:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label="Next"
                     >
                         <ChevronRight className="h-5 w-5" />

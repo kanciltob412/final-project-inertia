@@ -36,8 +36,15 @@ export const FilterModal = ({
   setCurrentPage,
 }: FilterModalProps) => {
   return (
-    <div className="fixed inset-0 z-50 bg-[#423F3B]/50 md:hidden">
-      <div className="absolute top-0 right-0 h-full w-80 overflow-y-auto bg-white p-6">
+    <div className="fixed inset-0 z-50 bg-[#423F3B]/50 md:hidden flex flex-col">
+      {/* Overlay */}
+      <div
+        className="flex-1"
+        onClick={() => setIsFilterMenuOpen(false)}
+      />
+
+      {/* Modal Content - Bottom Sheet */}
+      <div className="w-full max-h-[90vh] overflow-y-auto bg-white p-6 rounded-t-2xl">
         <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-bold">Filters</h3>
           <button
@@ -64,7 +71,7 @@ export const FilterModal = ({
           />
           <button
             onClick={() => setIsFilterMenuOpen(false)}
-            className="w-full rounded-md bg-[#423F3B] py-3 text-[#423F3B] hover:bg-gray-800"
+            className="w-full rounded-md bg-[#423F3B] py-3 text-white hover:bg-gray-800"
           >
             Apply Filters
           </button>

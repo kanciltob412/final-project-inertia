@@ -100,7 +100,7 @@ export default function About() {
     }, []);
 
     return (
-        <div>
+        <div className="overflow-x-hidden">
             <Navbar />
 
             {/* Simple banner image with centered title (not the Home hero) */}
@@ -114,9 +114,15 @@ export default function About() {
             </div>
 
             <main className="max-w-6xl mx-auto py-16 px-4">
-                <section className="py-12 grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch match-height">
-                    <div className="h-full flex flex-col justify-start match-text">
-                        <h2 className="text-3xl font-semibold mb-4">Brand story</h2>
+                <section className="flex flex-col-reverse md:grid md:grid-cols-2 gap-10 items-stretch match-height">
+                    <div className="h-full flex flex-col justify-start match-text w-full">
+                        {/* Image on mobile, before headline */}
+                        <div className="block md:hidden w-full mb-5">
+                            <div className="overflow-hidden match-image rounded-lg mx-auto" style={{ maxWidth: '340px' }}>
+                                <img src="/images/about/brand-history-1.jpg" alt="Porcelain plates" className="w-full h-auto object-cover block" />
+                            </div>
+                        </div>
+                        <h2 className="text-3xl font-semibold mb-4">Brand Story</h2>
                         <p className="mb-4 text-gray-700 leading-relaxed">
                             Founded in 2025 in Ubud, Bali, Lavanya Ceramics was born from a quiet devotion to the art of making by hand. Guided by Bali’s spirit of balance and its deep-rooted artistic traditions, we create ceramics that carry both function and soul.
 
@@ -127,8 +133,8 @@ export default function About() {
                             At Lavanya, we believe beauty lies in simplicity and sincerity. Through our ceramics, we aim to bring a sense of calm presence to the table — a reminder of the harmony between human hands, nature, and everyday life.
                         </p>
                     </div>
-
-                    <div className="h-full overflow-hidden match-image rounded-lg">
+                    {/* Image for desktop/tablet */}
+                    <div className="hidden md:block h-full overflow-hidden match-image rounded-lg">
                         <img src="/images/about/brand-history-1.jpg" alt="Porcelain plates" className="w-full h-full object-cover block" />
                     </div>
                 </section>
@@ -149,30 +155,30 @@ export default function About() {
                 </section>
 
                 <section className="py-12">
-                    <h3 className="text-2xl font-semibold mb-6">Manifesto / Our values</h3>
+                    <h3 className="text-2xl font-semibold mb-6">Manifesto / Our Values</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="space-y-4">
                             <img src="/images/about/our-vision-hand.jpg" alt="Vision" className="w-full h-40 object-cover rounded-lg" />
-                            <h4 className="font-semibold">Our vision</h4>
+                            <h4 className="font-semibold">Our Vision</h4>
                             <p className="text-gray-700">To build a lasting atelier that reflects the spirit of Bali — creating ceramics that embody timeless design, thoughtful craftsmanship, and a quiet sense of beauty.</p>
                         </div>
 
                         <div className="space-y-4">
                             <img src="/images/about/our-mission-bowl.jpg" alt="Mission" className="w-full h-40 object-cover rounded-lg" />
-                            <h4 className="font-semibold">Our mission</h4>
+                            <h4 className="font-semibold">Our Mission</h4>
                             <p className="text-gray-700">To craft pieces that enrich everyday life through authenticity and purpose. Each creation is guided by care for detail, respect for tradition, and a commitment to quality that endures. We aim to bring warmth and harmony to every table, connecting people through the simple act of sharing.</p>
                         </div>
 
                         <div className="space-y-4">
                             <img src="/images/about/respect-raw-materials.jpg" alt="Nature" className="w-full h-40 object-cover rounded-lg" />
-                            <h4 className="font-semibold">The respect to nature</h4>
+                            <h4 className="font-semibold">The Respect to Nature</h4>
                             <p className="text-gray-700">Nature is at the heart of everything we do. Our materials are of natural origin, responsibly sourced, and free from synthetic components. Each process is designed to minimize environmental impact while preserving the purity of the earth that gives our ceramics life. For us, sustainability means creating with integrity — in balance with the land, the craft, and the people who shape it.</p>
                         </div>
                     </div>
                 </section>
 
-                <section className="py-12 flex flex-col md:flex-row items-stretch gap-8 match-height">
+                <section className="py-12 flex flex-col-reverse md:flex-row items-stretch gap-8 match-height">
                     <div className="flex-1 h-full flex flex-col justify-start match-text">
                         <h3 className="text-2xl font-semibold mb-4">Handmade</h3>
                         <p className="text-gray-700 mb-6">Every Lavanya piece is shaped entirely by hand. From the first touch of clay to the final firing, each stage is carried out with patience and precision by our skilled artisans in Bali.
@@ -182,9 +188,9 @@ export default function About() {
                             At Lavanya, handmade is not simply a process — it is a philosophy of respect for time, material, and the craft itself.</p>
                         <Link
                             href="/craftsmanship"
-                            className="block md:inline-block w-full md:w-[30%] text-center rounded-md bg-black text-white px-6 py-3 transition-colors duration-200 hover:bg-white hover:text-black border border-transparent hover:border-black"
+                            className="block w-full md:w-full lg:w-[30%] text-center rounded-md bg-black text-white px-6 py-3 transition-colors duration-200 hover:bg-white hover:text-black border border-transparent hover:border-black"
                         >
-                            See craftsmanship
+                            See Craftsmanship
                         </Link>
                     </div>
 

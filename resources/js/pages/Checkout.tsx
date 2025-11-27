@@ -39,7 +39,11 @@ interface ShippingResponse {
 export default function Checkout() {
     const { items, cartTotal } = useCart();
     const { auth } = usePage<SharedData>().props;
-    const { addresses } = useSavedAddresses();
+    const { addresses: initialAddresses } = useSavedAddresses();
+
+    // Local state to track when user logs in so we can refetch addresses
+    const [loadedAddresses, setLoadedAddresses] = useState<SavedAddress[]>([]);
+    const addresses = loadedAddresses.length > 0 ? loadedAddresses : initialAddresses;
 
     // Saved address state
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
@@ -91,12 +95,46 @@ export default function Checkout() {
         fetchCouriers();
     }, []);
 
+    // Refetch addresses when user logs in
+    useEffect(() => {
+        if (auth.user) {
+            const fetchAddresses = async () => {
+                try {
+                    const response = await fetch('/api/customer/addresses');
+                    if (response.ok) {
+                        const data = await response.json();
+                        setLoadedAddresses(data);
+                    }
+                } catch (err) {
+                    console.error('Failed to fetch addresses:', err);
+                }
+            };
+            fetchAddresses();
+        }
+    }, [auth.user?.id]);
+
     // Fetch cities when destination province changes
     useEffect(() => {
         if (destProvince) {
             fetchCities(destProvince, 'dest');
         }
     }, [destProvince]);
+
+    // Auto-fill user's default address when they log in
+    useEffect(() => {
+        if (auth.user && addresses && addresses.length > 0 && !selectedAddressId) {
+            // Auto-fill user's name if not already filled
+            if (!data.full_name && auth.user.name) {
+                setData('full_name', auth.user.name);
+            }
+
+            // Find the default address or use the first one
+            const defaultAddress = addresses.find((addr: SavedAddress) => addr.is_default) || addresses[0];
+            if (defaultAddress) {
+                handleAddressSelect(defaultAddress);
+            }
+        }
+    }, [auth.user?.id, addresses?.length]);
 
     const fetchProvinces = async () => {
         try {

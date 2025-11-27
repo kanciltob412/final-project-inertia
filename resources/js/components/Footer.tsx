@@ -5,9 +5,9 @@ export default function Footer() {
     return (
         <footer className="bg-[#423F3B] text-white">
             <div className="mx-auto max-w-7xl px-4 py-16">
-                <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
+                <div className="grid grid-cols-1 gap-12 md:gap-8 lg:gap-12 md:grid-cols-2 lg:grid-cols-4">
                     {/* About Section */}
-                    <div>
+                    <div className="md:pr-4 lg:pr-0">
                         <h3 className="mb-4 flex items-center gap-2 text-left text-xl font-bold">
                             {/* Logo before the brand name. Adjust src/alt/size as needed. */}
                             <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -31,7 +31,7 @@ export default function Footer() {
                     </div>
 
                     {/* Quick Links */}
-                    <div>
+                    <div className="md:pl-4 lg:pl-0">
                         <h3 className="mb-4 text-lg font-semibold">Quick Links</h3>
                         <ul className="space-y-2">
                             <li>
@@ -63,7 +63,7 @@ export default function Footer() {
                     </div>
 
                     {/* Customer Service */}
-                    <div>
+                    <div className="md:pr-4 lg:pr-0">
                         <h3 className="mb-4 text-lg font-semibold">Customer Service</h3>
                         <ul className="space-y-2">
                             <li>
@@ -85,7 +85,7 @@ export default function Footer() {
                     </div>
 
                     {/* Contact Info */}
-                    <div>
+                    <div className="md:pl-4 lg:pl-0">
                         <h3 className="mb-4 text-lg font-semibold">Contact Us</h3>
                         <ul className="space-y-4">
                             <li className="flex items-center">

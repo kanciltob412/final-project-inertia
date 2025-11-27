@@ -37,6 +37,23 @@ class OrderController extends Controller
     {
         $order = Order::with('user', 'items', 'items.product', 'coupon')->findOrFail($id);
 
+        // Authorization check - allow if:
+        // 1. User is admin (can view any order)
+        // 2. User is authenticated and owns the order
+        // 3. User is not authenticated (guest can view order immediately after payment)
+        $user = Auth::user();
+        if ($user && $user->role === 'ADMIN') {
+            // Admin can view any order
+        } elseif ($user && $user->id === $order->user_id) {
+            // Customer can view their own order
+        } elseif (!$user) {
+            // Guest users can view orders (they just completed payment)
+            // This allows guests to see their order immediately after payment completes
+        } else {
+            // Deny access only if authenticated user doesn't own the order
+            abort(403, 'You do not have permission to view this order.');
+        }
+
         return Inertia::render("Order/show", [
             "data" => $order
         ]);

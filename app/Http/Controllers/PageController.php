@@ -32,7 +32,7 @@ class PageController extends Controller
             });
         }
 
-        // Price range filter
+        // Price range filter - using original price (before discount)
         if (request('min_price')) {
             $query->where('price', '>=', request('min_price'));
         }

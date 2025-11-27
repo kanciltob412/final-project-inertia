@@ -6,9 +6,21 @@ import { useCart } from 'react-use-cart';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 
+interface Props {
+    order_id?: string;
+    auth?: {
+        user?: {
+            id: number;
+            name: string;
+            email: string;
+        };
+    };
+}
+
 export default function PaymentSuccess() {
-    const props = usePage().props as { order_id?: string };
+    const props = usePage().props as Props;
     const order_id = props.order_id;
+    const auth = props.auth;
     const { emptyCart } = useCart();
 
     // Empty cart when payment is successful
@@ -62,7 +74,7 @@ export default function PaymentSuccess() {
                             </p>
                             {order_id && (
                                 <Link
-                                    href={`/admin/orders/${order_id}`}
+                                    href={`/orders/${order_id}`}
                                     className="inline-flex items-center px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors text-sm font-medium"
                                 >
                                     <Receipt className="h-4 w-4 mr-2" />

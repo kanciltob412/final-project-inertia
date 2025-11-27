@@ -121,9 +121,9 @@ function HeroIndex() {
                     src={heroSlides[currentSlide].image}
                     alt={heroSlides[currentSlide].title}
                     className={`absolute w-full h-full object-cover ${currentSlide % 4 === 0 ? 'kenburns-top' :
-                            currentSlide % 4 === 1 ? 'kenburns-bottom' :
-                                currentSlide % 4 === 2 ? 'kenburns-left' :
-                                    'kenburns-right'
+                        currentSlide % 4 === 1 ? 'kenburns-bottom' :
+                            currentSlide % 4 === 2 ? 'kenburns-left' :
+                                'kenburns-right'
                         }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -202,15 +202,15 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row justify-center gap-4"
+                            className="flex flex-col sm:flex-row justify-center gap-4 items-center"
                         >
-                            <Link href="/products" className="inline-flex items-center justify-center rounded-md bg-white px-6 sm:px-8 py-3 text-sm sm:text-base text-black hover:bg-gray-100 transition-colors">
+                            <Link href="/products" className="inline-flex items-center justify-center rounded-md bg-white px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-black hover:bg-gray-100 transition-colors w-auto max-w-[220px] min-w-[140px] mx-auto sm:max-w-none sm:min-w-0 sm:mx-0">
                                 Shop Now
                                 <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                             </Link>
                             <Link
                                 href="/about"
-                                className="rounded-md border-2 border-white px-6 sm:px-8 py-3 text-sm sm:text-base text-white transition-colors hover:bg-white hover:text-black"
+                                className="rounded-md border-2 border-white px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white transition-colors hover:bg-white hover:text-black w-auto max-w-[220px] min-w-[140px] mx-auto sm:max-w-none sm:min-w-0 sm:mx-0"
                             >
                                 Learn More
                             </Link>

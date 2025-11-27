@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\RajaOngkirController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AddressController;
 
 Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::post('register', [AuthController::class, 'register'])->name('api.register');
@@ -13,6 +14,11 @@ Route::post('register', [AuthController::class, 'register'])->name('api.register
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('api.logout');
     Route::get('profile', [AuthController::class, 'profile'])->name('api.profile');
+});
+
+// Customer addresses - can be accessed by both web-authenticated and sanctum-authenticated users
+Route::middleware(['auth'])->group(function () {
+    Route::get('customer/addresses', [AddressController::class, 'list'])->name('api.customer.addresses');
 });
 
 Route::post('webhook/orders', [PaymentController::class, 'webhookPayment'])->name('api.payment.webhook');

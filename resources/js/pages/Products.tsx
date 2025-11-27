@@ -6,7 +6,6 @@ import { Product, Category } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { FilterSidebar } from '../components/FilterSidebar';
-import { FilterModal } from '../components/FilterModal';
 
 interface PaginatedProducts {
     data: Product[];
@@ -65,7 +64,9 @@ export default function Products({ products, categories, filters }: ProductsProp
         const queryParams = new URLSearchParams();
         if (updatedFilters.search) queryParams.set('search', updatedFilters.search);
         if (updatedFilters.category && updatedFilters.category !== 'All') queryParams.set('category', updatedFilters.category);
-        if (updatedFilters.min_price) queryParams.set('min_price', updatedFilters.min_price);
+        // Only add min_price if it has a value and is not "0"
+        if (updatedFilters.min_price && updatedFilters.min_price !== '0') queryParams.set('min_price', updatedFilters.min_price);
+        // Only add max_price if it has a value
         if (updatedFilters.max_price) queryParams.set('max_price', updatedFilters.max_price);
         if (updatedFilters.sort) queryParams.set('sort', updatedFilters.sort);
 
@@ -106,7 +107,7 @@ export default function Products({ products, categories, filters }: ProductsProp
     return (
         <>
             <Navbar />
-            <div>
+            <div className="overflow-x-hidden">
                 <div className="relative h-[400px] md:h-[420px] overflow-hidden">
                     <img
                         src="/inspire-8.jpg"
@@ -132,12 +133,12 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 setSelectedCategory={handleCategoryFilter}
                                 categories={['All', ...categories.map(c => c.name)]}
                                 priceRange={{
-                                    min: parseInt(localFilters.min_price || '0'),
-                                    max: parseInt(localFilters.max_price || '999999')
+                                    min: localFilters.min_price ? parseInt(localFilters.min_price) : 0,
+                                    max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity
                                 }}
                                 setPriceRange={(range) => applyFilters({
-                                    min_price: range.min.toString(),
-                                    max_price: range.max.toString()
+                                    min_price: range.min === 0 ? '' : range.min.toString(),
+                                    max_price: range.max === Infinity ? '' : range.max.toString()
                                 })}
                                 sortBy={localFilters.sort || 'name'}
                                 setSortBy={handleSortChange}
@@ -147,35 +148,44 @@ export default function Products({ products, categories, filters }: ProductsProp
                         </div>
 
                         {/* Main Content */}
-                        <div className="flex-1">
-                            {/* Mobile Controls */}
-                            <div className="lg:hidden flex justify-between items-center mb-6">
+                        <div className="w-full lg:flex-1">
+                            {/* Mobile Controls - Show above products */}
+                            <div className="lg:hidden mb-6">
                                 <button
-                                    onClick={() => setIsFilterMenuOpen(true)}
-                                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50"
+                                    onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                                    className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-medium"
                                 >
                                     <SlidersHorizontal className="h-5 w-5" />
-                                    Filters
+                                    {isFilterMenuOpen ? 'Hide Filters' : 'Show Filters'}
                                 </button>
-
-                                {/* View Mode Toggle */}
-                                <div className="flex border border-gray-300 rounded-lg">
-                                    <button
-                                        onClick={() => setViewMode('grid')}
-                                        className={`p-2 ${viewMode === 'grid' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
-                                    >
-                                        <Grid className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => setViewMode('list')}
-                                        className={`p-2 ${viewMode === 'list' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
-                                    >
-                                        <List className="h-5 w-5" />
-                                    </button>
-                                </div>
                             </div>
 
-                            {/* Desktop View Mode Toggle & Results Info */}
+                            {/* Mobile Filter Accordion */}
+                            {isFilterMenuOpen && (
+                                <div className="lg:hidden mb-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
+                                    <FilterSidebar
+                                        searchQuery={localFilters.search || ''}
+                                        setSearchQuery={handleSearch}
+                                        selectedCategory={localFilters.category || 'All'}
+                                        setSelectedCategory={handleCategoryFilter}
+                                        categories={['All', ...categories.map(c => c.name)]}
+                                        priceRange={{
+                                            min: localFilters.min_price ? parseInt(localFilters.min_price) : 0,
+                                            max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity
+                                        }}
+                                        setPriceRange={(range) => applyFilters({
+                                            min_price: range.min === 0 ? '' : range.min.toString(),
+                                            max_price: range.max === Infinity ? '' : range.max.toString()
+                                        })}
+                                        sortBy={localFilters.sort || 'name'}
+                                        setSortBy={handleSortChange}
+                                        clearFilters={clearFilters}
+                                        setCurrentPage={() => { }}
+                                    />
+                                </div>
+                            )}
+
+                            {/* View Mode Toggle & Results Info */}
                             <div className="hidden lg:flex justify-between items-center mb-6">
                                 <div className="text-sm text-gray-600">
                                     Showing {((products.current_page - 1) * products.per_page) + 1} to{' '}
@@ -186,14 +196,16 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 {/* View Mode Toggle */}
                                 <div className="flex border border-gray-300 rounded-lg">
                                     <button
+                                        type="button"
                                         onClick={() => setViewMode('grid')}
-                                        className={`p-2 ${viewMode === 'grid' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 transition-colors ${viewMode === 'grid' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <Grid className="h-5 w-5" />
                                     </button>
                                     <button
+                                        type="button"
                                         onClick={() => setViewMode('list')}
-                                        className={`p-2 ${viewMode === 'list' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
+                                        className={`p-2 transition-colors ${viewMode === 'list' ? 'bg-gray-200 text-black' : 'text-gray-600'} hover:bg-gray-50`}
                                     >
                                         <List className="h-5 w-5" />
                                     </button>
@@ -236,8 +248,8 @@ export default function Products({ products, categories, filters }: ProductsProp
                                                     key={page}
                                                     onClick={() => handlePageClick(page)}
                                                     className={`px-3 py-2 text-sm font-medium rounded-md ${page === products.current_page
-                                                            ? 'bg-blue-600 text-white'
-                                                            : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
                                                         }`}
                                                 >
                                                     {page}
@@ -259,7 +271,6 @@ export default function Products({ products, categories, filters }: ProductsProp
                             </div>
                         </div>
                     </div>
-
                     {/* Mobile Product Info */}
                     <div className="lg:hidden mt-8 text-center text-gray-600">
                         <p>
@@ -269,23 +280,6 @@ export default function Products({ products, categories, filters }: ProductsProp
                         </p>
                     </div>
                 </div>
-
-                {/* Mobile Filter Modal */}
-                <FilterModal
-                    isFilterMenuOpen={isFilterMenuOpen}
-                    setIsFilterMenuOpen={setIsFilterMenuOpen}
-                    searchQuery={localFilters.search || ''}
-                    setSearchQuery={(query) => handleSearch(query)}
-                    selectedCategory={localFilters.category || 'All'}
-                    setSelectedCategory={handleCategoryFilter}
-                    categories={['All', ...categories.map(c => c.name)]}
-                    priceRange={{ min: parseInt(localFilters.min_price || '0'), max: parseInt(localFilters.max_price || '999999') }}
-                    setPriceRange={(range) => applyFilters({ min_price: range.min.toString(), max_price: range.max.toString() })}
-                    sortBy={localFilters.sort || 'name'}
-                    setSortBy={handleSortChange}
-                    clearFilters={clearFilters}
-                    setCurrentPage={() => { }}
-                />
             </div>
             <Footer />
         </>

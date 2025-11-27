@@ -56,6 +56,18 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        // Prevent body scroll when menu is open
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMenuOpen]);
+
     const handleLogout = () => {
         // Clear cart items when user logs out
         emptyCart();
@@ -63,10 +75,10 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
     };
 
     return (
-        <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-            <div className="mx-auto max-w-7xl px-4">
-                <div className="flex h-16 justify-between">
-                    <div className="flex items-center">
+        <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'} overflow-x-hidden`}>
+            <div className="w-full px-4">
+                <div className="flex h-16 justify-between items-center">
+                    <div className="flex items-center flex-1">
                         <Link href="/" className="flex items-center">
                             <img
                                 src={shouldUseBlackStyle ? "/LAVANYA_LOGO_BLACK.svg" : "/LAVANYA_LOGO_WHITE.svg"}
@@ -77,7 +89,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden items-center space-x-8 md:flex">
+                    <div className="hidden items-center space-x-8 lg:flex">
                         <Link href="/" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Home
                         </Link>
@@ -134,7 +146,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center md:hidden">
+                    <div className="flex items-center lg:hidden">
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} className={shouldUseBlackStyle ? 'text-black' : 'text-white'}>
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>
@@ -143,8 +155,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="pb-4 md:hidden">
-                        <div className="flex flex-col space-y-4">
+                    <div className="fixed inset-0 pt-16 pb-6 lg:hidden bg-white bg-opacity-100 shadow-xl overflow-y-auto overflow-x-hidden" style={{ top: '64px', maxHeight: 'calc(100vh - 64px)' }}>
+                        <div className="flex flex-col space-y-4 px-6 max-w-full">
                             <Link href="/" className="text-black hover:opacity-75">
                                 Home
                             </Link>
