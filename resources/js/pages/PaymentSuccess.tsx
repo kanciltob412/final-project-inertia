@@ -37,20 +37,21 @@ export default function PaymentSuccess() {
         emptyCart();
     }, [emptyCart]);
 
-    // If user is not authenticated after returning from payment, try to refresh the page
-    // This allows the session to be properly re-established through Inertia
+    // Always reload the page after payment to ensure fresh auth state is reflected in Inertia props
+    // This ensures the navbar and all components receive the updated auth state
     useEffect(() => {
-        if (!isAuthenticated && order_id) {
-            console.log('User not authenticated after payment, scheduling page reload...');
-            // Wait a moment for the session to be fully established, then reload
+        if (order_id) {
+            console.log('Payment success detected, scheduling page reload to refresh auth state...');
+            // Give the session a moment to be fully established, then reload
             const timer = setTimeout(() => {
-                console.log('Reloading page to establish session...');
+                console.log('Reloading page to refresh auth state and navbar...');
+                setIsReloading(true);
                 window.location.reload();
-            }, 1500);
+            }, 800);
 
             return () => clearTimeout(timer);
         }
-    }, [isAuthenticated, order_id]);
+    }, [order_id]);
 
     return (
         <div>
