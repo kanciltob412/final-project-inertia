@@ -272,18 +272,37 @@ class OrderController extends Controller
         DB::beginTransaction();
 
         try {
-            // Handle user - either authenticated user or create guest user
+            // Handle user - either authenticated user or create/login guest user
             $user = Auth::user();
             if (!$user) {
-                // Create or find guest user by email
-                $user = User::firstOrCreate(
-                    ['email' => $request->email],
-                    [
-                        'name' => $request->full_name,
-                        'email' => $request->email,
-                        'password' => Hash::make('guest_password_' . time()),
-                    ]
-                );
+                // Check if user exists with this email
+                $user = User::where('email', $request->email)->first();
+
+                if (!$user) {
+                    // Create new user with proper password if they want to create account
+                    if ($request->create_account && $request->password) {
+                        $user = User::create([
+                            'name' => $request->full_name,
+                            'email' => $request->email,
+                            'password' => Hash::make($request->password),
+                            'email_verified_at' => now(),
+                        ]);
+                    } else {
+                        // For guest checkout without account, create user but don't authenticate yet
+                        // They will be authenticated after payment
+                        $user = User::create([
+                            'name' => $request->full_name,
+                            'email' => $request->email,
+                            'password' => Hash::make(uniqid() . time()),
+                            'email_verified_at' => now(),
+                        ]);
+                    }
+                }
+
+                // Authenticate the user only if they explicitly want to create an account
+                if ($request->create_account && $request->password) {
+                    Auth::login($user, remember: false);
+                }
             }
 
             $order = Order::create([
@@ -594,11 +613,11 @@ class OrderController extends Controller
                     Log::info('Order marked as paid', ['order_id' => $order->id]);
                 }
 
-                // If the user is not authenticated but the order belongs to a user,
-                // we need to login the user to restore their session
-                if (!Auth::check() && $order->user) {
+                // Always authenticate the user after payment
+                // This ensures both registered and guest users are logged in after payment
+                if ($order->user && !Auth::check()) {
                     Auth::login($order->user, remember: false);
-                    Log::info('User session restored after payment', ['user_id' => $order->user->id, 'order_id' => $order->id]);
+                    Log::info('User authenticated after payment', ['user_id' => $order->user->id, 'order_id' => $order->id]);
                 }
 
                 // Send confirmation email to customer
