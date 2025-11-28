@@ -33,6 +33,7 @@ class DashboardContentController extends Controller
             'type' => 'required|in:banner,news,promotion,info',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|string',
             'link_url' => 'nullable|string',
             'content' => 'nullable|string',
@@ -41,6 +42,15 @@ class DashboardContentController extends Controller
             'is_active' => 'boolean',
             'display_order' => 'integer',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('dashboard-content', 'public');
+            $validated['image_url'] = '/storage/' . $imagePath;
+        }
+
+        // Remove the image key since we've converted it to image_url
+        unset($validated['image']);
 
         CustomerDashboardContent::create($validated);
 
@@ -56,6 +66,7 @@ class DashboardContentController extends Controller
             'type' => 'required|in:banner,news,promotion,info',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'image_url' => 'nullable|string',
             'link_url' => 'nullable|string',
             'content' => 'nullable|string',
@@ -64,6 +75,15 @@ class DashboardContentController extends Controller
             'is_active' => 'boolean',
             'display_order' => 'integer',
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('dashboard-content', 'public');
+            $validated['image_url'] = '/storage/' . $imagePath;
+        }
+
+        // Remove the image key since we've converted it to image_url
+        unset($validated['image']);
 
         $dashboardContent->update($validated);
 
