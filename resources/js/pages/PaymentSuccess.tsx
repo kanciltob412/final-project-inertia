@@ -1,6 +1,6 @@
 
 import { Link, usePage, router } from '@inertiajs/react';
-import { CheckCircle, ArrowLeft, Receipt, Mail, Loader } from 'lucide-react';
+import { CheckCircle, ArrowLeft, Receipt, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
 import Footer from '@/components/Footer';
@@ -30,28 +30,34 @@ export default function PaymentSuccess() {
     const isAuthenticated = props.is_authenticated || (auth?.user !== null && auth?.user !== undefined);
     const user = props.user || auth?.user;
     const { emptyCart } = useCart();
-    const [isReloading, setIsReloading] = useState(false);
+    const [hasReloaded, setHasReloaded] = useState(false);
 
     // Empty cart when payment is successful
     useEffect(() => {
         emptyCart();
     }, [emptyCart]);
 
-    // Always reload the page after payment to ensure fresh auth state is reflected in Inertia props
-    // This ensures the navbar and all components receive the updated auth state
+    // Reload page once on first load to refresh auth state from middleware
+    // This ensures the navbar receives the correct authenticated user after Auth::login()
     useEffect(() => {
-        if (order_id) {
-            console.log('Payment success detected, scheduling page reload to refresh auth state...');
+        // Check if we've already reloaded using sessionStorage
+        // This prevents infinite reload loops even if page is refreshed
+        const alreadyReloaded = sessionStorage.getItem('paymentSuccessReloaded');
+
+        if (order_id && !alreadyReloaded && !hasReloaded) {
+            console.log('First payment success page load, scheduling single reload to refresh auth state...');
+            setHasReloaded(true);
+            sessionStorage.setItem('paymentSuccessReloaded', 'true');
+
             // Give the session a moment to be fully established, then reload
             const timer = setTimeout(() => {
                 console.log('Reloading page to refresh auth state and navbar...');
-                setIsReloading(true);
                 window.location.reload();
             }, 800);
 
             return () => clearTimeout(timer);
         }
-    }, [order_id]);
+    }, [order_id, hasReloaded]);
 
     return (
         <div>
@@ -71,13 +77,6 @@ export default function PaymentSuccess() {
             {/* Success Content */}
             <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                 <div className="bg-black rounded-lg shadow-lg p-8 border border-gray-800">
-                    {isReloading && (
-                        <div className="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg flex items-center">
-                            <Loader className="h-5 w-5 mr-2 animate-spin text-blue-400" />
-                            <span className="text-blue-200">Establishing your session...</span>
-                        </div>
-                    )}
-
                     <div className="text-center mb-8">
                         <div className="bg-gray-900 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                             <CheckCircle className="h-10 w-10 text-white" />
