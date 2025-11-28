@@ -53,15 +53,18 @@ export default function ContentCarousel({ items, autoPlay = true, interval = 500
                     style={{ objectPosition: 'center' }}
                 />
             ) : (
-                <div className="w-full h-full bg-linear-to-r from-blue-400 to-purple-600 flex items-center justify-center">
-                    <div className="text-center text-white px-2 sm:px-4">
-                        <h2 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">{current.title}</h2>
-                        {current.description && (
-                            <p className="text-xs sm:text-sm md:text-lg">{current.description}</p>
-                        )}
-                    </div>
-                </div>
+                <div className="w-full h-full bg-linear-to-r from-blue-400 to-purple-600"></div>
             )}
+
+            {/* Text Overlay */}
+            <div className="absolute inset-0 flex items-center justify-center bg-linear-to-t from-black/60 via-black/30 to-transparent">
+                <div className="text-center text-white px-2 sm:px-4 z-15">
+                    <h2 className="text-lg sm:text-2xl md:text-4xl font-bold mb-2">{current.title}</h2>
+                    {current.description && (
+                        <p className="text-xs sm:text-sm md:text-lg">{current.description}</p>
+                    )}
+                </div>
+            </div>
 
             {/* Link Overlay */}
             {current.link_url && (
