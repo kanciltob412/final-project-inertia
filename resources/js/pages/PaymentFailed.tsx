@@ -12,7 +12,7 @@ export default function PaymentFailed() {
             <Navbar />
 
             {/* Hero Section - Black Theme */}
-            <div className="relative h-[300px] overflow-hidden bg-gradient-to-br from-black to-gray-900">
+            <div className="relative h-[300px] overflow-hidden bg-linear-to-br from-black to-gray-900">
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 text-white text-center">
                         <XCircle className="mx-auto mb-4 h-16 w-16 text-gray-300" />
