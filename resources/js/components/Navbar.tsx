@@ -75,8 +75,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
     };
 
     return (
-        <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'} overflow-x-hidden`}>
-            <div className="w-full px-4">
+        <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'} w-full`}>
+            <div className="mx-auto max-w-7xl px-4 w-full">
                 <div className="flex h-16 justify-between items-center">
                     <div className="flex items-center flex-1">
                         <Link href="/" className="flex items-center">
@@ -189,80 +189,27 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             </Link>
                                         ) : (
                                             <>
-                                                <div className="flex gap-2 mb-3 border-b border-gray-200 pb-2">
-                                                    <button
-                                                        onClick={() => handleTabChange('orders')}
-                                                        className={`flex-1 py-2 text-xs font-medium transition-colors ${activeTab === 'orders'
-                                                            ? 'border-b-2 border-black text-black'
-                                                            : 'text-gray-600 hover:text-gray-900'
-                                                            }`}
+                                                <div className="space-y-2 mb-3">
+                                                    <Link
+                                                        href="/customer/dashboard"
+                                                        className="block p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
+                                                    >
+                                                        My Dashboard
+                                                    </Link>
+                                                    <Link
+                                                        href="/customer/orders"
+                                                        className="block p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
                                                     >
                                                         My Orders
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleTabChange('wishlist')}
-                                                        className={`flex-1 py-2 text-xs font-medium transition-colors flex items-center justify-center gap-1 ${activeTab === 'wishlist'
-                                                            ? 'border-b-2 border-black text-black'
-                                                            : 'text-gray-600 hover:text-gray-900'
-                                                            }`}
+                                                    </Link>
+                                                    <Link
+                                                        href="/customer/wishlists"
+                                                        className="flex items-center gap-2 p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
                                                     >
-                                                        <Heart className="h-3 w-3" />
+                                                        <Heart className="h-4 w-4" />
                                                         Wishlist
-                                                    </button>
+                                                    </Link>
                                                 </div>
-
-                                                {activeTab === 'orders' ? (
-                                                    userOrders && userOrders.length > 0 ? (
-                                                        <div className="space-y-2 mb-3">
-                                                            {userOrders.map((order: any) => (
-                                                                <Link
-                                                                    key={order.id}
-                                                                    href={`/orders/${order.id}`}
-                                                                    className="block p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
-                                                                >
-                                                                    <div className="flex justify-between items-center">
-                                                                        <span className="text-sm font-medium text-gray-900">Order #{order.id}</span>
-                                                                        <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">{order.status}</span>
-                                                                    </div>
-                                                                    <p className="text-xs text-gray-600">Rp {order.total?.toLocaleString('id-ID')}</p>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    ) : (
-                                                        <div className="mb-3 p-3 bg-gray-50 rounded">
-                                                            <p className="text-sm text-gray-600 mb-2">You have not made any orders yet</p>
-                                                            <Link href="/products" className="inline-block text-xs bg-black text-white px-3 py-1 rounded hover:bg-gray-800">
-                                                                Go to Shopping
-                                                            </Link>
-                                                        </div>
-                                                    )
-                                                ) : (
-                                                    loadingWishlist ? (
-                                                        <div className="mb-3 p-3 text-center">
-                                                            <p className="text-sm text-gray-600">Loading...</p>
-                                                        </div>
-                                                    ) : wishlistItems.length > 0 ? (
-                                                        <div className="space-y-2 mb-3">
-                                                            {wishlistItems.map((item: any) => (
-                                                                <Link
-                                                                    key={item.id}
-                                                                    href={`/products/${item.product.id}`}
-                                                                    className="block p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
-                                                                >
-                                                                    <p className="font-medium text-gray-900 text-sm">{item.product.name}</p>
-                                                                    <p className="text-xs text-gray-600">Rp {item.product.price?.toLocaleString('id-ID')}</p>
-                                                                </Link>
-                                                            ))}
-                                                        </div>
-                                                    ) : (
-                                                        <div className="mb-3 p-3 bg-gray-50 rounded text-center">
-                                                            <p className="text-sm text-gray-600 mb-2">Your wishlist is empty</p>
-                                                            <Link href="/products" className="inline-block text-xs bg-black text-white px-3 py-1 rounded hover:bg-gray-800">
-                                                                Add Items
-                                                            </Link>
-                                                        </div>
-                                                    )
-                                                )}
                                             </>
                                         )}
 

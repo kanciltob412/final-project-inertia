@@ -365,7 +365,9 @@ class OrderController extends Controller
             // Reuse existing invoice if available
             if ($order->url) {
                 DB::commit();
-                return Inertia::location($order->url);
+                return Inertia::render('PaymentRedirect', [
+                    'payment_url' => $order->url
+                ]);
             }
 
             $apiKey = env('XENDIT_API_KEY');
@@ -455,7 +457,11 @@ class OrderController extends Controller
             DB::commit();
 
             Log::info('About to redirect to payment URL', ['url' => $result['invoice_url']]);
-            return Inertia::location($result['invoice_url']);
+            // Return Inertia response with payment URL as a prop
+            // The frontend component will handle the redirect
+            return Inertia::render('PaymentRedirect', [
+                'payment_url' => $result['invoice_url']
+            ]);
         } catch (Exception $e) {
             DB::rollBack();
             Log::error('PayOrder exception', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
@@ -582,8 +588,18 @@ class OrderController extends Controller
         if ($orderId) {
             $order = Order::with(['user', 'items.product'])->find($orderId);
             if ($order) {
-                // Update order status to paid
-                $order->update(['status' => 'PAID']);
+                // Update order status to paid only if it's not already paid
+                if ($order->status !== 'PAID') {
+                    $order->update(['status' => 'PAID']);
+                    Log::info('Order marked as paid', ['order_id' => $order->id]);
+                }
+
+                // If the user is not authenticated but the order belongs to a user,
+                // we need to login the user to restore their session
+                if (!Auth::check() && $order->user) {
+                    Auth::login($order->user, remember: false);
+                    Log::info('User session restored after payment', ['user_id' => $order->user->id, 'order_id' => $order->id]);
+                }
 
                 // Send confirmation email to customer
                 try {
@@ -613,7 +629,9 @@ class OrderController extends Controller
         }
 
         return Inertia::render('PaymentSuccess', [
-            'order_id' => $orderId
+            'order_id' => $orderId,
+            'is_authenticated' => Auth::check(),
+            'user' => Auth::user()
         ]);
     }
 

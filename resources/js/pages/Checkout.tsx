@@ -326,35 +326,41 @@ export default function Checkout() {
         console.log('Auth user object:', auth.user);
         console.log('Submitting payload:', payload);
 
+        // Use Inertia router.post with onSuccess to handle response
         router.post('/orders/pay', payload, {
-            onStart: () => {
-                console.log('Starting order submission...');
-            },
+            preserveScroll: true,
             onSuccess: (page) => {
-                console.log('Order successful! Server response:', page);
-                // Don't empty cart here - wait until payment is completed
+                console.log('Order successful! Page props:', page.props);
+                // When PaymentRedirect component is rendered, it will redirect
+                // But we also handle it here just in case
+                const responseData = page.props;
+                // Give the component time to render and redirect
+                setTimeout(() => {
+                    if (responseData.payment_url) {
+                        console.log('Fallback: Redirecting to payment URL:', responseData.payment_url);
+                        window.location.href = responseData.payment_url;
+                    }
+                }, 100);
             },
             onError: (errors) => {
                 console.error('Order submission errors:', errors);
-                console.error('Full error object:', JSON.stringify(errors, null, 2));
-
-                // Show user-friendly error message
                 let errorMessage = 'An error occurred during checkout.';
                 if (errors.checkout) {
                     errorMessage = errors.checkout;
                 } else if (errors.message) {
                     errorMessage = errors.message;
+                } else {
+                    const firstError = Object.values(errors)[0];
+                    if (Array.isArray(firstError)) {
+                        errorMessage = firstError[0];
+                    } else {
+                        errorMessage = String(firstError);
+                    }
                 }
-
                 alert(errorMessage);
             },
-            onFinish: () => {
-                console.log('Order submission finished');
-            },
         });
-    };
-
-    if (items.length === 0) {
+    }; if (items.length === 0) {
         return (
             <div>
                 <Navbar />

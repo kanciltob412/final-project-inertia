@@ -1,7 +1,7 @@
 
-import { Link, usePage } from '@inertiajs/react';
-import { CheckCircle, ArrowLeft, Receipt, Mail } from 'lucide-react';
-import { useEffect } from 'react';
+import { Link, usePage, router } from '@inertiajs/react';
+import { CheckCircle, ArrowLeft, Receipt, Mail, Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
@@ -15,18 +15,42 @@ interface Props {
             email: string;
         };
     };
+    is_authenticated?: boolean;
+    user?: {
+        id: number;
+        name: string;
+        email: string;
+    };
 }
 
 export default function PaymentSuccess() {
     const props = usePage().props as Props;
     const order_id = props.order_id;
     const auth = props.auth;
+    const isAuthenticated = props.is_authenticated || (auth?.user !== null && auth?.user !== undefined);
+    const user = props.user || auth?.user;
     const { emptyCart } = useCart();
+    const [isReloading, setIsReloading] = useState(false);
 
     // Empty cart when payment is successful
     useEffect(() => {
         emptyCart();
     }, [emptyCart]);
+
+    // If user is not authenticated after returning from payment, try to refresh the page
+    // This allows the session to be properly re-established through Inertia
+    useEffect(() => {
+        if (!isAuthenticated && order_id) {
+            console.log('User not authenticated after payment, scheduling page reload...');
+            // Wait a moment for the session to be fully established, then reload
+            const timer = setTimeout(() => {
+                console.log('Reloading page to establish session...');
+                window.location.reload();
+            }, 1500);
+
+            return () => clearTimeout(timer);
+        }
+    }, [isAuthenticated, order_id]);
 
     return (
         <div>
@@ -46,6 +70,13 @@ export default function PaymentSuccess() {
             {/* Success Content */}
             <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                 <div className="bg-black rounded-lg shadow-lg p-8 border border-gray-800">
+                    {isReloading && (
+                        <div className="mb-6 p-4 bg-blue-900 border border-blue-700 rounded-lg flex items-center">
+                            <Loader className="h-5 w-5 mr-2 animate-spin text-blue-400" />
+                            <span className="text-blue-200">Establishing your session...</span>
+                        </div>
+                    )}
+
                     <div className="text-center mb-8">
                         <div className="bg-gray-900 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                             <CheckCircle className="h-10 w-10 text-white" />
@@ -53,6 +84,9 @@ export default function PaymentSuccess() {
                         <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Payment Completed</h2>
                         {order_id && (
                             <p className="text-gray-300">Order ID: <span className="font-mono font-semibold">#{order_id}</span></p>
+                        )}
+                        {user && (
+                            <p className="text-sm text-gray-400 mt-2">Logged in as: {user.email}</p>
                         )}
                     </div>
 
@@ -123,3 +157,4 @@ export default function PaymentSuccess() {
         </div>
     );
 }
+
