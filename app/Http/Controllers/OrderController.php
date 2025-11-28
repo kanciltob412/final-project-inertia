@@ -631,7 +631,10 @@ class OrderController extends Controller
         return Inertia::render('PaymentSuccess', [
             'order_id' => $orderId,
             'is_authenticated' => Auth::check(),
-            'user' => Auth::user()
+            'user' => Auth::user(),
+            'auth_guard' => Auth::guard()->name,
+            'current_user_id' => Auth::check() ? Auth::user()->id : null,
+            'current_user_role' => Auth::check() ? Auth::user()->role : null,
         ]);
     }
 
