@@ -33,7 +33,7 @@ export default function Home() {
                 <InspiringCarouselSection />
                 <VisitUsSection />
 
-                <div className="mx-auto max-w-7xl px-4 py-16">
+                <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                     <motion.div
                         variants={fadeIn}
                         initial="initial"

@@ -184,7 +184,7 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.2, duration: 0.8 }}
-                            className="mb-4 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold"
+                            className="mb-4 text-3xl md:text-5xl lg:text-6xl font-bold"
                         >
                             {heroSlides[currentSlide].title}
                         </motion.h1>
@@ -193,7 +193,7 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.4, duration: 0.8 }}
-                            className="mb-6 text-sm sm:text-base md:text-lg lg:text-xl opacity-90"
+                            className="mb-6 text-sm md:text-base lg:text-lg opacity-90"
                         >
                             {heroSlides[currentSlide].description}
                         </motion.p>
@@ -202,15 +202,15 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="flex flex-col sm:flex-row justify-center gap-4 items-center"
+                            className="flex flex-col md:flex-row justify-center gap-4 items-center"
                         >
-                            <Link href="/products" className="inline-flex items-center justify-center rounded-md bg-white px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-black hover:bg-gray-100 transition-colors w-auto max-w-[220px] min-w-[140px] mx-auto sm:max-w-none sm:min-w-0 sm:mx-0">
+                            <Link href="/products" className="inline-flex items-center justify-center rounded-md bg-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base text-black hover:bg-gray-100 transition-colors w-auto max-w-[220px] min-w-[140px] mx-auto md:max-w-none md:min-w-0 md:mx-0">
                                 Shop Now
-                                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
+                                <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
                             </Link>
                             <Link
                                 href="/about"
-                                className="rounded-md border-2 border-white px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base text-white transition-colors hover:bg-white hover:text-black w-auto max-w-[220px] min-w-[140px] mx-auto sm:max-w-none sm:min-w-0 sm:mx-0"
+                                className="rounded-md border-2 border-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base text-white transition-colors hover:bg-white hover:text-black w-auto max-w-[220px] min-w-[140px] mx-auto md:max-w-none md:min-w-0 md:mx-0"
                             >
                                 Learn More
                             </Link>
