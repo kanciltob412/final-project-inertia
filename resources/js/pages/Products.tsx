@@ -117,12 +117,12 @@ export default function Products({ products, categories, filters }: ProductsProp
                     />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">OUR PRODUCTS</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-semibold uppercase tracking-wide">OUR PRODUCTS</h1>
                         </div>
                     </div>
                 </div>
 
-                <div className="mx-auto w-full max-w-7xl px-4 py-16">
+                <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                     <div className="flex gap-8">
                         {/* Desktop Sidebar */}
                         <div className="hidden lg:block">
