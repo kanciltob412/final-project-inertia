@@ -141,7 +141,7 @@ export const columns: ColumnDef<Order>[] = [
 
                         return (
                             <div key={item.id} className="text-sm border-b border-gray-100 pb-1 last:border-0 last:pb-0">
-                                <div className="font-medium text-gray-900">
+                                <div className="font-medium text-gray-900 normal-case">
                                     {itemName}
                                 </div>
                                 <div className="text-xs text-gray-500">

@@ -166,7 +166,7 @@ export default function Wishlist({ wishlists }: Props) {
                                 {/* Product Info */}
                                 <CardContent className="pt-4 flex-1 flex flex-col">
                                     <Link href={`/products/${item.product.id}`}>
-                                        <h3 className="line-clamp-2 font-semibold hover:text-blue-600">
+                                        <h3 className="line-clamp-2 font-semibold hover:text-blue-600 normal-case">
                                             {item.product.name}
                                         </h3>
                                     </Link>

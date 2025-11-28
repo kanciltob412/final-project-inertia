@@ -151,7 +151,7 @@ export default function AdminDashboard({ stats }: Props) {
                                         className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-b-0 dark:border-gray-700"
                                     >
                                         <div>
-                                            <p className="font-medium text-gray-900 dark:text-white">
+                                            <p className="font-medium text-gray-900 dark:text-white normal-case">
                                                 {product.name}
                                             </p>
                                             <p className="text-sm text-gray-600 dark:text-gray-400">

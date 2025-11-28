@@ -110,7 +110,7 @@ export default function Orders({ orders }: Props) {
                                             {order.items.slice(0, 3).map((item) => (
                                                 <div
                                                     key={item.id}
-                                                    className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700"
+                                                    className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 normal-case"
                                                 >
                                                     {item.product.name} x{item.quantity}
                                                 </div>

@@ -132,6 +132,7 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "name",
         header: "Name",
+        cell: ({ row }) => <div className="normal-case">{row.original.name}</div>,
     },
     {
         accessorKey: "price",

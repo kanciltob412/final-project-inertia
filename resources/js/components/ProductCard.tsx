@@ -89,9 +89,9 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
                     <div className="relative h-48 w-48 overflow-hidden">
                         <img src={`/storage/${getMainImage()}`} alt={product.name} className="h-full w-full object-cover" />
                     </div>
-                    <div className="flex flex-1 flex-col justify-between p-6">
+                    <div className="flex flex-col flex-1 justify-between p-6">
                         <div>
-                            <h3 className="mb-2 text-xl font-semibold text-black">{product.name}</h3>
+                            <h3 className="mb-2 text-xl font-semibold text-black normal-case">{product.name}</h3>
                             {product.discount && product.discount > 0 ? (
                                 <div className="mb-2">
                                     {formatPriceWithDiscount(product.price, product.discount, product.discount_type)}
@@ -173,7 +173,7 @@ export default function ProductCard({ product, viewMode = 'grid' }: { product: P
             </div>
             <div className="p-4 flex flex-col flex-1">
                 <div className="grow">
-                    <h3 className="text-lg font-semibold text-black">
+                    <h3 className="text-lg font-semibold text-black normal-case">
                         <Link
                             href={`/products/${product.id}`}
                             className="hover:text-gray-600 transition-colors duration-200"

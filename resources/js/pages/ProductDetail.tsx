@@ -110,7 +110,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                             />
                         </div>
                         <div>
-                            <h1 className="mb-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{product.name}</h1>
+                            <h1 className="mb-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 normal-case">{product.name}</h1>
                             {/* Product Details */}
                             <div className="mb-6">
                                 <div className="space-y-2">
