@@ -17,7 +17,7 @@ export default function ArticleDetail() {
     if (!article) {
         return (
             <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-                <h2 className="mb-4 text-2xl font-bold">Article not found</h2>
+                <h2 className="mb-4 text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Article not found</h2>
                 <Link href="/articles" className="inline-flex items-center gap-2 text-black hover:underline">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Articles
@@ -29,7 +29,7 @@ export default function ArticleDetail() {
     return (
         <div>
             <Navbar forceBlack={true} />
-            <div className="mx-auto max-w-7xl px-4 py-16 text-black">
+            <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 text-black">
                 <button onClick={() => router.visit('/articles')} className="mb-8 inline-flex items-center gap-2 text-gray-600 hover:text-black">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Articles
@@ -61,7 +61,7 @@ export default function ArticleDetail() {
                             </div>
                         </div>
 
-                        <h1 className="mb-6 text-4xl font-bold">{article.title}</h1>
+                        <h1 className="mb-6 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{article.title}</h1>
 
                         {/* AMAN: kalau content undefined → pakai string kosong */}
                         {typeof article.content === 'string' && article.content.trim().length > 0 ? (
@@ -103,7 +103,7 @@ export default function ArticleDetail() {
                     {/* Sidebar */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-24">
-                            <h2 className="mb-6 text-2xl font-bold">Article Information</h2>
+                            <h2 className="mb-6 text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Article Information</h2>
 
                             <div className="rounded-lg bg-gray-50 p-6">
                                 <h3 className="mb-4 font-semibold">Category</h3>

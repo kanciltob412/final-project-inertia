@@ -57,8 +57,8 @@ export default function OrderShow() {
         return (
             <div>
                 <Navbar />
-                <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-                    <h2 className="mb-4 text-2xl font-bold">Order not found</h2>
+                <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 text-center">
+                    <h2 className="mb-4 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Order not found</h2>
                     <Link href="/products" className="inline-flex items-center gap-2 text-black hover:underline">
                         <ArrowLeft className="h-4 w-4" />
                         Back to Products
@@ -100,10 +100,10 @@ export default function OrderShow() {
 
             {/* Black Header Section */}
             <div className="bg-black text-white py-20">
-                <div className="mx-auto max-w-4xl px-4">
+                <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8">
                     <div className="flex items-center justify-between">
                         <div>
-                            <h1 className="text-4xl font-bold">Order #{order.id}</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">Order #{order.id}</h1>
                             <p className="text-gray-300 mt-2">Placed on {new Date(order.created_at).toLocaleDateString()}</p>
                         </div>
                         <div className={`rounded-lg px-4 py-2 font-semibold ${statusColor}`}>
@@ -113,13 +113,13 @@ export default function OrderShow() {
                 </div>
             </div>
 
-            <div className="mx-auto max-w-4xl px-4 py-8">
+            <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                 {/* Order Summary */}
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
                     {/* Shipping Address */}
                     <div className="md:col-span-2 space-y-6">
                         <div className="border rounded-lg p-6">
-                            <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                            <h3 className="flex items-center gap-2 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">
                                 <MapPin className="h-5 w-5" />
                                 Shipping Address
                             </h3>
@@ -143,7 +143,7 @@ export default function OrderShow() {
 
                         {/* Order Items */}
                         <div className="border rounded-lg p-6">
-                            <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                            <h3 className="flex items-center gap-2 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">
                                 <Package className="h-5 w-5" />
                                 Order Items
                             </h3>
@@ -221,7 +221,7 @@ export default function OrderShow() {
                     {/* Order Summary Sidebar */}
                     <div className="space-y-4">
                         <div className="border rounded-lg p-6 bg-gray-50">
-                            <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                            <h3 className="flex items-center gap-2 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">
                                 <span className="text-xl font-bold">Rp</span>
                                 Order Total
                             </h3>
@@ -266,7 +266,7 @@ export default function OrderShow() {
 
                         {/* Status Info */}
                         <div className="border rounded-lg p-6">
-                            <h3 className="flex items-center gap-2 text-lg font-semibold mb-4">
+                            <h3 className="flex items-center gap-2 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">
                                 <Clock className="h-5 w-5" />
                                 Status
                             </h3>

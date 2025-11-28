@@ -89,11 +89,11 @@ export default function ProductDetail({ product }: { product: Product }) {
                     <img src="/inspire-8.jpg" alt="Product Detail banner" className="absolute w-full h-full object-cover object-center" style={{ filter: 'brightness(0.6)' }} />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">PRODUCT DETAIL</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-wide">PRODUCT DETAIL</h1>
                         </div>
                     </div>
                 </div>
-                <div className="mx-auto max-w-7xl px-4 py-16">
+                <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                     <div className="mb-8">
                         <Link href="/products" className="inline-flex items-center gap-2 text-gray-600 hover:text-black">
                             <ArrowLeft className="h-4 w-4" />
@@ -110,7 +110,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                             />
                         </div>
                         <div>
-                            <h1 className="mb-4 text-3xl font-bold">{product.name}</h1>
+                            <h1 className="mb-4 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{product.name}</h1>
                             {/* Product Details */}
                             <div className="mb-6">
                                 <div className="space-y-2">
@@ -158,7 +158,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                             </div>
 
                             <div className="mb-6">
-                                <h2 className="mb-2 font-semibold">Description</h2>
+                                <h2 className="mb-2 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">Description</h2>
                                 <div
                                     className="text-gray-600 prose prose-sm max-w-none"
                                     dangerouslySetInnerHTML={{ __html: product.description }}
@@ -166,7 +166,7 @@ export default function ProductDetail({ product }: { product: Product }) {
                             </div>
 
                             <div className="mb-8">
-                                <h2 className="mb-4 font-semibold">Quantity</h2>
+                                <h2 className="mb-4 text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">Quantity</h2>
                                 <div className="flex items-center gap-4">
                                     <button
                                         onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}

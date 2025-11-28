@@ -361,12 +361,12 @@ export default function Checkout() {
                     <img src="/inspire-10.jpg" alt="Checkout banner" className="absolute w-full h-full object-cover object-top" style={{ filter: 'brightness(0.6)' }} />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">CHECKOUT</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-wide">CHECKOUT</h1>
                         </div>
                     </div>
                 </div>
-                <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-                    <h2 className="mb-4 text-2xl font-bold">Your cart is empty</h2>
+                <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 text-center">
+                    <h2 className="mb-4 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Your cart is empty</h2>
                     <button
                         onClick={() => router.visit('/products')}
                         className="inline-flex items-center gap-2 text-black hover:underline"
@@ -386,12 +386,12 @@ export default function Checkout() {
                 <img src="/inspire-10.jpg" alt="Checkout banner" className="absolute w-full h-full object-cover object-top" style={{ filter: 'brightness(0.6)' }} />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                        <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">CHECKOUT</h1>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-wide">CHECKOUT</h1>
                     </div>
                 </div>
             </div>
 
-            <div className="mx-auto w-full max-w-7xl px-4 py-16 grid gap-8 md:grid-cols-2">
+            <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 grid gap-8 md:grid-cols-2">
                 {/* Checkout Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Show saved addresses if user is logged in */}
@@ -404,7 +404,7 @@ export default function Checkout() {
                     )}
 
                     <div className="mb-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-6">Shipping Details</h2>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900 mb-6">Shipping Details</h2>
 
                         {/* Login/Register Options for Guest Users */}
                         {!auth.user && (
@@ -561,7 +561,7 @@ export default function Checkout() {
 
                     {/* Shipping Calculator Section */}
                     <div className="mt-8 pt-8 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Method</h3>
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">Shipping Method</h3>
 
                         {shippingError && (
                             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
@@ -741,7 +741,7 @@ export default function Checkout() {
 
                     {/* Coupon Section */}
                     <div className="mt-8 pt-8 border-t">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Promo Code</h3>
+                        <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">Promo Code</h3>
 
                         {appliedCoupon ? (
                             <div className="mb-4 p-3 bg-gray-100 border border-gray-300 rounded-md">
@@ -812,7 +812,7 @@ export default function Checkout() {
 
                 {/* Cart Summary */}
                 <div className="rounded-lg border p-6 shadow-sm h-fit">
-                    <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                    <h2 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900 mb-4">Order Summary</h2>
                     <div className="space-y-4">
                         {items.map((item) => (
                             <div key={item.id}>

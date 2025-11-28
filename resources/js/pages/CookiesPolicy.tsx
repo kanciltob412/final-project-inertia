@@ -14,17 +14,17 @@ export default function CookiesPolicy() {
                 <img src="/history-plates.jpg" alt="Cookie Policy" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16">
-                        <h1 className="text-4xl md:text-5xl text-white font-semibold uppercase tracking-wide">COOKIES POLICY</h1>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-semibold uppercase tracking-wide">COOKIES POLICY</h1>
                     </div>
                 </div>
             </div>
 
-            <main className="max-w-4xl mx-auto py-16 px-4">
+            <main className="max-w-4xl mx-auto py-8 md:py-12 lg:py-16 px-4 md:px-6 lg:px-8">
                 <p className="text-gray-600 mb-12 text-center">Last updated: November 16, 2025</p>
 
                 <div className="space-y-12">
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">What Are Cookies?</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">What Are Cookies?</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             Cookies are small text files that are placed on your computer or mobile device when you visit our website. They are widely used to make websites work more efficiently and provide information to the site owners.
                         </p>
@@ -32,7 +32,7 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">How We Use Cookies</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">How We Use Cookies</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             We use cookies to enhance your browsing experience, analyze site traffic, personalize content, and for marketing purposes.
                         </p>
@@ -40,7 +40,7 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Types of Cookies We Use</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Types of Cookies We Use</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
@@ -78,7 +78,7 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Third-Party Cookies</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Third-Party Cookies</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             We may allow third-party service providers to place cookies on your device to help us analyze website traffic, provide social media features, and deliver targeted advertisements.
                         </p>
@@ -92,7 +92,7 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Managing Cookies</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Managing Cookies</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             Most web browsers allow you to control cookies through their settings preferences. You can:
                         </p>
@@ -110,7 +110,7 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Browser Settings</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Browser Settings</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             For more information about managing cookies in your specific browser, please visit:
                         </p>
@@ -123,14 +123,14 @@ export default function CookiesPolicy() {
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Updates to This Policy</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Updates to This Policy</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             We may update this Cookies Policy from time to time. Any changes will be posted on this page with an updated revision date.
                         </p>
                     </section>
 
                     <section>
-                        <h2 className="text-3xl font-semibold mb-6">Contact Us</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-6">Contact Us</h2>
                         <p className="text-gray-700 mb-4 leading-relaxed">
                             If you have any questions about our use of cookies, please contact us:
                         </p>

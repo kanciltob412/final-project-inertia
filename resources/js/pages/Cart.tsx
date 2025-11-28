@@ -23,15 +23,15 @@ export default function Cart() {
                         <img src="/inspire-9.jpg" alt="Shopping Cart banner" className="absolute w-full h-full object-cover object-center" style={{ filter: 'brightness(0.6)' }} />
                         <div className="absolute inset-0 flex items-center">
                             <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                                <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">SHOPPING CART</h1>
+                                <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-semibold uppercase tracking-wide">SHOPPING CART</h1>
                             </div>
                         </div>
                     </div>
-                    <div className="mx-auto max-w-7xl px-4 py-16 text-center">
+                    <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 text-center">
                         <div className="flex items-center justify-center">
                             <img src="/your-cart-empty.png" alt="" width={400} />
                         </div>
-                        <h2 className="mb-4 text-2xl font-bold">Your cart is empty</h2>
+                        <h2 className="mb-4 text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Your cart is empty</h2>
                         {auth.user ? (
                             <button
                                 onClick={() => router.visit('/checkout')}
@@ -66,7 +66,7 @@ export default function Cart() {
                 </div>
             </div>
 
-            <div className="mx-auto w-full max-w-7xl px-4 py-16">
+            <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                 <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-3">
                     {/* Cart Items */}
                     <div className="md:col-span-2 space-y-6">
@@ -108,7 +108,7 @@ export default function Cart() {
                                                         `${item.stock} available`)}
                                             </span>
                                         </p>
-                                          {item.discount && item.discount > 0 && (
+                                        {item.discount && item.discount > 0 && (
                                             <p className="text-sm text-red-600 font-medium mt-1">
                                                 Discount: {item.discount_type === 'percentage' ? `${Math.round(item.discount)}%` : `Rp ${Math.round(item.discount).toLocaleString('id-ID')}`}
                                             </p>
@@ -181,7 +181,7 @@ export default function Cart() {
 
                     {/* Summary */}
                     <div className="rounded-lg border p-6 shadow-sm h-fit">
-                        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+                        <h2 className="text-lg md:text-xl lg:text-2xl font-semibold mb-4 md:mb-6 text-gray-900">Order Summary</h2>
                         <div className="flex justify-between mb-2">
                             <span>Total</span>
                             <span className="font-semibold">{formatPrice(cartTotal)}</span>

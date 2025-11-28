@@ -73,11 +73,11 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                     />
                     <div className="absolute inset-0 flex items-center">
                         <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                            <h1 className="text-4xl md:text-5xl font-semibold uppercase tracking-wide">ARTICLES</h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold uppercase tracking-wide">ARTICLES</h1>
                         </div>
                     </div>
                 </div>
-                <div className="mx-auto max-w-7xl px-4 py-16">
+                <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                     {/* Active Filters */}
                     {(filters?.category || filters?.tag) && (
                         <div className="mb-8 flex flex-wrap items-center gap-4">
@@ -118,7 +118,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                     {/* Featured Article */}
                     {featuredArticle && (
                         <div className="mb-16">
-                            <h2 className="mb-6 text-2xl font-semibold">Featured Article</h2>
+                            <h2 className="mb-6 text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">Featured Article</h2>
                             <div className="grid gap-8 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2">
                                 <Link
                                     href={`/articles/${featuredArticle.id}`}
@@ -152,7 +152,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                             href={`/articles/${featuredArticle.id}`}
                                             className="block mb-4"
                                         >
-                                            <h3 className="text-3xl font-bold hover:text-gray-600 transition-colors">{featuredArticle.title}</h3>
+                                            <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold hover:text-gray-600 transition-colors">{featuredArticle.title}</h3>
                                         </Link>
                                         <p className="mb-4 text-gray-600">{featuredArticle.excerpt}</p>
                                         <p className="text-gray-500">By {featuredArticle.author_name || 'Admin'}</p>
@@ -171,7 +171,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
 
                     {/* Regular Articles Grid */}
                     <div>
-                        <h2 className="mb-6 text-2xl font-semibold">Latest Articles</h2>
+                        <h2 className="mb-6 text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">Latest Articles</h2>
                         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-8">
                             {regularArticles.map((article) => (
                                 <div key={article.id} className="group overflow-hidden rounded-lg bg-white shadow-md">
@@ -206,7 +206,7 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                             href={`/articles/${article.id}`}
                                             className="block mb-3"
                                         >
-                                            <h3 className="text-xl font-bold transition-colors hover:text-gray-600">{article.title}</h3>
+                                            <h3 className="text-lg md:text-xl lg:text-2xl font-bold transition-colors hover:text-gray-600">{article.title}</h3>
                                         </Link>
                                         <p className="mb-4 line-clamp-2 text-gray-600">{article.excerpt}</p>
                                         <div className="flex items-center justify-between">

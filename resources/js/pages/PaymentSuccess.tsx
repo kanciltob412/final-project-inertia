@@ -37,20 +37,20 @@ export default function PaymentSuccess() {
                 <div className="absolute inset-0 flex items-center">
                     <div className="max-w-6xl w-full mx-auto px-4 text-white text-center">
                         <CheckCircle className="mx-auto mb-4 h-16 w-16 text-gray-300" />
-                        <h1 className="text-4xl md:text-5xl font-bold mb-2">Payment Successful</h1>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white">Payment Successful</h1>
                         <p className="text-xl text-gray-300">Thank you! Your payment was processed.</p>
                     </div>
                 </div>
             </div>
 
             {/* Success Content */}
-            <div className="mx-auto max-w-4xl px-4 py-16">
+            <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
                 <div className="bg-black rounded-lg shadow-lg p-8 border border-gray-800">
                     <div className="text-center mb-8">
                         <div className="bg-gray-900 rounded-full p-4 w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                             <CheckCircle className="h-10 w-10 text-white" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Payment Completed</h2>
+                        <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2">Payment Completed</h2>
                         {order_id && (
                             <p className="text-gray-300">Order ID: <span className="font-mono font-semibold">#{order_id}</span></p>
                         )}
