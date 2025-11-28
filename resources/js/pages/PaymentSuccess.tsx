@@ -40,14 +40,16 @@ export default function PaymentSuccess() {
     // Reload page once on first load to refresh auth state from middleware
     // This ensures the navbar receives the correct authenticated user after Auth::login()
     useEffect(() => {
-        // Check if we've already reloaded using sessionStorage
-        // This prevents infinite reload loops even if page is refreshed
-        const alreadyReloaded = sessionStorage.getItem('paymentSuccessReloaded');
+        // Use a unique key for this payment session to track reload
+        const reloadKey = `paymentReload_${order_id}`;
+        const reloadTimestamp = localStorage.getItem(reloadKey);
+        const now = Date.now();
 
-        if (order_id && !alreadyReloaded && !hasReloaded) {
+        // Check if we've already reloaded within the last 5 seconds
+        if (order_id && !hasReloaded && (!reloadTimestamp || now - parseInt(reloadTimestamp) > 5000)) {
             console.log('First payment success page load, scheduling single reload to refresh auth state...');
             setHasReloaded(true);
-            sessionStorage.setItem('paymentSuccessReloaded', 'true');
+            localStorage.setItem(reloadKey, now.toString());
 
             // Give the session a moment to be fully established, then reload
             const timer = setTimeout(() => {
