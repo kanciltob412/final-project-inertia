@@ -119,7 +119,7 @@ export default function CustomerDashboardShow({ customer, stats, recentOrders }:
                             <Link href="/admin/customer-dashboards" className="inline-flex items-center">
                                 <ArrowLeft className="h-5 w-5" />
                             </Link>
-                            <h1 className="text-3xl font-bold">{customer.name}</h1>
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">{customer.name}</h1>
                         </div>
                         <p className="text-gray-600">{customer.email}</p>
                         <p className="text-sm text-gray-500">Customer since {new Date(customer.created_at).toLocaleDateString()}</p>
@@ -176,7 +176,7 @@ export default function CustomerDashboardShow({ customer, stats, recentOrders }:
                 {/* Recent Orders */}
                 <div>
                     <div className="mb-4">
-                        <h2 className="text-2xl font-bold mb-2">Recent Orders</h2>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Recent Orders</h2>
                         <p className="text-gray-600 text-sm">Latest purchases from this customer</p>
                     </div>
 
@@ -243,7 +243,7 @@ export default function CustomerDashboardShow({ customer, stats, recentOrders }:
                 {/* Account Management Section */}
                 <div>
                     <div className="mb-4">
-                        <h2 className="text-2xl font-bold mb-2">Change Password</h2>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Change Password</h2>
                         <p className="text-gray-600 text-sm">Reset customer's password - An email notification will be sent to the customer</p>
                     </div>
                     <Card>

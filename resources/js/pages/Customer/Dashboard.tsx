@@ -50,7 +50,7 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold">Welcome back, {user.name}!</h1>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Welcome back, {user.name}!</h1>
                     <p className="text-gray-600">Manage your orders, addresses, and wishlist all in one place</p>
                 </div>
 
@@ -105,7 +105,7 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                 {/* Recent Orders Section */}
                 <div>
                     <div className="mb-4">
-                        <h2 className="text-2xl font-bold mb-2">Recent Orders</h2>
+                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Recent Orders</h2>
                         <p className="text-gray-600 text-sm">Track and manage your latest purchases</p>
                     </div>
                     {recentOrders.length > 0 ? (

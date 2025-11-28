@@ -10,6 +10,7 @@ Comprehensive site-wide responsive design standardization initiative completed s
 ## Standardization Rules Applied
 
 ### Responsive Breakpoints
+
 - **Mobile (default):** No prefix
 - **Tablet:** `md:` prefix (768px and up)
 - **Desktop:** `lg:` prefix (1024px and up)
@@ -18,26 +19,31 @@ Comprehensive site-wide responsive design standardization initiative completed s
 ### Typography Hierarchy
 
 #### Hero Titles (h1)
+
 ```jsx
-<h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold">Title</h1>
+<h1 className="text-4xl font-semibold md:text-5xl lg:text-6xl">Title</h1>
 ```
 
 #### Section Headings (h2)
+
 ```jsx
-<h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-900">Section</h2>
+<h2 className="text-xl font-semibold text-gray-900 md:text-2xl lg:text-3xl">Section</h2>
 ```
 
 #### Subsection Headings (h3)
+
 ```jsx
-<h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">Subsection</h3>
+<h3 className="text-lg font-semibold text-gray-900 md:text-xl lg:text-2xl">Subsection</h3>
 ```
 
 #### Body Text (p)
+
 ```jsx
-<p className="text-sm md:text-base text-gray-700 leading-relaxed">Content</p>
+<p className="text-sm leading-relaxed text-gray-700 md:text-base">Content</p>
 ```
 
 ### Color Palette
+
 - **Hero Text:** `text-white`
 - **Headings:** `text-gray-900`
 - **Body Text:** `text-gray-700`
@@ -46,13 +52,13 @@ Comprehensive site-wide responsive design standardization initiative completed s
 ### Spacing & Padding
 
 #### Containers
+
 ```jsx
-<div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
-  {/* content */}
-</div>
+<div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">{/* content */}</div>
 ```
 
 #### Gaps (between grid items)
+
 ```jsx
 <div className="gap-4 md:gap-6 lg:gap-8">
 ```
@@ -62,56 +68,56 @@ Comprehensive site-wide responsive design standardization initiative completed s
 ### Primary Pages (14 pages)
 
 1. **Home.tsx** ✅
-   - Hero section with banner
-   - Typography standardized
-   - All responsive breakpoints applied
+    - Hero section with banner
+    - Typography standardized
+    - All responsive breakpoints applied
 
 2. **Home Component Sections** ✅
-   - HeroIndex.tsx
-   - HistorySection.tsx
-   - CraftsmanshipSection.tsx
-   - InspiringCarouselSection.tsx
-   - VisitUsSection.tsx
-   - All converted from `sm:` to `md:/lg:` breakpoints
+    - HeroIndex.tsx
+    - HistorySection.tsx
+    - CraftsmanshipSection.tsx
+    - InspiringCarouselSection.tsx
+    - VisitUsSection.tsx
+    - All converted from `sm:` to `md:/lg:` breakpoints
 
 3. **About.tsx** ✅
-   - 9 sections standardized
-   - Used as template for other pages
-   - Full responsive padding and font sizing
+    - 9 sections standardized
+    - Used as template for other pages
+    - Full responsive padding and font sizing
 
 4. **Contact.tsx** ✅
-   - Hero title with responsive sizes
-   - Address text responsive sizing
-   - Container padding standardized
+    - Hero title with responsive sizes
+    - Address text responsive sizing
+    - Container padding standardized
 
 5. **Products.tsx** ✅
-   - Container padding: `px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16`
-   - Product grid responsive gaps
+    - Container padding: `px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16`
+    - Product grid responsive gaps
 
 6. **ProductDetail.tsx** ✅
-   - Hero h1: `text-4xl md:text-5xl lg:text-6xl`
-   - Product name h1: `text-3xl md:text-4xl lg:text-5xl text-gray-900`
-   - Description h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
-   - Quantity h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Hero h1: `text-4xl md:text-5xl lg:text-6xl`
+    - Product name h1: `text-3xl md:text-4xl lg:text-5xl text-gray-900`
+    - Description h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Quantity h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
 
 7. **Cart.tsx** ✅
-   - Hero h1: `text-4xl md:text-5xl lg:text-6xl text-white`
-   - Empty cart h2: `text-2xl md:text-3xl lg:text-4xl text-gray-900`
-   - Order Summary h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
-   - Container padding applied
+    - Hero h1: `text-4xl md:text-5xl lg:text-6xl text-white`
+    - Empty cart h2: `text-2xl md:text-3xl lg:text-4xl text-gray-900`
+    - Order Summary h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Container padding applied
 
 8. **Checkout.tsx** ✅
-   - Both hero h1 instances: added `lg:text-6xl`
-   - Shipping Details h2: `text-xl md:text-2xl lg:text-3xl text-gray-900`
-   - Shipping Method h3: `text-lg md:text-xl lg:text-2xl text-gray-900`
-   - Promo Code h3: `text-lg md:text-xl lg:text-2xl text-gray-900`
-   - Order Summary h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
-   - Main container: responsive padding applied
+    - Both hero h1 instances: added `lg:text-6xl`
+    - Shipping Details h2: `text-xl md:text-2xl lg:text-3xl text-gray-900`
+    - Shipping Method h3: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Promo Code h3: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Order Summary h2: `text-lg md:text-xl lg:text-2xl text-gray-900`
+    - Main container: responsive padding applied
 
 9. **ArticleDetail.tsx** ✅
-   - Article title h1: `text-3xl md:text-4xl lg:text-5xl text-gray-900`
-   - Article Information h2: `text-xl md:text-2xl lg:text-3xl text-gray-900`
-   - Main container: responsive padding applied
+    - Article title h1: `text-3xl md:text-4xl lg:text-5xl text-gray-900`
+    - Article Information h2: `text-xl md:text-2xl lg:text-3xl text-gray-900`
+    - Main container: responsive padding applied
 
 10. **Articles.tsx** ✅
     - Hero h1: `text-4xl md:text-5xl lg:text-6xl`
@@ -170,6 +176,7 @@ Comprehensive site-wide responsive design standardization initiative completed s
 ### Status: Reviewed & Appropriate ✅
 
 Email templates in `resources/views/emails/` use inline CSS with fixed sizing:
+
 - **Logo font-size:** 28px (appropriate for email headers)
 - **Title font-size:** 24px (appropriate for section headers)
 - **Body font-size:** 14px (standard for email body text)
@@ -177,6 +184,7 @@ Email templates in `resources/views/emails/` use inline CSS with fixed sizing:
 Email clients do not support Tailwind responsive breakpoints, so inline CSS with fixed sizing is correct for these templates.
 
 **Templates reviewed:**
+
 - `orders/confirmation.blade.php`
 - `orders/admin-notification.blade.php`
 - `orders/failed.blade.php`
@@ -189,11 +197,13 @@ Email clients do not support Tailwind responsive breakpoints, so inline CSS with
 ## Git Commits
 
 ### Commit 1
+
 ```
 8fe4873 - Standardize additional pages: Checkout, Articles, Order Show, ProductDetail, CookiesPolicy with responsive md:/lg: breakpoints
 ```
 
 **Changes:**
+
 - Checkout.tsx: 8 replacements (hero h1, empty cart h2, shipping details, method, coupon, order summary)
 - Articles.tsx: 5 replacements (hero, featured article, latest articles headings)
 - Order/show.tsx: 6 replacements (all section headings with responsive sizing)
@@ -227,6 +237,7 @@ Email clients do not support Tailwind responsive breakpoints, so inline CSS with
 ## User Experience Improvements
 
 ### Before
+
 - Inconsistent font sizes across pages
 - Mixed use of `sm:`, `md:`, and other breakpoints
 - Padding inconsistencies between sections
@@ -234,6 +245,7 @@ Email clients do not support Tailwind responsive breakpoints, so inline CSS with
 - Poor readability on mobile devices
 
 ### After
+
 - Unified typography hierarchy across all pages
 - Consistent responsive breakpoints (`md:/lg:` strategy)
 - Predictable padding patterns
@@ -269,6 +281,7 @@ For any new pages added to the site:
 ## Future Enhancements
 
 Potential improvements for future iterations:
+
 1. Dark mode variant with corresponding color palette
 2. Animation/transition effects on hover
 3. Better accessibility labels and ARIA attributes

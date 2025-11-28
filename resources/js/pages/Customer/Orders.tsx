@@ -56,7 +56,7 @@ export default function Orders({ orders }: Props) {
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold">My Orders</h1>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Orders</h1>
                     <p className="text-gray-600">Track and manage all your orders</p>
                 </div>
 

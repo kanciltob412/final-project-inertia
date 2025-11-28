@@ -41,7 +41,7 @@ export default function ChangePassword() {
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold flex items-center gap-2 mb-2">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center gap-2 mb-2">
                         <Lock className="h-8 w-8" />
                         Change Password
                     </h1>

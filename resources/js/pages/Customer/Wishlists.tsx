@@ -139,7 +139,7 @@ export default function Wishlist({ wishlists }: Props) {
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold">My Wishlist</h1>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Wishlist</h1>
                     <p className="text-gray-600">Items you want to purchase later</p>
                 </div>
 

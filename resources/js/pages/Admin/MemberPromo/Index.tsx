@@ -76,7 +76,7 @@ export default function MemberPromoIndex({ promos }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">Member Promos & News</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Member Promos & News</h1>
                         <p className="text-gray-600">Manage promotions and news for members</p>
                     </div>
                     <Link href="/admin/member-promos/create">

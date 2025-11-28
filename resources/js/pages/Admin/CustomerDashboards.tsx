@@ -31,7 +31,7 @@ export default function CustomerDashboards({ customers }: Props) {
             <div className="space-y-6 p-4 md:p-8 max-w-7xl mx-auto">
                 {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold">Customer Dashboards</h1>
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Customer Dashboards</h1>
                     <p className="text-gray-600">View and manage customer accounts and their dashboard information</p>
                 </div>
 

@@ -138,7 +138,7 @@ export default function DashboardContent({ content }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold">Slider & Announcements</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Slider & Announcements</h1>
                         <p className="text-sm text-gray-600">Create banners, news, promotions, or announcements</p>
                     </div>
                     <Button onClick={() => {

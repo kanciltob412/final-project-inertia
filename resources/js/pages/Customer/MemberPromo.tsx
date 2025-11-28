@@ -60,7 +60,7 @@ export default function MemberPromo({ promos }: Props) {
 
                 {/* Header */}
                 <div className="rounded-lg bg-linear-to-r from-orange-500 to-red-600 p-8 text-white">
-                    <h1 className="flex items-center gap-3 text-4xl font-bold">
+                    <h1 className="flex items-center gap-3 text-3xl md:text-4xl lg:text-5xl font-bold">
                         <Bell className="h-10 w-10" />
                         Member Promos & News
                     </h1>

@@ -57,7 +57,7 @@ export default function Addresses({ addresses }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold">My Addresses</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Addresses</h1>
                         <p className="text-gray-600">Manage your shipping and billing addresses</p>
                     </div>
                     {!isFormOpen && (
