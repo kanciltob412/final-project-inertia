@@ -40,9 +40,12 @@ class HandleInertiaRequests extends Middleware
 
         $userOrders = null;
         $wishlistCount = 0;
-        if ($request->user()) {
-            $userOrders = $request->user()->orders()->latest()->take(5)->get(['id', 'total', 'status', 'created_at']);
-            $wishlistCount = $request->user()->wishlists()->count();
+        // Use Auth::user() directly instead of $request->user() to get the latest auth state
+        // This ensures Auth::login() changes in the controller are reflected
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if ($user !== null) {
+            $userOrders = $user->orders()->latest()->take(5)->get(['id', 'total', 'status', 'created_at']);
+            $wishlistCount = $user->wishlists()->count();
         }
 
         return [
@@ -50,7 +53,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
             'userOrders' => $userOrders,
             'wishlistCount' => $wishlistCount,

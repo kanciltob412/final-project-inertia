@@ -1,7 +1,7 @@
 
 import { Link, usePage, router } from '@inertiajs/react';
 import { CheckCircle, ArrowLeft, Receipt, Mail } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useCart } from 'react-use-cart';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
@@ -30,36 +30,11 @@ export default function PaymentSuccess() {
     const isAuthenticated = props.is_authenticated || (auth?.user !== null && auth?.user !== undefined);
     const user = props.user || auth?.user;
     const { emptyCart } = useCart();
-    const [hasReloaded, setHasReloaded] = useState(false);
 
     // Empty cart when payment is successful
     useEffect(() => {
         emptyCart();
     }, [emptyCart]);
-
-    // Reload page once on first load to refresh auth state from middleware
-    // This ensures the navbar receives the correct authenticated user after Auth::login()
-    useEffect(() => {
-        // Use a unique key for this payment session to track reload
-        const reloadKey = `paymentReload_${order_id}`;
-        const reloadTimestamp = localStorage.getItem(reloadKey);
-        const now = Date.now();
-
-        // Check if we've already reloaded within the last 5 seconds
-        if (order_id && !hasReloaded && (!reloadTimestamp || now - parseInt(reloadTimestamp) > 5000)) {
-            console.log('First payment success page load, scheduling single reload to refresh auth state...');
-            setHasReloaded(true);
-            localStorage.setItem(reloadKey, now.toString());
-
-            // Give the session a moment to be fully established, then reload
-            const timer = setTimeout(() => {
-                console.log('Reloading page to refresh auth state and navbar...');
-                window.location.reload();
-            }, 800);
-
-            return () => clearTimeout(timer);
-        }
-    }, [order_id, hasReloaded]);
 
     return (
         <div>

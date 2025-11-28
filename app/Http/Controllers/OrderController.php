@@ -628,18 +628,10 @@ class OrderController extends Controller
             }
         }
 
-        // Force a fresh request() to ensure auth state is updated in the response
-        $request->setUserResolver(function () {
-            return Auth::user();
-        });
-
         return Inertia::render('PaymentSuccess', [
             'order_id' => $orderId,
             'is_authenticated' => Auth::check(),
             'user' => Auth::user(),
-            'auth_guard' => Auth::guard()->name,
-            'current_user_id' => Auth::check() ? Auth::user()->id : null,
-            'current_user_role' => Auth::check() ? Auth::user()->role : null,
         ]);
     }
 
