@@ -647,9 +647,10 @@ class OrderController extends Controller
             }
         }
 
+        // Use Inertia's shared() method to override auth with fresh data
         return Inertia::render('PaymentSuccess', [
             'order_id' => $orderId,
-            'is_authenticated' => Auth::check(),
+        ])->with('auth', [
             'user' => Auth::user(),
         ]);
     }
