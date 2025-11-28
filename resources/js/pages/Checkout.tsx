@@ -47,6 +47,7 @@ export default function Checkout() {
 
     // Saved address state
     const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+    const [useNewAddress, setUseNewAddress] = useState(false);
 
     // Shipping state
     const [provinces, setProvinces] = useState<Province[]>([]);
@@ -134,7 +135,7 @@ export default function Checkout() {
                 handleAddressSelect(defaultAddress);
             }
         }
-    }, [auth.user?.id, addresses?.length]);
+    }, [auth.user?.id, addresses.length, addresses]);
 
     const fetchProvinces = async () => {
         try {
@@ -395,12 +396,35 @@ export default function Checkout() {
                 {/* Checkout Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Show saved addresses if user is logged in */}
-                    {auth.user && addresses.length > 0 && (
-                        <SavedAddressSelector
-                            addresses={addresses}
-                            onAddressSelect={handleAddressSelect}
-                            currentAddressId={selectedAddressId}
-                        />
+                    {auth.user && addresses.length > 0 && !useNewAddress && (
+                        <div>
+                            <SavedAddressSelector
+                                addresses={addresses}
+                                onAddressSelect={handleAddressSelect}
+                                currentAddressId={selectedAddressId}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setUseNewAddress(true)}
+                                className="mt-3 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                                + Use a Different Address
+                            </button>
+                        </div>
+                    )}
+
+                    {/* Show option to go back to saved addresses */}
+                    {auth.user && addresses.length > 0 && useNewAddress && (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setUseNewAddress(false);
+                                setSelectedAddressId(addresses[0]?.id || null);
+                            }}
+                            className="text-sm text-gray-600 hover:text-gray-700 font-medium"
+                        >
+                            ← Back to Saved Addresses
+                        </button>
                     )}
 
                     <div className="mb-8">
