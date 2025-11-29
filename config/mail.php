@@ -124,6 +124,6 @@ return [
     |
     */
 
-    'admin_email' => env('MAIL_ADMIN_EMAIL', 'admin@lavanyaceramics.com'),
+    'admin_email' => env('MAIL_ADMIN_EMAIL', 'info@lavanyaceramics.com'),
 
 ];

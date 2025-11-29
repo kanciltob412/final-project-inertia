@@ -26,17 +26,17 @@ export default function ShippingInfo() {
                             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
                                 <h3 className="mb-3 text-base font-medium text-gray-900 md:text-lg">Standard Shipping</h3>
                                 <p className="mb-3 text-sm leading-relaxed text-gray-700 md:text-base">Delivery within 5-7 business days</p>
-                                <p className="text-sm font-semibold text-gray-900 md:text-base">Free for orders over $75, otherwise $8.99</p>
+                                <p className="text-sm font-semibold text-gray-900 md:text-base">Free for orders over Rp2.000.000</p>
                             </div>
                             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
                                 <h3 className="mb-3 text-base font-medium text-gray-900 md:text-lg">Express Shipping</h3>
                                 <p className="mb-3 text-sm leading-relaxed text-gray-700 md:text-base">Delivery within 2-3 business days</p>
-                                <p className="text-sm font-semibold text-gray-900 md:text-base">$15.99</p>
+                                <p className="text-sm font-semibold text-gray-900 md:text-base">Rp225.000</p>
                             </div>
                             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
                                 <h3 className="mb-3 text-base font-medium text-gray-900 md:text-lg">Overnight Shipping</h3>
                                 <p className="mb-3 text-sm leading-relaxed text-gray-700 md:text-base">Next business day delivery</p>
-                                <p className="text-sm font-semibold text-gray-900 md:text-base">$25.99</p>
+                                <p className="text-sm font-semibold text-gray-900 md:text-base">Rp450.000</p>
                             </div>
                         </div>
                     </section>
@@ -48,19 +48,19 @@ export default function ShippingInfo() {
                             up to 3-4 business days.
                         </p>
                         <p className="text-sm leading-relaxed text-gray-700 md:text-base">
-                            All orders placed before 2 PM EST on business days will be processed the same day.
+                            All orders placed before 2 PM WIB (Bali time) on business days will be processed the same day.
                         </p>
                     </section>
 
                     <section>
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Shipping Locations</h2>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-                            We currently ship to all 50 United States and Washington D.C. International shipping is available to select countries.
+                            We ship directly from Bali, Indonesia to all countries worldwide. Whether you're ordering locally or internationally, we deliver quality crafted items to your doorstep.
                         </p>
                         <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 md:p-6">
                             <p className="text-sm text-orange-800 md:text-base">
-                                <strong>Note:</strong> Additional customs fees and duties may apply for international orders and are the
-                                responsibility of the customer.
+                                <strong>Note:</strong> Additional customs fees, import duties, and taxes may apply for international orders and are the
+                                responsibility of the customer. Shipping times may vary depending on destination country.
                             </p>
                         </div>
                     </section>
@@ -81,8 +81,8 @@ export default function ShippingInfo() {
                     <section>
                         <h2 className="mb-6 text-3xl font-semibold">Order Tracking</h2>
                         <p className="mb-4 leading-relaxed text-gray-700">
-                            Once your order ships, you'll receive a confirmation email with tracking information. You can track your package using the
-                            provided tracking number on our shipping partner's website.
+                            Once your order ships from our Bali facility, you'll receive a confirmation email with tracking information. You can track your package using the
+                            provided tracking number on our shipping partner's website. Our team operates during Bali time (WIB, UTC+8).
                         </p>
                     </section>
                 </div>

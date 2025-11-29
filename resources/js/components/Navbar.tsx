@@ -69,37 +69,37 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                             href="/"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            Home
+                            HOME
                         </Link>
                         <Link
                             href="/about"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            About
+                            ABOUT
                         </Link>
                         <Link
                             href="/craftsmanship"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            Craftsmanship
+                            CRAFTMANSHIP
                         </Link>
                         <Link
                             href="/products"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            Products
+                            PRODUCTS
                         </Link>
                         <Link
                             href="/articles"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            Articles
+                            ARTICLES
                         </Link>
                         <Link
                             href="/contact"
                             className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                         >
-                            Contact
+                            CONTACT
                         </Link>
                         <Link href="/cart" className="relative">
                             <ShoppingCart className={`h-6 w-6 transition-colors ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`} />
@@ -118,13 +118,13 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                             prefetch
                                         >
-                                            Admin Dashboard
+                                            ADMIN DASHBOARD
                                         </Link>
                                         <div
                                             onClick={handleLogout}
                                             className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                         >
-                                            Logout
+                                            LOGOUT
                                         </div>
                                     </>
                                 ) : (
@@ -134,7 +134,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                             prefetch
                                         >
-                                            Hello, {user.name}
+                                            HELLO, {user.name}
                                         </Link>
                                         <div
                                             onClick={handleLogout}
@@ -168,26 +168,26 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                     >
                         <div className="flex max-w-full flex-col space-y-4 px-6">
                             <Link href="/" className="text-black hover:opacity-75">
-                                Home
+                                HOME
                             </Link>
                             <Link href="/about" className="text-black hover:opacity-75">
-                                About
+                                ABOUT
                             </Link>
                             <Link href="/craftsmanship" className="text-black hover:opacity-75">
-                                Craftsmanship
+                                CRAFTMANSHIP
                             </Link>
                             <Link href="/products" className="text-black hover:opacity-75">
-                                Products
+                                PRODUCTS
                             </Link>
                             <Link href="/articles" className="text-black hover:opacity-75">
-                                Articles
+                                ARTICLES
                             </Link>
                             <Link href="/contact" className="text-black hover:opacity-75">
-                                Contact
+                                CONTACT
                             </Link>
                             <Link href="/cart" className="flex items-center text-black hover:opacity-75">
                                 <ShoppingCart className="mr-2 h-6 w-6" />
-                                <span>Cart ({totalItems})</span>
+                                <span>CART ({totalItems})</span>
                             </Link>
                             {user ? (
                                 <>
@@ -199,7 +199,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                 className="mb-3 block rounded bg-black p-2 text-center text-sm text-white transition-colors hover:bg-gray-800"
                                                 prefetch
                                             >
-                                                Admin Dashboard
+                                                ADMIN DASHBOARD
                                             </Link>
                                         ) : (
                                             <>
@@ -208,32 +208,32 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                         href="/customer/dashboard"
                                                         className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
-                                                        My Dashboard
+                                                        MY DASHBOARD
                                                     </Link>
                                                     <Link
                                                         href="/customer/orders"
                                                         className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
-                                                        My Orders
+                                                        MY ORDERS
                                                     </Link>
                                                     <Link
                                                         href="/customer/wishlists"
                                                         className="flex items-center gap-2 rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
                                                         <Heart className="h-4 w-4" />
-                                                        Wishlist
+                                                        WISHLIST
                                                     </Link>
                                                 </div>
                                             </>
                                         )}
                                     </div>
                                     <div onClick={handleLogout} className="cursor-pointer border-t pt-4 text-black hover:opacity-75">
-                                        Logout
+                                        LOGOUT
                                     </div>
                                 </>
                             ) : (
                                 <Link href="/login" className="text-black hover:opacity-75">
-                                    Login
+                                    LOGIN
                                 </Link>
                             )}
                         </div>
