@@ -1,21 +1,42 @@
 import { Link } from '@inertiajs/react';
 import { useState } from 'react';
 
-const slides = [
-    [
-        { src: '/inspire-1.jpg', alt: 'Inspiring 1', href: '/products/1' },
-        { src: '/inspire-2.jpg', alt: 'Inspiring 2', href: '/products/2' },
-        { src: '/inspire-3.jpg', alt: 'Inspiring 3', href: '/products/3' },
-    ],
-    [
-        { src: '/inspire-4.jpg', alt: 'Inspiring 4', href: '/products/4' },
-        { src: '/inspire-5.jpg', alt: 'Inspiring 5', href: '/products/5' },
-        { src: '/inspire-6.jpg', alt: 'Inspiring 6', href: '/products/6' },
-    ],
-];
+interface Product {
+    id: number;
+    name: string;
+    sku: string;
+    price: number;
+    discount?: number;
+    discount_type?: 'fixed' | 'percentage';
+    images?: Array<{
+        id: number;
+        image_path: string;
+        is_primary: boolean;
+        sort_order: number;
+    }>;
+}
 
-export default function InspiringCarouselSection() {
+interface Props {
+    products: Product[];
+}
+
+export default function InspiringCarouselSection({ products }: Props) {
     const [current, setCurrent] = useState(0);
+
+    // Split products into groups of 3 for carousel slides
+    const slides = [];
+    for (let i = 0; i < products.length; i += 3) {
+        slides.push(products.slice(i, i + 3));
+    }
+
+    // If no products, show placeholder slides
+    const displaySlides = slides.length > 0 ? slides : [
+        [
+            { id: 1, name: 'Product 1', sku: 'PRD-001', price: 0, images: [{ id: 1, image_path: '/inspire-1.jpg', is_primary: true, sort_order: 1 }] },
+            { id: 2, name: 'Product 2', sku: 'PRD-002', price: 0, images: [{ id: 2, image_path: '/inspire-2.jpg', is_primary: true, sort_order: 1 }] },
+            { id: 3, name: 'Product 3', sku: 'PRD-003', price: 0, images: [{ id: 3, image_path: '/inspire-3.jpg', is_primary: true, sort_order: 1 }] },
+        ],
+    ];
 
     return (
         <section className="w-full bg-white py-8 md:py-12 lg:py-16">
@@ -28,19 +49,25 @@ export default function InspiringCarouselSection() {
                     See Collection
                 </Link>
                 <div className="mt-6 mb-6 flex flex-col justify-center gap-4 md:mt-8 md:mb-8 md:flex-row md:gap-6 lg:mt-10 lg:mb-10 lg:gap-8">
-                    {slides[current].map((img, idx) => (
-                        <Link key={idx} href={img.href} className="block">
-                            <img
-                                src={img.src}
-                                alt={img.alt}
-                                className="h-40 w-full rounded-md bg-gray-100 object-cover transition-opacity hover:opacity-80 md:h-[300px] md:w-[250px] lg:h-[400px] lg:w-[400px]"
-                                style={{ minWidth: '0' }}
-                            />
-                        </Link>
-                    ))}
+                    {displaySlides[current].map((product, idx) => {
+                        const imageUrl = product.images && product.images.length > 0
+                            ? `/storage/${product.images[0].image_path}`
+                            : '/inspire-placeholder.jpg';
+
+                        return (
+                            <Link key={idx} href={`/products/${product.id}`} className="block">
+                                <img
+                                    src={imageUrl}
+                                    alt={product.name}
+                                    className="h-40 w-full rounded-md bg-gray-100 object-cover transition-opacity hover:opacity-80 md:h-[300px] md:w-[250px] lg:h-[400px] lg:w-[400px]"
+                                    style={{ minWidth: '0' }}
+                                />
+                            </Link>
+                        );
+                    })}
                 </div>
                 <div className="mt-4 flex justify-center gap-2 md:mt-6 md:gap-3 lg:mt-8">
-                    {slides.map((_, idx) => (
+                    {displaySlides.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setCurrent(idx)}

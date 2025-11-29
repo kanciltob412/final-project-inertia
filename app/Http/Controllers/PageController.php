@@ -10,7 +10,14 @@ class PageController extends Controller
 {
     public function home()
     {
-        return Inertia::render('Home');
+        // Get featured products for the inspiring section (limit to 6)
+        $featuredProducts = Product::with(['images' => function ($query) {
+            $query->where('is_primary', true)->orWhere('sort_order', 1)->orderBy('sort_order');
+        }])->limit(6)->get();
+
+        return Inertia::render('Home', [
+            'featuredProducts' => $featuredProducts,
+        ]);
     }
 
     public function products()

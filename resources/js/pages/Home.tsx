@@ -8,13 +8,33 @@ import Navbar from '@/components/Navbar';
 import NewsletterSubscription from '@/components/NewsletterSubscription';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+
+interface Product {
+    id: number;
+    name: string;
+    sku: string;
+    price: number;
+    discount?: number;
+    discount_type?: 'fixed' | 'percentage';
+    images?: Array<{
+        id: number;
+        image_path: string;
+        is_primary: boolean;
+        sort_order: number;
+    }>;
+}
+
+interface Props {
+    featuredProducts: Product[];
+}
+
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 1 },
 };
 
-export default function Home() {
+export default function Home({ featuredProducts }: Props) {
     return (
         <div>
             <Head title="Lavanya Ceramics - Luxury Ceramics for Hotels and Restaurants">
@@ -34,7 +54,7 @@ export default function Home() {
                 <HeroIndex />
                 <HistorySection />
                 <CraftsmanshipSection />
-                <InspiringCarouselSection />
+                <InspiringCarouselSection products={featuredProducts} />
                 <VisitUsSection />
 
                 <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">
