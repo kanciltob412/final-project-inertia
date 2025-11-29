@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function PaymentRedirect() {
-    const { payment_url } = usePage().props as Props;
+    const { payment_url } = usePage().props as unknown as Props;
 
     useEffect(() => {
         if (payment_url) {

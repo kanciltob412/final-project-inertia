@@ -49,6 +49,9 @@ export default function Create() {
         is_active: true,
     });
 
+    const [errors] = useState<Record<string, string>>({});
+    const [processing] = useState(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
         const { name, value, type } = target;

@@ -266,7 +266,7 @@ export default function Form({ categories, product }: Props) {
                                 <Label htmlFor="discount_type">Discount Type</Label>
                                 <Select
                                     value={data.discount_type}
-                                    onValueChange={(value) => setData("discount_type", value)}
+                                    onValueChange={(value) => setData("discount_type", value as "fixed" | "percentage")}
                                     disabled={processing}
                                 >
                                     <SelectTrigger id="discount_type">

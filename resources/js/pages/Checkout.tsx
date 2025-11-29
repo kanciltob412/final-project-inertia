@@ -5,7 +5,7 @@ import { ArrowLeft, AlertCircle, Loader } from 'lucide-react';
 import { useCart } from 'react-use-cart';
 import { formatPrice } from '../utils/helper';
 import { SharedData } from '@/types';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import SavedAddressSelector from '@/components/checkout/SavedAddressSelector';
 import { useSavedAddresses, type SavedAddress } from '@/hooks/useSavedAddresses';
 
@@ -90,6 +90,17 @@ export default function Checkout() {
         coupon_discount: 0,
     });
 
+    const handleAddressSelect = useCallback((address: SavedAddress) => {
+        setSelectedAddressId(address.id);
+        // Auto-fill form with selected address
+        setData('full_name', address.recipient_name);
+        setData('phone', address.phone);
+        setData('address', address.street_address);
+        setData('city', address.city);
+        setData('country', address.country);
+        setData('postal_code', address.postal_code);
+    }, [setData]);
+
     // Fetch provinces on mount
     useEffect(() => {
         fetchProvinces();
@@ -112,7 +123,7 @@ export default function Checkout() {
             };
             fetchAddresses();
         }
-    }, [auth.user?.id]);
+    }, [auth.user]);
 
     // Fetch cities when destination province changes
     useEffect(() => {
@@ -135,7 +146,7 @@ export default function Checkout() {
                 handleAddressSelect(defaultAddress);
             }
         }
-    }, [auth.user?.id, addresses.length, addresses]);
+    }, [auth.user, addresses, selectedAddressId, data.full_name, handleAddressSelect, setData]);
 
     const fetchProvinces = async () => {
         try {
@@ -286,17 +297,6 @@ export default function Checkout() {
         setData('coupon_discount', 0);
     };
 
-    const handleAddressSelect = (address: SavedAddress) => {
-        setSelectedAddressId(address.id);
-        // Auto-fill form with selected address
-        setData('full_name', address.recipient_name);
-        setData('phone', address.phone);
-        setData('address', address.street_address);
-        setData('city', address.city);
-        setData('country', address.country);
-        setData('postal_code', address.postal_code);
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -333,10 +333,10 @@ export default function Checkout() {
                 console.log('Order successful! Page props:', page.props);
                 // When PaymentRedirect component is rendered, it will redirect
                 // But we also handle it here just in case
-                const responseData = page.props;
+                const responseData = page.props as unknown as { payment_url?: string };
                 // Give the component time to render and redirect
                 setTimeout(() => {
-                    if (responseData.payment_url) {
+                    if (responseData.payment_url && typeof responseData.payment_url === 'string') {
                         console.log('Fallback: Redirecting to payment URL:', responseData.payment_url);
                         window.location.href = responseData.payment_url;
                     }
