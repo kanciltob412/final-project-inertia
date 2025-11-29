@@ -24,7 +24,7 @@ export default function Footer() {
                             <a href="#" className="text-white hover:text-gray-400">
                                 <Instagram className="h-5 w-5" />
                             </a>
-                            <a href="#" className="text-white hover:text-gray-400">
+                            <a href="https://www.youtube.com/@LavanyaCeramics" className="text-white hover:text-gray-400">
                                 <Youtube className="h-5 w-5" />
                             </a>
                         </div>

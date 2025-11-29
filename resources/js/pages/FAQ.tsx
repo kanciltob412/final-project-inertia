@@ -23,11 +23,11 @@ const faqData: FAQItem[] = [
     },
     {
         question: 'Do you offer custom orders?',
-        answer: "Yes, we accept custom orders for special occasions or specific design requirements. Please contact us at custom@lavanyaceramics.com with your specifications, and we'll provide a quote and timeline.",
+        answer: "Yes, we accept custom orders for special occasions or specific design requirements. Please contact us at info@lavanyaceramics.com with your specifications, and we'll provide a quote and timeline.",
     },
     {
         question: 'How long does shipping take?',
-        answer: 'Standard shipping takes 5-7 business days within the US. Express shipping (2-3 days) and overnight options are also available. International shipping times vary by location.',
+        answer: 'Standard shipping takes 5-7 business days within Indonesia shipping (2-3 days) and overnight options are also available. International shipping times vary by location.',
     },
     {
         question: 'What if my item arrives damaged?',
@@ -43,7 +43,7 @@ const faqData: FAQItem[] = [
     },
     {
         question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards (Visa, MasterCard, American Express, Discover), PayPal, and other digital payment methods through our secure checkout process.',
+        answer: 'We accept all major credit cards (Visa, MasterCard, American Express, Discover) and other digital payment methods through our secure checkout process.',
     },
     {
         question: 'How do I know what size to order?',

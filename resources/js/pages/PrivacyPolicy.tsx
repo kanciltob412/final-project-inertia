@@ -98,11 +98,11 @@ export default function PrivacyPolicy() {
                         </p>
                         <div className="rounded-lg bg-gray-50 p-4 md:p-6">
                             <p className="text-sm leading-relaxed text-gray-700 md:text-base">
-                                Email: privacy@lavanyaceramics.com
+                                Email: info@lavanyaceramics.com
                                 <br />
-                                Phone: (555) 123-4567
+                                Phone: (+62) 811-129-775
                                 <br />
-                                Address: 123 Ceramic Way, Artisan City, AC 12345
+                                Address: Jl. Sunset road No.22, Seminyak, Bali 80361
                             </p>
                         </div>
                     </section>

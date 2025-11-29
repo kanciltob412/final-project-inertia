@@ -120,7 +120,7 @@ export default function TermsOfService() {
                     <section>
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Governing Law</h2>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-                            These terms and conditions are governed by and construed in accordance with the laws of the United States and you
+                            These terms and conditions are governed by and construed in accordance with the laws of Indonesia and you
                             irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
                         </p>
                     </section>
@@ -139,11 +139,12 @@ export default function TermsOfService() {
                         </p>
                         <div className="rounded-lg bg-gray-50 p-4 md:p-6">
                             <p className="text-sm text-gray-700 md:text-base">
-                                <strong>Email:</strong> legal@lavanyaceramics.com
+                                <strong>Email:</strong> info@lavanyaceramics.com
                                 <br />
-                                <strong>Phone:</strong> (555) 123-4567
+                                <strong>Phone:</strong> (+62) 811-129-775
                                 <br />
-                                <strong>Address:</strong> 123 Ceramic Way, Artisan City, AC 12345
+                                <strong>Address:</strong> Jl. Sunset road No.22, Seminyak, Bali 80361
+
                             </p>
                         </div>
                     </section>

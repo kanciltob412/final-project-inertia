@@ -118,13 +118,13 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                             prefetch
                                         >
-                                            ADMIN DASHBOARD
+                                            Admin Dashboard
                                         </Link>
                                         <div
                                             onClick={handleLogout}
                                             className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                         >
-                                            LOGOUT
+                                            Logout
                                         </div>
                                     </>
                                 ) : (
@@ -134,20 +134,20 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                             prefetch
                                         >
-                                            HELLO, {user.name}
+                                            Hello, {user.name}
                                         </Link>
                                         <div
                                             onClick={handleLogout}
                                             className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
                                         >
-                                            LOGOUT
+                                            Logout
                                         </div>
                                     </>
                                 )}
                             </>
                         ) : (
                             <Link href="/login" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
-                                LOGIN
+                                Login
                             </Link>
                         )}
                     </div>
@@ -187,7 +187,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                             </Link>
                             <Link href="/cart" className="flex items-center text-black hover:opacity-75">
                                 <ShoppingCart className="mr-2 h-6 w-6" />
-                                <span>CART ({totalItems})</span>
+                                <span>Cart ({totalItems})</span>
                             </Link>
                             {user ? (
                                 <>
@@ -199,7 +199,7 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                 className="mb-3 block rounded bg-black p-2 text-center text-sm text-white transition-colors hover:bg-gray-800"
                                                 prefetch
                                             >
-                                                ADMIN DASHBOARD
+                                                Admin Dashboard
                                             </Link>
                                         ) : (
                                             <>
@@ -208,32 +208,32 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                         href="/customer/dashboard"
                                                         className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
-                                                        MY DASHBOARD
+                                                        My Dashboard
                                                     </Link>
                                                     <Link
                                                         href="/customer/orders"
                                                         className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
-                                                        MY ORDERS
+                                                        My Orders
                                                     </Link>
                                                     <Link
                                                         href="/customer/wishlists"
                                                         className="flex items-center gap-2 rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
                                                         <Heart className="h-4 w-4" />
-                                                        WISHLIST
+                                                        Wishlist
                                                     </Link>
                                                 </div>
                                             </>
                                         )}
                                     </div>
                                     <div onClick={handleLogout} className="cursor-pointer border-t pt-4 text-black hover:opacity-75">
-                                        LOGOUT
+                                        Logout
                                     </div>
                                 </>
                             ) : (
                                 <Link href="/login" className="text-black hover:opacity-75">
-                                    LOGIN
+                                    Login
                                 </Link>
                             )}
                         </div>

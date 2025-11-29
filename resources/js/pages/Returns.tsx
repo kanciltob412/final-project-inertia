@@ -52,7 +52,7 @@ export default function Returns() {
                                     <h3 className="text-base font-medium text-gray-900 md:text-lg">Contact Us</h3>
                                 </div>
                                 <p className="text-sm leading-relaxed text-gray-700 md:text-base">
-                                    Email us at returns@lavanyaceramics.com or call (555) 123-4567 to initiate your return.
+                                    Email us at info@lavanyaceramics.com or call (+62) 811-129-775 to initiate your return.
                                 </p>
                             </div>
                             <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:p-6">
@@ -118,7 +118,7 @@ export default function Returns() {
                     <section>
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Damaged or Defective Items</h2>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
-                            If your item arrives damaged or defective, please contact us immediately at support@lavanyaceramics.com with photos of the
+                            If your item arrives damaged or defective, please contact us immediately at info@lavanyaceramics.com with photos of the
                             damage. We'll arrange for a replacement or full refund at no cost to you.
                         </p>
                     </section>

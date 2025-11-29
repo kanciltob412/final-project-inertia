@@ -176,11 +176,11 @@ export default function CookiesPolicy() {
                         <p className="mb-4 leading-relaxed text-gray-700">If you have any questions about our use of cookies, please contact us:</p>
                         <div className="rounded-lg bg-gray-50 p-6">
                             <p className="leading-relaxed text-gray-700">
-                                Email: privacy@lavanyaceramics.com
+                                Email: info@lavanyaceramics.com
                                 <br />
-                                Phone: (555) 123-4567
+                                Phone: (+62) 811-129-775
                                 <br />
-                                Address: 123 Ceramic Way, Artisan City, AC 12345
+                                Address: Jl. Sunset road No.22, Seminyak, Bali 80361
                             </p>
                         </div>
                     </section>
