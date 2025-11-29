@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, Clock, Mail, MapPin, Package, Phone, Truck } from 'lucide-react';
+import { ArrowLeft, Clock, CreditCard, Mail, MapPin, Package, Phone, Truck } from 'lucide-react';
 
 interface OrderItem {
     id: number;
@@ -38,6 +38,9 @@ interface OrderData {
     shipping_service?: string;
     courier_name?: string;
     tracking_number?: string;
+    payment_method?: string;
+    payment_channel?: string;
+    paid_at?: string;
     coupon_id?: number;
     coupon_discount?: number;
     coupon?: {
@@ -271,7 +274,36 @@ export default function OrderShow() {
                                 {order.status === 'COMPLETED' && 'Your order has been confirmed and is being prepared.'}
                                 {order.status === 'SHIPPED' && 'Your order is on the way!'}
                                 {order.status === 'CANCELLED' && 'This order has been cancelled.'}
+                                {order.status === 'PAID' && 'Payment received. Your order is being prepared.'}
                             </p>
+
+                            {/* Payment Details for PAID status */}
+                            {order.status === 'PAID' && (order.payment_method || order.payment_channel) && (
+                                <div className="mt-6 space-y-4 border-t pt-4">
+                                    <h4 className="flex items-center gap-2 font-semibold text-gray-900">
+                                        <CreditCard className="h-4 w-4" />
+                                        Payment Details
+                                    </h4>
+                                    {order.payment_method && (
+                                        <div className="space-y-1 rounded-lg bg-green-50 p-3">
+                                            <p className="text-xs font-semibold text-gray-600">Payment Method</p>
+                                            <p className="font-semibold text-gray-900">{order.payment_method}</p>
+                                        </div>
+                                    )}
+                                    {order.payment_channel && (
+                                        <div className="space-y-1 rounded-lg bg-green-50 p-3">
+                                            <p className="text-xs font-semibold text-gray-600">Payment Channel</p>
+                                            <p className="font-semibold text-gray-900">{order.payment_channel}</p>
+                                        </div>
+                                    )}
+                                    {order.paid_at && (
+                                        <div className="space-y-1 rounded-lg bg-green-50 p-3">
+                                            <p className="text-xs font-semibold text-gray-600">Payment Date</p>
+                                            <p className="font-semibold text-gray-900">{new Date(order.paid_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                             {/* Shipping Details for SHIPPED status */}
                             {order.status === 'SHIPPED' && (order.courier_name || order.tracking_number) && (
