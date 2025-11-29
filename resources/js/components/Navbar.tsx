@@ -1,8 +1,7 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { Menu, ShoppingCart, X, ChevronDown, Heart } from 'lucide-react';
+import { Menu, ShoppingCart, X, Heart } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
-import axios from 'axios';
 import { SharedData } from '@/types';
 import { logout, dashboard } from '@/routes';
 
@@ -12,40 +11,14 @@ interface NavbarProps {
 
 export default function Navbar({ forceBlack = false }: NavbarProps) {
     const user = usePage<SharedData>().props.auth.user;
-    const userOrders = usePage<SharedData>().props.userOrders || [];
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [isScrolled, setIsScrolled] = useState<boolean>(false);
-    const [isOrderMenuOpen, setIsOrderMenuOpen] = useState<boolean>(false);
-    const [activeTab, setActiveTab] = useState<'orders' | 'wishlist'>('orders');
-    const [wishlistItems, setWishlistItems] = useState<any[]>([]);
-    const [loadingWishlist, setLoadingWishlist] = useState<boolean>(false);
     const { items, emptyCart } = useCart();
 
     const totalItems = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
 
     // Use forceBlack prop to override normal scroll behavior
     const shouldUseBlackStyle = forceBlack || isScrolled;
-
-    const loadWishlist = async () => {
-        if (!user) return;
-        setLoadingWishlist(true);
-        try {
-            const response = await axios.get('/api/wishlist');
-            setWishlistItems(response.data);
-        } catch (error) {
-            console.error('Failed to load wishlist:', error);
-        } finally {
-            setLoadingWishlist(false);
-        }
-    };
-
-    const handleTabChange = (tab: 'orders' | 'wishlist') => {
-        setActiveTab(tab);
-        // Always reload wishlist when switching to the wishlist tab
-        if (tab === 'wishlist') {
-            loadWishlist();
-        }
-    };
 
     useEffect(() => {
         const handleScroll = () => {
