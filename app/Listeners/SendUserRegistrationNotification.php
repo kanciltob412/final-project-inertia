@@ -18,7 +18,7 @@ class SendUserRegistrationNotification implements ShouldQueue
     public function handle(Registered $event): void
     {
         // Send notification to admin about new user registration
-        Mail::to(config('mail.admin_email', 'admin@lavanyaceramics.com'))
+        Mail::to(config('mail.admin_email', 'info@lavanyaceramics.com'))
             ->send(new NewUserRegistrationNotification($event->user));
     }
 }

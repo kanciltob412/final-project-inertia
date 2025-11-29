@@ -53,7 +53,7 @@ class TestNewsletterEmails extends Command
                 }
             } else {
                 // Fallback to config admin email
-                $adminEmail = config('mail.admin_email', 'admin@lavanyaceramics.com');
+                $adminEmail = config('mail.admin_email', 'info@lavanyaceramics.com');
                 Mail::to($adminEmail)->send(new AdminNewsletterNotification($subscription));
                 $this->info("✓ Admin notification sent to fallback email: {$adminEmail}");
             }

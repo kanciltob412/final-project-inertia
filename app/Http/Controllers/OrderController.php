@@ -634,7 +634,7 @@ class OrderController extends Controller
                     $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
 
                     if (empty($adminEmails)) {
-                        $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                        $adminEmails = [config('mail.admin_email', 'info@lavanyaceramics.com')];
                     }
 
                     foreach ($adminEmails as $adminEmail) {
@@ -679,7 +679,7 @@ class OrderController extends Controller
                     $adminEmails = \App\Models\User::where('role', 'ADMIN')->pluck('email')->toArray();
 
                     if (empty($adminEmails)) {
-                        $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                        $adminEmails = [config('mail.admin_email', 'info@lavanyaceramics.com')];
                     }
 
                     foreach ($adminEmails as $adminEmail) {

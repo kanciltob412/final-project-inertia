@@ -90,7 +90,7 @@ class NewsletterController extends Controller
 
                 // Also add a fallback admin email from config if no admin users found
                 if (empty($adminEmails)) {
-                    $adminEmails = [config('mail.admin_email', 'admin@lavanyaceramics.com')];
+                    $adminEmails = [config('mail.admin_email', 'info@lavanyaceramics.com')];
                 }
 
                 foreach ($adminEmails as $adminEmail) {
