@@ -34,6 +34,8 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import { Order } from '@/types';
+
 interface Customer {
     id: number;
     name: string;
@@ -43,7 +45,7 @@ interface Customer {
     total_wishlist: number;
     total_addresses: number;
     total_spent: number;
-    recent_order?: Record<string, any>;
+    recent_order?: Order;
 }
 
 interface CustomerDataTableProps {

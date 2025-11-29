@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Heart, MapPin } from 'lucide-react';
 import ContentCarousel from '@/components/content-carousel';
+import { Order } from '@/types';
 
 interface ContentItem {
     id: number;
@@ -30,7 +31,7 @@ interface DashboardProps {
         totalWishlist: number;
         totalAddresses: number;
     };
-    recentOrders: Array<Record<string, any>>;
+    recentOrders: Array<Order>;
     dashboardContent?: ContentItem[];
 }
 

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ShoppingBag, Heart, DollarSign } from 'lucide-react';
 import { CustomerDataTable } from './CustomerDashboards/CustomerDataTable';
 import { Separator } from '@/components/ui/separator';
+import { Order } from '@/types';
 
 interface Customer {
     id: number;
@@ -13,7 +14,7 @@ interface Customer {
     total_wishlist: number;
     total_addresses: number;
     total_spent: number;
-    recent_order?: Record<string, any>;
+    recent_order?: Order;
 }
 
 interface Props {
