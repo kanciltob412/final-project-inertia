@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Edit2, Trash2, Plus, Calendar } from 'lucide-react';
 import { useState } from 'react';
@@ -18,7 +18,7 @@ interface Promo {
 
 interface PaginatedPromos {
     data: Promo[];
-    links: any;
+    links: Array<{ label: string; url: string | null; active: boolean }>;
 }
 
 interface Props {

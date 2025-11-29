@@ -66,14 +66,15 @@ export default function Edit({ promo }: Props) {
         is_active: promo.is_active,
     });
 
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [processing, setProcessing] = useState(false);
+    const [errors] = useState<Record<string, string>>({});
+    const [processing] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target as any;
+        const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        const { name, value, type } = target;
         setData((prev) => ({
             ...prev,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : type === 'number' ? parseInt(value) : value,
+            [name]: type === 'checkbox' ? (target as HTMLInputElement).checked : type === 'number' ? parseInt(value) : value,
         }));
     };
 

@@ -1,7 +1,7 @@
 import { Head, Form, Link } from '@inertiajs/react';
 import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -49,14 +49,12 @@ export default function Create() {
         is_active: true,
     });
 
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [processing, setProcessing] = useState(false);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type } = e.target as any;
+        const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        const { name, value, type } = target;
         setData((prev) => ({
             ...prev,
-            [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : type === 'number' ? parseInt(value) : value,
+            [name]: type === 'checkbox' ? (target as HTMLInputElement).checked : type === 'number' ? parseInt(value) : value,
         }));
     };
 

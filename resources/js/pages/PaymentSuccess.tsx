@@ -1,5 +1,5 @@
 
-import { Link, usePage, router } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { CheckCircle, ArrowLeft, Receipt, Mail } from 'lucide-react';
 import { useEffect } from 'react';
 import { useCart } from 'react-use-cart';
@@ -27,7 +27,6 @@ export default function PaymentSuccess() {
     const props = usePage().props as Props;
     const order_id = props.order_id;
     const auth = props.auth;
-    const isAuthenticated = props.is_authenticated || (auth?.user !== null && auth?.user !== undefined);
     const user = props.user || auth?.user;
     const { emptyCart } = useCart();
 
