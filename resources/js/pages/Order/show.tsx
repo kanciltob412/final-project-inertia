@@ -1,7 +1,7 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Link, usePage } from '@inertiajs/react';
-import { ArrowLeft, Clock, Mail, MapPin, Package, Phone } from 'lucide-react';
+import { ArrowLeft, Clock, Mail, MapPin, Package, Phone, Truck } from 'lucide-react';
 
 interface OrderItem {
     id: number;
@@ -36,6 +36,8 @@ interface OrderData {
     shipping_cost?: number;
     shipping_courier?: string;
     shipping_service?: string;
+    courier_name?: string;
+    tracking_number?: string;
     coupon_id?: number;
     coupon_discount?: number;
     coupon?: {
@@ -270,6 +272,28 @@ export default function OrderShow() {
                                 {order.status === 'SHIPPED' && 'Your order is on the way!'}
                                 {order.status === 'CANCELLED' && 'This order has been cancelled.'}
                             </p>
+
+                            {/* Shipping Details for SHIPPED status */}
+                            {order.status === 'SHIPPED' && (order.courier_name || order.tracking_number) && (
+                                <div className="mt-6 space-y-4 border-t pt-4">
+                                    <h4 className="flex items-center gap-2 font-semibold text-gray-900">
+                                        <Truck className="h-4 w-4" />
+                                        Shipping Details
+                                    </h4>
+                                    {order.courier_name && (
+                                        <div className="space-y-1 rounded-lg bg-blue-50 p-3">
+                                            <p className="text-xs font-semibold text-gray-600">Courier</p>
+                                            <p className="font-semibold text-gray-900">{order.courier_name}</p>
+                                        </div>
+                                    )}
+                                    {order.tracking_number && (
+                                        <div className="space-y-1 rounded-lg bg-blue-50 p-3">
+                                            <p className="text-xs font-semibold text-gray-600">Tracking Number</p>
+                                            <p className="font-mono font-semibold text-gray-900">{order.tracking_number}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
