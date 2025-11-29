@@ -72,6 +72,7 @@ export interface Product {
     stock?: number;
     dimension?: string;
     is_active: boolean;
+    is_featured_carousel?: boolean;
     created_at: string;
     updated_at: string;
 

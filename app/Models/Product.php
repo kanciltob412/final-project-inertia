@@ -23,10 +23,12 @@ class Product extends Model
         'dimension',
         'image',
         'is_active',
+        'is_featured_carousel',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_featured_carousel' => 'boolean',
         'price' => 'decimal:2',
         'discount' => 'decimal:2',
     ];

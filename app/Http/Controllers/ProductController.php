@@ -48,6 +48,8 @@ class ProductController extends Controller
             "price" => "required|numeric|min:0",
             "discount" => "nullable|numeric|min:0",
             "discount_type" => "nullable|in:fixed,percentage",
+            "is_active" => "nullable|boolean",
+            "is_featured_carousel" => "nullable|boolean",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
@@ -63,6 +65,8 @@ class ProductController extends Controller
                 'price' => $validated['price'],
                 'discount' => $validated['discount'] ?? 0,
                 'discount_type' => $validated['discount_type'] ?? 'fixed',
+                'is_active' => $validated['is_active'] ?? true,
+                'is_featured_carousel' => $validated['is_featured_carousel'] ?? false,
                 'image' => null, // Will be set from first gallery image
             ];
 
@@ -127,6 +131,8 @@ class ProductController extends Controller
             "price" => "required|numeric|min:0",
             "discount" => "nullable|numeric|min:0",
             "discount_type" => "nullable|in:fixed,percentage",
+            "is_active" => "nullable|boolean",
+            "is_featured_carousel" => "nullable|boolean",
             "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048",
             "gallery_images" => "nullable|array",
         ]);
@@ -142,6 +148,8 @@ class ProductController extends Controller
                 'price' => $validated['price'],
                 'discount' => $validated['discount'] ?? 0,
                 'discount_type' => $validated['discount_type'] ?? 'fixed',
+                'is_active' => $validated['is_active'] ?? true,
+                'is_featured_carousel' => $validated['is_featured_carousel'] ?? false,
             ];
 
             if ($request->hasFile('image')) {

@@ -2,6 +2,7 @@ import HeadingSmall from '@/components/heading-small';
 import MultiImageUpload from '@/components/MultiImageUpload';
 import TiptapEditor from '@/components/TiptapEditor';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -36,6 +37,8 @@ export default function Form({ categories, product }: Props) {
         price: product?.price?.toString() || '',
         discount: product?.discount ? Math.round(Number(product.discount)).toString() : '',
         discount_type: product?.discount_type || 'fixed',
+        is_active: product?.is_active ?? true,
+        is_featured_carousel: product?.is_featured_carousel ?? false,
         gallery_images: initialGalleryFiles,
     });
 
@@ -84,6 +87,8 @@ export default function Form({ categories, product }: Props) {
         formData.append('category_id', data.category_id?.toString() || '');
         formData.append('stock', data.stock?.toString() || '0');
         formData.append('dimension', data.dimension || '');
+        formData.append('is_active', data.is_active ? '1' : '0');
+        formData.append('is_featured_carousel', data.is_featured_carousel ? '1' : '0');
 
         // Add gallery images (File[])
         let galleryIndex = 0;
@@ -269,6 +274,33 @@ export default function Form({ categories, product }: Props) {
                                     min="0"
                                 />
                                 {errors.discount && <p className="text-sm text-red-600">{errors.discount}</p>}
+                            </div>
+
+                            {/* Status Checkboxes */}
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                    <Checkbox
+                                        id="is_active"
+                                        checked={data.is_active}
+                                        onCheckedChange={(checked) => setData('is_active', checked as boolean)}
+                                        disabled={processing}
+                                    />
+                                    <Label htmlFor="is_active" className="cursor-pointer">
+                                        Product is Active
+                                    </Label>
+                                </div>
+
+                                <div className="flex items-center gap-3">
+                                    <Checkbox
+                                        id="is_featured_carousel"
+                                        checked={data.is_featured_carousel}
+                                        onCheckedChange={(checked) => setData('is_featured_carousel', checked as boolean)}
+                                        disabled={processing}
+                                    />
+                                    <Label htmlFor="is_featured_carousel" className="cursor-pointer">
+                                        Featured in Carousel (Show on inspiring products section)
+                                    </Label>
+                                </div>
                             </div>
                         </div>
                     </div>
