@@ -447,7 +447,8 @@ class OrderController extends Controller
                 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             } finally {
                 if (is_resource($ch)) {
-                    curl_close($ch); // @phpstan-ignore-line - needed for resource cleanup
+                    // @noinspection PhpDeprecatedFunctionUsageInspection
+                    curl_close($ch); // Resource cleanup
                 }
             }
 
