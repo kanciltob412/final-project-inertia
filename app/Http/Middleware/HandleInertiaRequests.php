@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -42,6 +43,7 @@ class HandleInertiaRequests extends Middleware
         $wishlistCount = 0;
         // Use Auth::user() directly instead of $request->user() to get the latest auth state
         // This ensures Auth::login() changes in the controller are reflected
+        /** @var User|null $user */
         $user = \Illuminate\Support\Facades\Auth::user();
         if ($user !== null) {
             $userOrders = $user->orders()->latest()->take(5)->get(['id', 'total', 'status', 'created_at']);

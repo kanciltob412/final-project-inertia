@@ -72,17 +72,17 @@ class User extends Authenticatable implements MustVerifyEmail
         };
     }
 
-    public function orders()
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function wishlists()
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    public function addresses()
+    public function addresses(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Address::class);
     }
