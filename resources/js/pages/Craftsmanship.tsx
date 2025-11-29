@@ -125,7 +125,7 @@ export default function Craftsmanship() {
 
                 <section className="py-8 md:py-10 lg:py-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-stretch match-height">
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/images/craftmanship/craftmanship-01.jpg" alt="Giving form" className="w-full h-full object-cover rounded-lg block" />
+                        <img src="/images/craftmanship/craftmanship_02.jpg" alt="Noble Material" className="w-full h-full object-cover rounded-lg block" />
                     </div>
                     <div className="h-full flex flex-col justify-start match-text">
                         <h3 className="text-lg md:text-xl lg:text-2xl text-gray-900 font-semibold mb-4 md:mb-6">Noble Materials</h3>
@@ -147,7 +147,7 @@ export default function Craftsmanship() {
 
                 <section className="py-8 md:py-10 lg:py-12 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-stretch match-height">
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/images/craftmanship/craftmanship_03.jpg" alt="Handmade" className="w-full h-full object-cover rounded-lg block" />
+                        <img src="/images/craftmanship/craftmanship_04.jpg" alt="Handmade" className="w-full h-full object-cover rounded-lg block" />
                     </div>
                     <div className="h-full flex flex-col justify-start match-text">
                         <h3 className="text-lg md:text-xl lg:text-2xl text-gray-900 font-semibold mb-4 md:mb-6">Finishing</h3>
