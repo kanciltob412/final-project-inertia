@@ -4,13 +4,19 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface HeroSlide {
-    image: string;
+    id?: number;
+    image_path?: string;
+    image?: string;
     title: string;
     subtitle: string;
     description: string;
 }
 
-const heroSlides: HeroSlide[] = [
+interface Props {
+    carousels?: HeroSlide[];
+}
+
+const defaultHeroSlides: HeroSlide[] = [
     {
         image: '/hero.jpg',
         title: 'Elevate Your Spaces',
@@ -38,9 +44,17 @@ const heroSlides: HeroSlide[] = [
     },
 ];
 
-function HeroIndex() {
+function HeroIndex({ carousels = [] }: Props) {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+    // Use provided carousels or fallback to defaults
+    const heroSlides: HeroSlide[] = carousels && carousels.length > 0
+        ? carousels.map(slide => ({
+            ...slide,
+            image: slide.image_path ? `/storage/${slide.image_path}` : slide.image || '/hero.jpg',
+        }))
+        : defaultHeroSlides;
 
     // Auto-advance slides
     useEffect(() => {
@@ -51,7 +65,7 @@ function HeroIndex() {
         }, 5000); // Change slide every 5 seconds
 
         return () => clearInterval(interval);
-    }, [isAutoPlaying]);
+    }, [isAutoPlaying, heroSlides.length]);
 
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -121,15 +135,14 @@ function HeroIndex() {
                     key={currentSlide}
                     src={heroSlides[currentSlide].image}
                     alt={heroSlides[currentSlide].title}
-                    className={`absolute h-full w-full object-cover ${
-                        currentSlide % 4 === 0
+                    className={`absolute h-full w-full object-cover ${currentSlide % 4 === 0
                             ? 'kenburns-top'
                             : currentSlide % 4 === 1
-                              ? 'kenburns-bottom'
-                              : currentSlide % 4 === 2
-                                ? 'kenburns-left'
-                                : 'kenburns-right'
-                    }`}
+                                ? 'kenburns-bottom'
+                                : currentSlide % 4 === 2
+                                    ? 'kenburns-left'
+                                    : 'kenburns-right'
+                        }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

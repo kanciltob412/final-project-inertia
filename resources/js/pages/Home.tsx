@@ -24,7 +24,18 @@ interface Product {
     }>;
 }
 
+interface Carousel {
+    id: number;
+    title: string;
+    subtitle: string;
+    description: string;
+    image_path: string;
+    sort_order: number;
+    is_active: boolean;
+}
+
 interface Props {
+    carousels: Carousel[];
     featuredProducts: Product[];
 }
 
@@ -34,7 +45,7 @@ const fadeIn = {
     transition: { duration: 1 },
 };
 
-export default function Home({ featuredProducts }: Props) {
+export default function Home({ carousels, featuredProducts }: Props) {
     return (
         <div>
             <Head title="Lavanya Ceramics - Luxury Ceramics for Hotels and Restaurants">
@@ -51,7 +62,7 @@ export default function Home({ featuredProducts }: Props) {
             <Navbar></Navbar>
             <div className="bg-gray-50">
                 {/* Hero Section with Video Background */}
-                <HeroIndex />
+                <HeroIndex carousels={carousels} />
                 <HistorySection />
                 <CraftsmanshipSection />
                 <InspiringCarouselSection products={featuredProducts} />

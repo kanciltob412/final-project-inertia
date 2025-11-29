@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CarouselController;
 
 Route::prefix('admin')->group(function () {
 
@@ -18,6 +19,9 @@ Route::prefix('admin')->group(function () {
     Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
     Route::post('/newsletter/bulk', [NewsletterController::class, 'bulkDelete'])->name('admin.newsletter.bulk');
     Route::get('/newsletter/export', [NewsletterController::class, 'export'])->name('admin.newsletter.export');
+
+    // Carousel management routes
+    Route::resource('carousels', CarouselController::class);
 
     // Order shipping routes
     Route::post('/orders/{id}/ship', [\App\Http\Controllers\OrderController::class, 'markAsShipped'])->name('admin.orders.ship');

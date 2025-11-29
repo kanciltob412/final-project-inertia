@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Carousel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -10,6 +11,9 @@ class PageController extends Controller
 {
     public function home()
     {
+        // Get active carousels for hero section
+        $carousels = Carousel::where('is_active', true)->orderBy('sort_order')->get();
+
         // Get featured carousel products (limit to 6)
         $featuredProducts = Product::with(['images' => function ($query) {
             $query->where('is_primary', true)->orWhere('sort_order', 1)->orderBy('sort_order');
@@ -20,6 +24,7 @@ class PageController extends Controller
             ->get();
 
         return Inertia::render('Home', [
+            'carousels' => $carousels,
             'featuredProducts' => $featuredProducts,
         ]);
     }
