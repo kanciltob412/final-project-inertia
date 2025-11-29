@@ -142,16 +142,16 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                                                 {/* Status & Action */}
                                                 <div className="flex flex-col items-end justify-between">
                                                     <span
-                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'completed'
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : order.status === 'pending'
-                                                                ? 'bg-yellow-100 text-yellow-800'
-                                                                : order.status === 'shipped'
-                                                                    ? 'bg-blue-100 text-blue-800'
-                                                                    : 'bg-gray-100 text-gray-800'
+                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'DELIVERED'
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : order.status === 'PENDING'
+                                                                    ? 'bg-yellow-100 text-yellow-800'
+                                                                    : order.status === 'SHIPPED'
+                                                                        ? 'bg-blue-100 text-blue-800'
+                                                                        : 'bg-gray-100 text-gray-800'
                                                             }`}
                                                     >
-                                                        {order.status?.charAt(0).toUpperCase() + order.status?.slice(1)}
+                                                        {order.status?.charAt(0).toUpperCase() + order.status?.slice(1).toLowerCase()}
                                                     </span>
                                                     <Link href={`/orders/${order.id}`} className="mt-2">
                                                         <Button variant="link" className="p-0 h-auto">
