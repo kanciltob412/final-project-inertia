@@ -119,7 +119,7 @@ export default function Craftsmanship() {
                     </div>
 
                     <div className="h-full overflow-hidden match-image rounded-lg">
-                        <img src="/images/craftmanship/craftmanship-01.jpg" alt="Giving form" className="w-full h-full object-cover rounded-lg block" />
+                        <img src="/images/craftmanship/craftmanship_01.jpg" alt="Giving form" className="w-full h-full object-cover rounded-lg block" />
                     </div>
                 </section>
 

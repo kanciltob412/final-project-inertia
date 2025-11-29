@@ -90,22 +90,22 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
 
                     {/* Desktop Menu */}
                     <div className="hidden items-center space-x-8 lg:flex">
-                        <Link href="/" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Home
                         </Link>
-                        <Link href="/about" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/about" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             About
                         </Link>
-                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Craftsmanship
                         </Link>
-                        <Link href="/products" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/products" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Products
                         </Link>
-                        <Link href="/articles" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/articles" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Articles
                         </Link>
-                        <Link href="/contact" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link href="/contact" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
                             Contact
                         </Link>
                         <Link href="/cart" className="relative">
@@ -133,14 +133,14 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                             Hello, {user.name}
                                         </Link>
                                         <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
-                                            Logout
+                                            LOGOUT
                                         </div>
                                     </>
                                 )}
                             </>
                         ) : (
                             <Link href="/login" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
-                                Login
+                                LOGIN
                             </Link>
                         )}
                     </div>
