@@ -1,8 +1,8 @@
-import { Heart } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { usePage, router } from '@inertiajs/react';
 import { SharedData } from '@/types';
+import { router, usePage } from '@inertiajs/react';
 import axios from 'axios';
+import { Heart } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface WishlistButtonProps {
     productId: number;
@@ -77,10 +77,7 @@ export default function WishlistButton({ productId, className = '' }: WishlistBu
             className={`transition-all duration-200 ${isInWishlist ? 'text-red-500' : 'text-gray-400 hover:text-red-500'} disabled:opacity-50 ${className}`}
             title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-            <Heart
-                className="h-6 w-6"
-                fill={isInWishlist ? 'currentColor' : 'none'}
-            />
+            <Heart className="h-6 w-6" fill={isInWishlist ? 'currentColor' : 'none'} />
         </button>
     );
 }

@@ -1,7 +1,7 @@
-import { Link } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import CustomerLayout from '@/layouts/customer-layout';
+import { Link } from '@inertiajs/react';
 import { ShoppingBag } from 'lucide-react';
 
 interface OrderItem {
@@ -46,17 +46,19 @@ export default function Orders({ orders }: Props) {
 
     return (
         <CustomerLayout title="My Orders">
-
-            <div className="space-y-6 p-4 md:p-8 max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Orders</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">My Orders</h1>
                     <p className="text-gray-600">Track and manage all your orders</p>
                 </div>
 
@@ -71,9 +73,7 @@ export default function Orders({ orders }: Props) {
                                         <div>
                                             <p className="text-sm text-gray-500">Order Number</p>
                                             <p className="font-semibold">#{order.id}</p>
-                                            <p className="text-xs text-gray-500">
-                                                {new Date(order.created_at).toLocaleDateString()}
-                                            </p>
+                                            <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleDateString()}</p>
                                         </div>
 
                                         {/* Items Count */}
@@ -85,9 +85,7 @@ export default function Orders({ orders }: Props) {
                                         {/* Total Amount */}
                                         <div>
                                             <p className="text-sm text-gray-500">Total</p>
-                                            <p className="font-semibold">
-                                                Rp {(order.total || 0).toLocaleString('id-ID')}
-                                            </p>
+                                            <p className="font-semibold">Rp {(order.total || 0).toLocaleString('id-ID')}</p>
                                         </div>
 
                                         {/* Status & Action */}
@@ -108,10 +106,7 @@ export default function Orders({ orders }: Props) {
                                         <p className="mb-2 text-sm font-medium text-gray-600">Items:</p>
                                         <div className="flex flex-wrap gap-2">
                                             {order.items.slice(0, 3).map((item) => (
-                                                <div
-                                                    key={item.id}
-                                                    className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 normal-case"
-                                                >
+                                                <div key={item.id} className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-700 normal-case">
                                                     {item.product.name} x{item.quantity}
                                                 </div>
                                             ))}

@@ -1,12 +1,21 @@
+import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import { Head, router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import { Download, Trash2 } from 'lucide-react';
-import HeadingSmall from '@/components/heading-small';
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { useState } from 'react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -48,22 +57,22 @@ export default function Newsletter({ subscriptions }: Props) {
     const handleBulkDelete = () => {
         if (selectedEmails.length === 0) return;
 
-        router.post('/admin/newsletter/bulk', {
-            ids: selectedEmails
-        }, {
-            onSuccess: () => {
-                setSelectedEmails([]);
+        router.post(
+            '/admin/newsletter/bulk',
+            {
+                ids: selectedEmails,
             },
-        });
+            {
+                onSuccess: () => {
+                    setSelectedEmails([]);
+                },
+            },
+        );
     };
-
-
 
     const handleExport = () => {
         window.location.href = '/admin/newsletter/export';
     };
-
-
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -71,43 +80,34 @@ export default function Newsletter({ subscriptions }: Props) {
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <HeadingSmall
-                        title="Newsletter Subscriptions"
-                        description={`Manage newsletter subscriptions (${subscriptions.total} total)`}
-                    />
+                    <HeadingSmall title="Newsletter Subscriptions" description={`Manage newsletter subscriptions (${subscriptions.total} total)`} />
                     <div className="flex gap-2">
                         {selectedEmails.length > 0 && (
-                            <Button
-                                variant="destructive"
-                                onClick={handleBulkDelete}
-                            >
-                                <Trash2 className="h-4 w-4 mr-2" />
+                            <Button variant="destructive" onClick={handleBulkDelete}>
+                                <Trash2 className="mr-2 h-4 w-4" />
                                 Delete Selected ({selectedEmails.length})
                             </Button>
                         )}
-                        <Button
-                            onClick={handleExport}
-                            variant="outline"
-                        >
-                            <Download className="h-4 w-4 mr-2" />
+                        <Button onClick={handleExport} variant="outline">
+                            <Download className="mr-2 h-4 w-4" />
                             Export CSV
                         </Button>
                     </div>
                 </div>
 
                 {subscriptions.data.length > 0 ? (
-                    <div className="bg-white rounded-lg shadow">
+                    <div className="rounded-lg bg-white shadow">
                         <div className="overflow-x-auto">
                             <table className="min-w-full divide-y divide-gray-200">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                             <input
                                                 type="checkbox"
                                                 checked={selectedEmails.length === subscriptions.data.length}
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
-                                                        setSelectedEmails(subscriptions.data.map(sub => sub.id));
+                                                        setSelectedEmails(subscriptions.data.map((sub) => sub.id));
                                                     } else {
                                                         setSelectedEmails([]);
                                                     }
@@ -115,18 +115,16 @@ export default function Newsletter({ subscriptions }: Props) {
                                                 className="rounded"
                                             />
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                             Email Address
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                             Subscribed At
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
+                                <tbody className="divide-y divide-gray-200 bg-white">
                                     {subscriptions.data.map((subscription) => (
                                         <tr key={subscription.id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -137,7 +135,7 @@ export default function Newsletter({ subscriptions }: Props) {
                                                         if (e.target.checked) {
                                                             setSelectedEmails([...selectedEmails, subscription.id]);
                                                         } else {
-                                                            setSelectedEmails(selectedEmails.filter(id => id !== subscription.id));
+                                                            setSelectedEmails(selectedEmails.filter((id) => id !== subscription.id));
                                                         }
                                                     }}
                                                     className="rounded"
@@ -147,14 +145,15 @@ export default function Newsletter({ subscriptions }: Props) {
                                                 <div className="font-medium text-gray-900">
                                                     {subscription.email}
                                                     {subscription.email_verified_at && (
-                                                        <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                                                        <span className="ml-2 inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
                                                             Verified
                                                         </span>
                                                     )}
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                                {new Date(subscription.created_at).toLocaleDateString()} {new Date(subscription.created_at).toLocaleTimeString()}
+                                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-600">
+                                                {new Date(subscription.created_at).toLocaleDateString()}{' '}
+                                                {new Date(subscription.created_at).toLocaleTimeString()}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <Button
@@ -174,10 +173,9 @@ export default function Newsletter({ subscriptions }: Props) {
 
                         {/* Pagination */}
                         {subscriptions.last_page > 1 && (
-                            <div className="flex items-center justify-between px-6 py-4 border-t">
+                            <div className="flex items-center justify-between border-t px-6 py-4">
                                 <div className="text-sm text-gray-600">
-                                    Page {subscriptions.current_page} of {subscriptions.last_page}
-                                    ({subscriptions.total} total entries)
+                                    Page {subscriptions.current_page} of {subscriptions.last_page}({subscriptions.total} total entries)
                                 </div>
                                 <div className="flex gap-2">
                                     {subscriptions.current_page > 1 && (
@@ -203,9 +201,9 @@ export default function Newsletter({ subscriptions }: Props) {
                         )}
                     </div>
                 ) : (
-                    <div className="text-center py-12">
-                        <div className="text-gray-500 text-lg mb-2">No newsletter subscriptions found</div>
-                        <div className="text-gray-400 text-sm">
+                    <div className="py-12 text-center">
+                        <div className="mb-2 text-lg text-gray-500">No newsletter subscriptions found</div>
+                        <div className="text-sm text-gray-400">
                             Newsletter subscriptions will appear here when users subscribe to your newsletter.
                         </div>
                     </div>
@@ -223,10 +221,7 @@ export default function Newsletter({ subscriptions }: Props) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={() => deleteId && handleDelete(deleteId)}
-                            className="bg-red-600 hover:bg-red-700"
-                        >
+                        <AlertDialogAction onClick={() => deleteId && handleDelete(deleteId)} className="bg-red-600 hover:bg-red-700">
                             Delete
                         </AlertDialogAction>
                     </AlertDialogFooter>

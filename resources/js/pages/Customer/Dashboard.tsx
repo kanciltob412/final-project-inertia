@@ -1,10 +1,10 @@
-import { Link } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ShoppingBag, Heart, MapPin } from 'lucide-react';
 import ContentCarousel from '@/components/content-carousel';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import CustomerLayout from '@/layouts/customer-layout';
 import { Order } from '@/types';
+import { Link } from '@inertiajs/react';
+import { Heart, MapPin, ShoppingBag } from 'lucide-react';
 
 interface ContentItem {
     id: number;
@@ -40,25 +40,23 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
     console.log('Dashboard Content:', dashboardContent);
     return (
         <CustomerLayout title="Customer Dashboard">
-            <div className="space-y-6 p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="mx-auto max-w-7xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
                 <Link
                     href="/"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
                 >
                     ← Back to Home
                 </Link>
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Welcome back, {user.name}!</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Welcome back, {user.name}!</h1>
                     <p className="text-gray-600">Manage your orders, addresses, and wishlist all in one place</p>
                 </div>
 
                 {/* Content Carousel Slider */}
-                {dashboardContent && dashboardContent.length > 0 && (
-                    <ContentCarousel items={dashboardContent} />
-                )}
+                {dashboardContent && dashboardContent.length > 0 && <ContentCarousel items={dashboardContent} />}
 
                 {/* Quick Stats */}
                 <div className="grid gap-4 md:grid-cols-3">
@@ -102,16 +100,15 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                     </Link>
                 </div>
 
-
                 {/* Recent Orders Section */}
                 <div>
                     <div className="mb-4">
-                        <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">Recent Orders</h2>
-                        <p className="text-gray-600 text-sm">Track and manage your latest purchases</p>
+                        <h2 className="mb-2 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">Recent Orders</h2>
+                        <p className="text-sm text-gray-600">Track and manage your latest purchases</p>
                     </div>
                     {recentOrders.length > 0 ? (
                         <div>
-                            <div className="space-y-4 mb-4">
+                            <div className="mb-4 space-y-4">
                                 {recentOrders.slice(0, 5).map((order) => (
                                     <Card key={order.id}>
                                         <CardContent className="pt-6">
@@ -120,9 +117,7 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                                                 <div>
                                                     <p className="text-sm text-gray-500">Order Number</p>
                                                     <p className="font-semibold">#{order.id}</p>
-                                                    <p className="text-xs text-gray-500">
-                                                        {new Date(order.created_at).toLocaleDateString()}
-                                                    </p>
+                                                    <p className="text-xs text-gray-500">{new Date(order.created_at).toLocaleDateString()}</p>
                                                 </div>
 
                                                 {/* Items Count */}
@@ -134,27 +129,26 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                                                 {/* Total */}
                                                 <div>
                                                     <p className="text-sm text-gray-500">Total</p>
-                                                    <p className="font-bold">
-                                                        Rp {(order.total || 0).toLocaleString('id-ID')}
-                                                    </p>
+                                                    <p className="font-bold">Rp {(order.total || 0).toLocaleString('id-ID')}</p>
                                                 </div>
 
                                                 {/* Status & Action */}
                                                 <div className="flex flex-col items-end justify-between">
                                                     <span
-                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'DELIVERED'
+                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${
+                                                            order.status === 'DELIVERED'
                                                                 ? 'bg-green-100 text-green-800'
                                                                 : order.status === 'PENDING'
-                                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                                    : order.status === 'SHIPPED'
-                                                                        ? 'bg-blue-100 text-blue-800'
-                                                                        : 'bg-gray-100 text-gray-800'
-                                                            }`}
+                                                                  ? 'bg-yellow-100 text-yellow-800'
+                                                                  : order.status === 'SHIPPED'
+                                                                    ? 'bg-blue-100 text-blue-800'
+                                                                    : 'bg-gray-100 text-gray-800'
+                                                        }`}
                                                     >
                                                         {order.status?.charAt(0).toUpperCase() + order.status?.slice(1).toLowerCase()}
                                                     </span>
                                                     <Link href={`/orders/${order.id}`} className="mt-2">
-                                                        <Button variant="link" className="p-0 h-auto">
+                                                        <Button variant="link" className="h-auto p-0">
                                                             View Details →
                                                         </Button>
                                                     </Link>
@@ -166,7 +160,9 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                             </div>
                             {recentOrders.length > 5 && (
                                 <Link href="/customer/orders">
-                                    <Button variant="outline" className="w-full md:w-auto">View All Orders</Button>
+                                    <Button variant="outline" className="w-full md:w-auto">
+                                        View All Orders
+                                    </Button>
                                 </Link>
                             )}
                         </div>
@@ -190,9 +186,7 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                             <CardTitle>Account Settings</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="mb-4 text-sm text-gray-600">
-                                Update your profile information and preferences
-                            </p>
+                            <p className="mb-4 text-sm text-gray-600">Update your profile information and preferences</p>
                             <Button asChild variant="outline">
                                 <Link href="/customer/profile">Go to Settings</Link>
                             </Button>
@@ -203,9 +197,7 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                             <CardTitle>Need Help?</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="mb-4 text-sm text-gray-600">
-                                Have questions? Contact us for assistance
-                            </p>
+                            <p className="mb-4 text-sm text-gray-600">Have questions? Contact us for assistance</p>
                             <Button asChild variant="outline">
                                 <Link href="/contact">Contact Us</Link>
                             </Button>

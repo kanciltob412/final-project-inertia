@@ -1,12 +1,12 @@
-import { Link, usePage, useForm } from '@inertiajs/react';
-import { type SharedData } from '@/types';
-import CustomerLayout from '@/layouts/customer-layout';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import InputError from '@/components/input-error';
-import { User, Lock } from 'lucide-react';
+import CustomerLayout from '@/layouts/customer-layout';
+import { type SharedData } from '@/types';
+import { Link, useForm, usePage } from '@inertiajs/react';
+import { Lock, User } from 'lucide-react';
 
 export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: boolean; status?: string }) {
     const { auth } = usePage<SharedData>().props;
@@ -17,39 +17,47 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
     });
 
     const handleDeleteAccount = () => {
-        if (window.confirm('Are you absolutely sure you want to delete your account? This action cannot be undone. All your data, orders, and settings will be permanently deleted.')) {
+        if (
+            window.confirm(
+                'Are you absolutely sure you want to delete your account? This action cannot be undone. All your data, orders, and settings will be permanently deleted.',
+            )
+        ) {
             if (window.confirm('This is your final warning. Click OK to permanently delete your account.')) {
                 fetch('/customer/profile', {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
                     },
-                }).then(response => {
-                    if (response.ok) {
-                        // Redirect to home page after successful deletion
-                        window.location.href = '/';
-                    }
-                }).catch(error => {
-                    console.error('Error deleting account:', error);
-                    alert('An error occurred while deleting your account. Please try again.');
-                });
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            // Redirect to home page after successful deletion
+                            window.location.href = '/';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting account:', error);
+                        alert('An error occurred while deleting your account. Please try again.');
+                    });
             }
         }
     };
 
     return (
         <CustomerLayout title="My Profile">
-
-            <div className="space-y-6 p-4 md:p-8 max-w-4xl mx-auto">
+            <div className="mx-auto max-w-4xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Profile</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">My Profile</h1>
                     <p className="text-gray-600">Manage your personal information and preferences</p>
                 </div>
 
@@ -106,11 +114,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                 <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
                                     <p className="text-sm text-yellow-900">
                                         Your email address is unverified.{' '}
-                                        <Link
-                                            href="/verification-link/resend"
-                                            as="button"
-                                            className="font-semibold underline hover:text-yellow-700"
-                                        >
+                                        <Link href="/verification-link/resend" as="button" className="font-semibold underline hover:text-yellow-700">
                                             Click here to resend the verification email.
                                         </Link>
                                     </p>
@@ -128,9 +132,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                                     {processing ? 'Saving...' : 'Save Changes'}
                                 </Button>
 
-                                {recentlySuccessful && (
-                                    <p className="text-sm font-medium text-green-600">✓ Changes saved successfully!</p>
-                                )}
+                                {recentlySuccessful && <p className="text-sm font-medium text-green-600">✓ Changes saved successfully!</p>}
                             </div>
                         </form>
                     </CardContent>
@@ -145,9 +147,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="mb-4 text-sm text-gray-600">
-                            Update your password and manage your account security
-                        </p>
+                        <p className="mb-4 text-sm text-gray-600">Update your password and manage your account security</p>
                         <Button asChild variant="outline">
                             <Link href="/customer/change-password">Change Password</Link>
                         </Button>
@@ -160,9 +160,7 @@ export default function Profile({ mustVerifyEmail, status }: { mustVerifyEmail: 
                         <CardTitle className="text-red-900">Danger Zone</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <p className="text-sm text-red-800">
-                            These actions are permanent and cannot be undone.
-                        </p>
+                        <p className="text-sm text-red-800">These actions are permanent and cannot be undone.</p>
                         <Button variant="destructive" onClick={handleDeleteAccount}>
                             Delete Account
                         </Button>

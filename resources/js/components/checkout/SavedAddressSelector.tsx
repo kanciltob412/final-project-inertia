@@ -1,6 +1,6 @@
-import { MapPin, Plus } from 'lucide-react';
 import { SavedAddress } from '@/hooks/useSavedAddresses';
 import { Link } from '@inertiajs/react';
+import { MapPin, Plus } from 'lucide-react';
 
 interface SavedAddressSelectorProps {
     addresses: SavedAddress[];
@@ -8,17 +8,13 @@ interface SavedAddressSelectorProps {
     currentAddressId?: number | null;
 }
 
-export default function SavedAddressSelector({
-    addresses,
-    onAddressSelect,
-    currentAddressId,
-}: SavedAddressSelectorProps) {
+export default function SavedAddressSelector({ addresses, onAddressSelect, currentAddressId }: SavedAddressSelectorProps) {
     if (!addresses || addresses.length === 0) {
         return null;
     }
 
     return (
-        <div className="mb-6 rounded-lg border border-black-200 bg-white-50 p-4">
+        <div className="border-black-200 bg-white-50 mb-6 rounded-lg border p-4">
             <div className="mb-3 flex items-center gap-2">
                 <MapPin className="h-5 w-5 text-gray-600" />
                 <h3 className="font-semibold text-gray-800">Your Saved Addresses</h3>
@@ -42,9 +38,7 @@ export default function SavedAddressSelector({
                             <div className="font-medium text-gray-900">
                                 {address.recipient_name}
                                 {address.is_default && (
-                                    <span className="ml-2 rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
-                                        Default
-                                    </span>
+                                    <span className="ml-2 rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">Default</span>
                                 )}
                             </div>
                             <div className="mt-1 text-sm text-gray-600">

@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface HeroSlide {
     image: string;
@@ -15,26 +15,27 @@ const heroSlides: HeroSlide[] = [
         image: '/hero.jpg',
         title: 'Elevate Your Spaces',
         subtitle: 'Premium Ceramic Collections',
-        description: 'Discover our curated collection of premium ceramics that blend timeless elegance, artisanal craftsmanship, and modern design.'
+        description: 'Discover our curated collection of premium ceramics that blend timeless elegance, artisanal craftsmanship, and modern design.',
     },
     {
         image: '/inspire-1.jpg',
         title: 'Artisanal Excellence',
         subtitle: 'Handcrafted Perfection',
-        description: 'Each piece is meticulously crafted by skilled artisans, bringing centuries of ceramic tradition to your modern spaces.'
+        description: 'Each piece is meticulously crafted by skilled artisans, bringing centuries of ceramic tradition to your modern spaces.',
     },
     {
         image: '/inspire-2.jpg',
         title: 'Luxury Hospitality',
         subtitle: 'Hotel & Restaurant Collections',
-        description: 'Transform your hospitality spaces with our exclusive ceramic collections designed for luxury hotels and fine dining establishments.'
+        description:
+            'Transform your hospitality spaces with our exclusive ceramic collections designed for luxury hotels and fine dining establishments.',
     },
     {
         image: '/inspire-3.jpg',
         title: 'Timeless Elegance',
         subtitle: 'Classic Meets Contemporary',
-        description: 'Experience the perfect fusion of traditional ceramic artistry with contemporary design aesthetics for the modern connoisseur.'
-    }
+        description: 'Experience the perfect fusion of traditional ceramic artistry with contemporary design aesthetics for the modern connoisseur.',
+    },
 ];
 
 function HeroIndex() {
@@ -68,7 +69,7 @@ function HeroIndex() {
     };
 
     return (
-        <div className="relative h-[500px] sm:h-[650px] md:h-[750px] lg:h-[879px] overflow-hidden">
+        <div className="relative h-[500px] overflow-hidden sm:h-[650px] md:h-[750px] lg:h-[879px]">
             <style>{`
                 @keyframes kenburns-top {
                     0% {
@@ -120,11 +121,15 @@ function HeroIndex() {
                     key={currentSlide}
                     src={heroSlides[currentSlide].image}
                     alt={heroSlides[currentSlide].title}
-                    className={`absolute w-full h-full object-cover ${currentSlide % 4 === 0 ? 'kenburns-top' :
-                        currentSlide % 4 === 1 ? 'kenburns-bottom' :
-                            currentSlide % 4 === 2 ? 'kenburns-left' :
-                                'kenburns-right'
-                        }`}
+                    className={`absolute h-full w-full object-cover ${
+                        currentSlide % 4 === 0
+                            ? 'kenburns-top'
+                            : currentSlide % 4 === 1
+                              ? 'kenburns-bottom'
+                              : currentSlide % 4 === 2
+                                ? 'kenburns-left'
+                                : 'kenburns-right'
+                    }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -137,26 +142,25 @@ function HeroIndex() {
             {/* Navigation Arrows */}
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                className="absolute top-1/2 left-4 z-10 -translate-y-1/2 rounded-full bg-white/20 p-2 transition-colors hover:bg-white/30"
             >
                 <ChevronLeft className="h-6 w-6 text-white" />
             </button>
 
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                className="absolute top-1/2 right-4 z-10 -translate-y-1/2 rounded-full bg-white/20 p-2 transition-colors hover:bg-white/30"
             >
                 <ChevronRight className="h-6 w-6 text-white" />
             </button>
 
             {/* Slide Indicators */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+            <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-2">
                 {heroSlides.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => goToSlide(index)}
-                        className={`w-3 h-3 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'
-                            }`}
+                        className={`h-3 w-3 rounded-full transition-colors ${index === currentSlide ? 'bg-white' : 'bg-white/50'}`}
                     />
                 ))}
             </div>
@@ -175,7 +179,7 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.1, duration: 0.8 }}
-                            className="mb-2 text-sm sm:text-base md:text-lg opacity-80 tracking-wider uppercase"
+                            className="mb-2 text-sm tracking-wider uppercase opacity-80 sm:text-base md:text-lg"
                         >
                             {heroSlides[currentSlide].subtitle}
                         </motion.p>
@@ -184,7 +188,7 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.2, duration: 0.8 }}
-                            className="mb-4 text-3xl md:text-5xl lg:text-6xl font-bold"
+                            className="mb-4 text-3xl font-bold md:text-5xl lg:text-6xl"
                         >
                             {heroSlides[currentSlide].title}
                         </motion.h1>
@@ -193,7 +197,7 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.4, duration: 0.8 }}
-                            className="mb-6 text-sm md:text-base lg:text-lg opacity-90"
+                            className="mb-6 text-sm opacity-90 md:text-base lg:text-lg"
                         >
                             {heroSlides[currentSlide].description}
                         </motion.p>
@@ -202,15 +206,18 @@ function HeroIndex() {
                             initial={{ y: 30, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.6, duration: 0.8 }}
-                            className="flex flex-col md:flex-row justify-center gap-4 items-center"
+                            className="flex flex-col items-center justify-center gap-4 md:flex-row"
                         >
-                            <Link href="/products" className="inline-flex items-center justify-center rounded-md bg-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base text-black hover:bg-gray-100 transition-colors w-auto max-w-[220px] min-w-[140px] mx-auto md:max-w-none md:min-w-0 md:mx-0">
+                            <Link
+                                href="/products"
+                                className="mx-auto inline-flex w-auto max-w-[220px] min-w-[140px] items-center justify-center rounded-md bg-white px-4 py-2 text-sm text-black transition-colors hover:bg-gray-100 md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
+                            >
                                 Shop Now
                                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
                             </Link>
                             <Link
                                 href="/about"
-                                className="rounded-md border-2 border-white px-4 md:px-8 py-2 md:py-3 text-sm md:text-base text-white transition-colors hover:bg-white hover:text-black w-auto max-w-[220px] min-w-[140px] mx-auto md:max-w-none md:min-w-0 md:mx-0"
+                                className="mx-auto w-auto max-w-[220px] min-w-[140px] rounded-md border-2 border-white px-4 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
                             >
                                 Learn More
                             </Link>

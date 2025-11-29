@@ -1,9 +1,9 @@
-import { Link, router } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Trash2, ShoppingCart } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import CustomerLayout from '@/layouts/customer-layout';
 import { formatPrice } from '@/utils/helper';
+import { Link, router } from '@inertiajs/react';
+import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { useCart } from 'react-use-cart';
 
 interface ProductImage {
@@ -38,7 +38,7 @@ interface Props {
 const calculateDiscountedPrice = (price: number, discount?: number, discountType?: string): number => {
     if (!discount || discount === 0) return price;
     if (discountType === 'percentage') {
-        return price - (price * (discount / 100));
+        return price - price * (discount / 100);
     }
     return price - discount;
 };
@@ -50,9 +50,9 @@ const formatPriceWithDiscount = (price: number, discount?: number, discountType?
     const discountedPrice = calculateDiscountedPrice(price, discount, discountType);
     return (
         <div className="flex items-center gap-2">
-            <span className="text-gray-500 line-through text-sm">{formatPrice(price)}</span>
-            <span className="text-green-600 font-semibold">{formatPrice(discountedPrice)}</span>
-            <span className="text-green-600 text-xs bg-green-100 px-2 py-1 rounded">
+            <span className="text-sm text-gray-500 line-through">{formatPrice(price)}</span>
+            <span className="font-semibold text-green-600">{formatPrice(discountedPrice)}</span>
+            <span className="rounded bg-green-100 px-2 py-1 text-xs text-green-600">
                 {discountType === 'percentage' ? `${Math.round(discount)}% off` : `Save ${formatPrice(discount)}`}
             </span>
         </div>
@@ -63,7 +63,7 @@ export default function Wishlist({ wishlists }: Props) {
     const { addItem, items, updateItemQuantity } = useCart();
 
     const getMainImage = (product: Product) => {
-        const primaryImage = product.images?.find(img => img.is_primary);
+        const primaryImage = product.images?.find((img) => img.is_primary);
         return primaryImage ? primaryImage.image_path : product.image;
     };
 
@@ -90,7 +90,7 @@ export default function Wishlist({ wishlists }: Props) {
                     id: productId,
                     price: discountedPrice,
                     originalPrice: product.price,
-                    stock: product.stock
+                    stock: product.stock,
                 },
                 1,
             );
@@ -129,17 +129,19 @@ export default function Wishlist({ wishlists }: Props) {
 
     return (
         <CustomerLayout title="My Wishlist">
-
-            <div className="space-y-6 p-4 md:p-8 max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Wishlist</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">My Wishlist</h1>
                     <p className="text-gray-600">Items you want to purchase later</p>
                 </div>
 
@@ -147,7 +149,7 @@ export default function Wishlist({ wishlists }: Props) {
                 {wishlists.length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {wishlists.map((item) => (
-                            <Card key={item.id} className="overflow-hidden flex flex-col">
+                            <Card key={item.id} className="flex flex-col overflow-hidden">
                                 {/* Product Image */}
                                 <div className="relative h-48 overflow-hidden bg-gray-200">
                                     <img
@@ -157,18 +159,16 @@ export default function Wishlist({ wishlists }: Props) {
                                     />
                                     <button
                                         onClick={() => handleRemove(item.id, item.product.id)}
-                                        className="absolute right-2 top-2 rounded-full bg-white p-2 text-red-500 shadow-md transition-colors hover:bg-red-50"
+                                        className="absolute top-2 right-2 rounded-full bg-white p-2 text-red-500 shadow-md transition-colors hover:bg-red-50"
                                     >
                                         <Heart className="h-4 w-4 fill-current" />
                                     </button>
                                 </div>
 
                                 {/* Product Info */}
-                                <CardContent className="pt-4 flex-1 flex flex-col">
+                                <CardContent className="flex flex-1 flex-col pt-4">
                                     <Link href={`/products/${item.product.id}`}>
-                                        <h3 className="line-clamp-2 font-semibold hover:text-blue-600 normal-case">
-                                            {item.product.name}
-                                        </h3>
+                                        <h3 className="line-clamp-2 font-semibold normal-case hover:text-blue-600">{item.product.name}</h3>
                                     </Link>
 
                                     {/* Price with Discount */}
@@ -176,37 +176,24 @@ export default function Wishlist({ wishlists }: Props) {
                                         {item.product.discount && item.product.discount > 0 ? (
                                             formatPriceWithDiscount(item.product.price, item.product.discount, item.product.discount_type)
                                         ) : (
-                                            <p className="text-lg font-bold text-gray-800">
-                                                {formatPrice(item.product.price)}
-                                            </p>
+                                            <p className="text-lg font-bold text-gray-800">{formatPrice(item.product.price)}</p>
                                         )}
                                     </div>
 
                                     {item.product.description && (
-                                        <p className="mt-2 line-clamp-2 text-xs text-gray-600">
-                                            {item.product.description}
-                                        </p>
+                                        <p className="mt-2 line-clamp-2 text-xs text-gray-600">{item.product.description}</p>
                                     )}
 
                                     {/* Actions */}
                                     <div className="mt-4 space-y-2 pt-4">
-                                        <Button
-                                            onClick={() => handleAddToCart(item.product)}
-                                            className="w-full"
-                                            variant="default"
-                                        >
+                                        <Button onClick={() => handleAddToCart(item.product)} className="w-full" variant="default">
                                             <ShoppingCart className="mr-2 h-4 w-4" />
                                             Add to Cart
                                         </Button>
                                         <Button asChild variant="outline" className="w-full" size="sm">
                                             <Link href={`/products/${item.product.id}`}>View Details</Link>
                                         </Button>
-                                        <Button
-                                            onClick={() => handleRemove(item.id, item.product.id)}
-                                            variant="outline"
-                                            className="w-full"
-                                            size="sm"
-                                        >
+                                        <Button onClick={() => handleRemove(item.id, item.product.id)} variant="outline" className="w-full" size="sm">
                                             <Trash2 className="mr-2 h-4 w-4" />
                                             Remove
                                         </Button>

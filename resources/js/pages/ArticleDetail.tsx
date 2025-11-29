@@ -17,7 +17,7 @@ export default function ArticleDetail() {
     if (!article) {
         return (
             <div className="mx-auto max-w-7xl px-4 py-16 text-center">
-                <h2 className="mb-4 text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Article not found</h2>
+                <h2 className="mb-4 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">Article not found</h2>
                 <Link href="/articles" className="inline-flex items-center gap-2 text-black hover:underline">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Articles
@@ -29,7 +29,7 @@ export default function ArticleDetail() {
     return (
         <div>
             <Navbar forceBlack={true} />
-            <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16 text-black">
+            <div className="mx-auto max-w-7xl px-4 py-8 text-black md:px-6 md:py-12 lg:px-8 lg:py-16">
                 <button onClick={() => router.visit('/articles')} className="mb-8 inline-flex items-center gap-2 text-gray-600 hover:text-black">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Articles
@@ -43,8 +43,8 @@ export default function ArticleDetail() {
                                 article.featured_image?.startsWith('http')
                                     ? article.featured_image
                                     : article.featured_image
-                                        ? `/storage/${article.featured_image}`
-                                        : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
+                                      ? `/storage/${article.featured_image}`
+                                      : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
                             }
                             alt={article.title}
                             className="mb-8 h-[400px] w-full rounded-xl object-cover"
@@ -61,7 +61,7 @@ export default function ArticleDetail() {
                             </div>
                         </div>
 
-                        <h1 className="mb-6 text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">{article.title}</h1>
+                        <h1 className="mb-6 text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl">{article.title}</h1>
 
                         {/* AMAN: kalau content undefined → pakai string kosong */}
                         {typeof article.content === 'string' && article.content.trim().length > 0 ? (
@@ -103,13 +103,12 @@ export default function ArticleDetail() {
                     {/* Sidebar */}
                     <div className="lg:col-span-1">
                         <div className="sticky top-24">
-                            <h2 className="mb-6 text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Article Information</h2>
-
+                            <h2 className="mb-6 text-xl font-bold text-gray-900 md:text-2xl lg:text-3xl">Article Information</h2>
                             <div className="rounded-lg bg-gray-50 p-6">
                                 <h3 className="mb-4 font-semibold">Category</h3>
                                 <Link
                                     href={`/articles?category=${encodeURIComponent(article.category || 'General')}`}
-                                    className="inline-block text-gray-600 hover:text-black hover:underline mb-4 transition-colors"
+                                    className="mb-4 inline-block text-gray-600 transition-colors hover:text-black hover:underline"
                                 >
                                     {article.category || 'General'}
                                 </Link>
@@ -122,7 +121,7 @@ export default function ArticleDetail() {
                                                 <Link
                                                     key={index}
                                                     href={`/articles?tag=${encodeURIComponent(tag.trim())}`}
-                                                    className="rounded-full bg-gray-200 px-3 py-1 text-sm hover:bg-gray-300 transition-colors cursor-pointer"
+                                                    className="cursor-pointer rounded-full bg-gray-200 px-3 py-1 text-sm transition-colors hover:bg-gray-300"
                                                 >
                                                     {tag.trim()}
                                                 </Link>
@@ -130,7 +129,8 @@ export default function ArticleDetail() {
                                         </div>
                                     </>
                                 )}
-                            </div>                            {/* Author Info */}
+                            </div>{' '}
+                            {/* Author Info */}
                             {article.author_name && (
                                 <div className="mt-12 rounded-xl bg-gray-50 p-6">
                                     <div className="mb-4 flex items-center gap-4">

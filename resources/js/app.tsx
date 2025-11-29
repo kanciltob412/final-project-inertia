@@ -16,7 +16,7 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <div className="flex min-h-screen flex-col bg-gray-50 text-black overflow-x-hidden">
+            <div className="flex min-h-screen flex-col overflow-x-hidden bg-gray-50 text-black">
                 <AuthProvider>
                     <CartProvider>
                         <App {...props} />

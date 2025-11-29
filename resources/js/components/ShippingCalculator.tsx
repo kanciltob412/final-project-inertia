@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import { AlertCircle, Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface Province {
     province_id: string;
@@ -153,34 +153,32 @@ export default function ShippingCalculator() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-lg shadow-md p-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-8">Shipping Cost Calculator</h1>
+        <div className="min-h-screen bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl">
+                <div className="rounded-lg bg-white p-8 shadow-md">
+                    <h1 className="mb-8 text-3xl font-bold text-gray-900">Shipping Cost Calculator</h1>
 
                     {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
-                            <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+                        <div className="mb-6 flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 p-4">
+                            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-600" />
                             <p className="text-red-700">{error}</p>
                         </div>
                     )}
 
-                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                    <div className="mb-8 grid gap-6 md:grid-cols-2">
                         {/* Origin Location */}
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Origin</h3>
+                            <h3 className="mb-4 text-lg font-semibold text-gray-900">Origin</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Province
-                                    </label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Province</label>
                                     <select
                                         value={originProvince}
                                         onChange={(e) => {
                                             setOriginProvince(e.target.value);
                                             setOriginCity('');
                                         }}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="">Select Province</option>
                                         {provinces.map((p) => (
@@ -192,14 +190,12 @@ export default function ShippingCalculator() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        City
-                                    </label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">City</label>
                                     <select
                                         value={originCity}
                                         onChange={(e) => setOriginCity(e.target.value)}
                                         disabled={!originProvince}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                                     >
                                         <option value="">Select City</option>
                                         {originCities.map((c) => (
@@ -214,19 +210,17 @@ export default function ShippingCalculator() {
 
                         {/* Destination Location */}
                         <div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">Destination</h3>
+                            <h3 className="mb-4 text-lg font-semibold text-gray-900">Destination</h3>
                             <div className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Province
-                                    </label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">Province</label>
                                     <select
                                         value={destProvince}
                                         onChange={(e) => {
                                             setDestProvince(e.target.value);
                                             setDestCity('');
                                         }}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="">Select Province</option>
                                         {provinces.map((p) => (
@@ -238,14 +232,12 @@ export default function ShippingCalculator() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        City
-                                    </label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-700">City</label>
                                     <select
                                         value={destCity}
                                         onChange={(e) => setDestCity(e.target.value)}
                                         disabled={!destProvince}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                                        className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
                                     >
                                         <option value="">Select City</option>
                                         {destCities.map((c) => (
@@ -260,29 +252,25 @@ export default function ShippingCalculator() {
                     </div>
 
                     {/* Weight & Courier */}
-                    <div className="grid md:grid-cols-2 gap-6 mb-8">
+                    <div className="mb-8 grid gap-6 md:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Weight (grams)
-                            </label>
+                            <label className="mb-2 block text-sm font-medium text-gray-700">Weight (grams)</label>
                             <input
                                 type="number"
                                 value={weight}
                                 onChange={(e) => setWeight(e.target.value)}
                                 min="1"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                                 placeholder="1000"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Courier
-                            </label>
+                            <label className="mb-2 block text-sm font-medium text-gray-700">Courier</label>
                             <select
                                 value={selectedCourier}
                                 onChange={(e) => setSelectedCourier(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
                             >
                                 {Object.entries(couriers).map(([code, name]) => (
                                     <option key={code} value={code}>
@@ -297,7 +285,7 @@ export default function ShippingCalculator() {
                     <button
                         onClick={calculateShipping}
                         disabled={loading}
-                        className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                        className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
                     >
                         {loading ? (
                             <>
@@ -320,43 +308,36 @@ export default function ShippingCalculator() {
 
                                 if (hasError) {
                                     return (
-                                        <div
-                                            key={courier}
-                                            className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
-                                        >
-                                            <p className="text-yellow-800 font-semibold">{courierName}</p>
-                                            <p className="text-yellow-700 text-sm">
-                                                {costs && 'error' in costs ? costs.error : 'Unknown error'}
-                                            </p>
+                                        <div key={courier} className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
+                                            <p className="font-semibold text-yellow-800">{courierName}</p>
+                                            <p className="text-sm text-yellow-700">{costs && 'error' in costs ? costs.error : 'Unknown error'}</p>
                                         </div>
                                     );
                                 }
 
                                 return (
-                                    <div key={courier} className="border border-gray-200 rounded-lg p-6">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-4">{courierName}</h3>
+                                    <div key={courier} className="rounded-lg border border-gray-200 p-6">
+                                        <h3 className="mb-4 text-lg font-semibold text-gray-900">{courierName}</h3>
                                         <div className="space-y-3">
-                                            {costs && 'results' in costs && costs.results?.[0]?.costs?.map(
-                                                (
-                                                    cost: { service: string; description: string; cost: Array<{ value: number; etd: string }> },
-                                                    idx: number
-                                                ) => (
-                                                    <div key={idx} className="p-3 bg-gray-50 rounded-lg">
-                                                        <p className="font-semibold text-gray-900">{cost.service}</p>
-                                                        <p className="text-sm text-gray-600 mb-2">{cost.description}</p>
-                                                        {cost.cost?.map((item, i) => (
-                                                            <div key={i} className="flex justify-between">
-                                                                <span className="text-gray-700">
-                                                                    Rp {item.value.toLocaleString('id-ID')}
-                                                                </span>
-                                                                <span className="text-gray-600 text-sm">
-                                                                    {item.etd || '2-3 hari'}
-                                                                </span>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )
-                                            )}
+                                            {costs &&
+                                                'results' in costs &&
+                                                costs.results?.[0]?.costs?.map(
+                                                    (
+                                                        cost: { service: string; description: string; cost: Array<{ value: number; etd: string }> },
+                                                        idx: number,
+                                                    ) => (
+                                                        <div key={idx} className="rounded-lg bg-gray-50 p-3">
+                                                            <p className="font-semibold text-gray-900">{cost.service}</p>
+                                                            <p className="mb-2 text-sm text-gray-600">{cost.description}</p>
+                                                            {cost.cost?.map((item, i) => (
+                                                                <div key={i} className="flex justify-between">
+                                                                    <span className="text-gray-700">Rp {item.value.toLocaleString('id-ID')}</span>
+                                                                    <span className="text-sm text-gray-600">{item.etd || '2-3 hari'}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ),
+                                                )}
                                         </div>
                                     </div>
                                 );

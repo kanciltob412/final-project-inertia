@@ -1,9 +1,9 @@
+import { dashboard, logout } from '@/routes';
+import { SharedData } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Menu, ShoppingCart, X, Heart } from 'lucide-react';
+import { Heart, Menu, ShoppingCart, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useCart } from 'react-use-cart';
-import { SharedData } from '@/types';
-import { logout, dashboard } from '@/routes';
 
 interface NavbarProps {
     forceBlack?: boolean;
@@ -48,13 +48,15 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
     };
 
     return (
-        <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'} w-full`}>
-            <div className="mx-auto max-w-7xl px-4 w-full">
-                <div className="flex h-16 justify-between items-center">
-                    <div className="flex items-center flex-1">
+        <nav
+            className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${shouldUseBlackStyle ? 'bg-white shadow-md' : 'bg-transparent'} w-full`}
+        >
+            <div className="mx-auto w-full max-w-7xl px-4">
+                <div className="flex h-16 items-center justify-between">
+                    <div className="flex flex-1 items-center">
                         <Link href="/" className="flex items-center">
                             <img
-                                src={shouldUseBlackStyle ? "/LAVANYA_LOGO_BLACK.svg" : "/LAVANYA_LOGO_WHITE.svg"}
+                                src={shouldUseBlackStyle ? '/LAVANYA_LOGO_BLACK.svg' : '/LAVANYA_LOGO_WHITE.svg'}
                                 alt="Lavanya Ceramics Logo"
                                 className="h-10 w-auto transition-all duration-300"
                             />
@@ -63,22 +65,40 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
 
                     {/* Desktop Menu */}
                     <div className="hidden items-center space-x-8 lg:flex">
-                        <Link href="/" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             Home
                         </Link>
-                        <Link href="/about" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/about"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             About
                         </Link>
-                        <Link href="/craftsmanship" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/craftsmanship"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             Craftsmanship
                         </Link>
-                        <Link href="/products" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/products"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             Products
                         </Link>
-                        <Link href="/articles" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/articles"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             Articles
                         </Link>
-                        <Link href="/contact" className={`transition-colors hover:opacity-75 capitalize ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                        <Link
+                            href="/contact"
+                            className={`capitalize transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                        >
                             Contact
                         </Link>
                         <Link href="/cart" className="relative">
@@ -93,19 +113,33 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                             <>
                                 {user.role === 'ADMIN' ? (
                                     <>
-                                        <Link href={dashboard()} className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`} prefetch>
+                                        <Link
+                                            href={dashboard()}
+                                            className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                                            prefetch
+                                        >
                                             Admin Dashboard
                                         </Link>
-                                        <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                                        <div
+                                            onClick={handleLogout}
+                                            className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                                        >
                                             Logout
                                         </div>
                                     </>
                                 ) : (
                                     <>
-                                        <Link href="/customer/dashboard" className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`} prefetch>
+                                        <Link
+                                            href="/customer/dashboard"
+                                            className={`transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                                            prefetch
+                                        >
                                             Hello, {user.name}
                                         </Link>
-                                        <div onClick={handleLogout} className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}>
+                                        <div
+                                            onClick={handleLogout}
+                                            className={`cursor-pointer transition-colors hover:opacity-75 ${shouldUseBlackStyle ? 'text-black' : 'text-white'}`}
+                                        >
                                             LOGOUT
                                         </div>
                                     </>
@@ -128,8 +162,11 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
 
                 {/* Mobile Menu */}
                 {isMenuOpen && (
-                    <div className="fixed inset-0 pt-16 pb-6 lg:hidden bg-white bg-opacity-100 shadow-xl overflow-y-auto overflow-x-hidden" style={{ top: '64px', maxHeight: 'calc(100vh - 64px)' }}>
-                        <div className="flex flex-col space-y-4 px-6 max-w-full">
+                    <div
+                        className="bg-opacity-100 fixed inset-0 overflow-x-hidden overflow-y-auto bg-white pt-16 pb-6 shadow-xl lg:hidden"
+                        style={{ top: '64px', maxHeight: 'calc(100vh - 64px)' }}
+                    >
+                        <div className="flex max-w-full flex-col space-y-4 px-6">
                             <Link href="/" className="text-black hover:opacity-75">
                                 Home
                             </Link>
@@ -155,29 +192,33 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                             {user ? (
                                 <>
                                     <div className="border-t pt-4">
-                                        <p className="font-semibold text-black mb-3">Hello, {user.name}</p>
+                                        <p className="mb-3 font-semibold text-black">Hello, {user.name}</p>
                                         {user.role === 'ADMIN' ? (
-                                            <Link href={dashboard()} className="block p-2 bg-black text-white rounded hover:bg-gray-800 transition-colors text-sm text-center mb-3" prefetch>
+                                            <Link
+                                                href={dashboard()}
+                                                className="mb-3 block rounded bg-black p-2 text-center text-sm text-white transition-colors hover:bg-gray-800"
+                                                prefetch
+                                            >
                                                 Admin Dashboard
                                             </Link>
                                         ) : (
                                             <>
-                                                <div className="space-y-2 mb-3">
+                                                <div className="mb-3 space-y-2">
                                                     <Link
                                                         href="/customer/dashboard"
-                                                        className="block p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
+                                                        className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
                                                         My Dashboard
                                                     </Link>
                                                     <Link
                                                         href="/customer/orders"
-                                                        className="block p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
+                                                        className="block rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
                                                         My Orders
                                                     </Link>
                                                     <Link
                                                         href="/customer/wishlists"
-                                                        className="flex items-center gap-2 p-2 bg-gray-100 text-black rounded hover:bg-gray-200 transition-colors text-sm"
+                                                        className="flex items-center gap-2 rounded bg-gray-100 p-2 text-sm text-black transition-colors hover:bg-gray-200"
                                                     >
                                                         <Heart className="h-4 w-4" />
                                                         Wishlist
@@ -185,9 +226,8 @@ export default function Navbar({ forceBlack = false }: NavbarProps) {
                                                 </div>
                                             </>
                                         )}
-
                                     </div>
-                                    <div onClick={handleLogout} className="cursor-pointer text-black hover:opacity-75 border-t pt-4">
+                                    <div onClick={handleLogout} className="cursor-pointer border-t pt-4 text-black hover:opacity-75">
                                         Logout
                                     </div>
                                 </>

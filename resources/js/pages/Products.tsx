@@ -1,11 +1,11 @@
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import { ChevronLeft, ChevronRight, Grid, List, SlidersHorizontal } from 'lucide-react';
-import ProductCard from '../components/ProductCard';
-import { Product, Category } from '@/types';
+import { Category, Product } from '@/types';
 import { router } from '@inertiajs/react';
+import { ChevronLeft, ChevronRight, Grid, List, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { FilterSidebar } from '../components/FilterSidebar';
+import ProductCard from '../components/ProductCard';
 
 interface PaginatedProducts {
     data: Product[];
@@ -108,21 +108,21 @@ export default function Products({ products, categories, filters }: ProductsProp
         <>
             <Navbar />
             <div className="overflow-x-hidden">
-                <div className="relative h-[400px] md:h-[420px] overflow-hidden">
+                <div className="relative h-[400px] overflow-hidden md:h-[420px]">
                     <img
                         src="/inspire-8.jpg"
                         alt="Products banner"
-                        className="absolute w-full h-full object-cover object-center"
+                        className="absolute h-full w-full object-cover object-center"
                         style={{ filter: 'brightness(0.6)' }}
                     />
                     <div className="absolute inset-0 flex items-center">
-                        <div className="max-w-6xl w-full mx-auto px-4 transform translate-y-12 md:translate-y-16 text-white">
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl text-white font-semibold uppercase tracking-wide">OUR PRODUCTS</h1>
+                        <div className="mx-auto w-full max-w-6xl translate-y-12 transform px-4 text-white md:translate-y-16">
+                            <h1 className="text-4xl font-semibold tracking-wide text-white uppercase md:text-5xl lg:text-6xl">OUR PRODUCTS</h1>
                         </div>
                     </div>
                 </div>
 
-                <div className="mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
+                <div className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">
                     <div className="flex gap-8">
                         {/* Desktop Sidebar */}
                         <div className="hidden lg:block">
@@ -131,29 +131,31 @@ export default function Products({ products, categories, filters }: ProductsProp
                                 setSearchQuery={handleSearch}
                                 selectedCategory={localFilters.category || 'All'}
                                 setSelectedCategory={handleCategoryFilter}
-                                categories={['All', ...categories.map(c => c.name)]}
+                                categories={['All', ...categories.map((c) => c.name)]}
                                 priceRange={{
                                     min: localFilters.min_price ? parseInt(localFilters.min_price) : 0,
-                                    max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity
+                                    max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity,
                                 }}
-                                setPriceRange={(range) => applyFilters({
-                                    min_price: range.min === 0 ? '' : range.min.toString(),
-                                    max_price: range.max === Infinity ? '' : range.max.toString()
-                                })}
+                                setPriceRange={(range) =>
+                                    applyFilters({
+                                        min_price: range.min === 0 ? '' : range.min.toString(),
+                                        max_price: range.max === Infinity ? '' : range.max.toString(),
+                                    })
+                                }
                                 sortBy={localFilters.sort || 'name'}
                                 setSortBy={handleSortChange}
                                 clearFilters={clearFilters}
-                                setCurrentPage={() => { }}
+                                setCurrentPage={() => {}}
                             />
                         </div>
 
                         {/* Main Content */}
                         <div className="w-full lg:flex-1">
                             {/* Mobile Controls - Show above products */}
-                            <div className="lg:hidden mb-6">
+                            <div className="mb-6 lg:hidden">
                                 <button
                                     onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                                    className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 font-medium"
+                                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-600 hover:bg-gray-50"
                                 >
                                     <SlidersHorizontal className="h-5 w-5" />
                                     {isFilterMenuOpen ? 'Hide Filters' : 'Show Filters'}
@@ -162,39 +164,40 @@ export default function Products({ products, categories, filters }: ProductsProp
 
                             {/* Mobile Filter Accordion */}
                             {isFilterMenuOpen && (
-                                <div className="lg:hidden mb-6 p-4 border border-gray-300 rounded-lg bg-gray-50">
+                                <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4 lg:hidden">
                                     <FilterSidebar
                                         searchQuery={localFilters.search || ''}
                                         setSearchQuery={handleSearch}
                                         selectedCategory={localFilters.category || 'All'}
                                         setSelectedCategory={handleCategoryFilter}
-                                        categories={['All', ...categories.map(c => c.name)]}
+                                        categories={['All', ...categories.map((c) => c.name)]}
                                         priceRange={{
                                             min: localFilters.min_price ? parseInt(localFilters.min_price) : 0,
-                                            max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity
+                                            max: localFilters.max_price ? parseInt(localFilters.max_price) : Infinity,
                                         }}
-                                        setPriceRange={(range) => applyFilters({
-                                            min_price: range.min === 0 ? '' : range.min.toString(),
-                                            max_price: range.max === Infinity ? '' : range.max.toString()
-                                        })}
+                                        setPriceRange={(range) =>
+                                            applyFilters({
+                                                min_price: range.min === 0 ? '' : range.min.toString(),
+                                                max_price: range.max === Infinity ? '' : range.max.toString(),
+                                            })
+                                        }
                                         sortBy={localFilters.sort || 'name'}
                                         setSortBy={handleSortChange}
                                         clearFilters={clearFilters}
-                                        setCurrentPage={() => { }}
+                                        setCurrentPage={() => {}}
                                     />
                                 </div>
                             )}
 
                             {/* View Mode Toggle & Results Info */}
-                            <div className="hidden lg:flex justify-between items-center mb-6">
+                            <div className="mb-6 hidden items-center justify-between lg:flex">
                                 <div className="text-sm text-gray-600">
-                                    Showing {((products.current_page - 1) * products.per_page) + 1} to{' '}
-                                    {Math.min(products.current_page * products.per_page, products.total)} of{' '}
-                                    {products.total} products
+                                    Showing {(products.current_page - 1) * products.per_page + 1} to{' '}
+                                    {Math.min(products.current_page * products.per_page, products.total)} of {products.total} products
                                 </div>
 
                                 {/* View Mode Toggle */}
-                                <div className="flex border border-gray-300 rounded-lg">
+                                <div className="flex rounded-lg border border-gray-300">
                                     <button
                                         type="button"
                                         onClick={() => setViewMode('grid')}
@@ -213,31 +216,32 @@ export default function Products({ products, categories, filters }: ProductsProp
                             </div>
 
                             {/* Products Grid */}
-                            <div className={`gap-6 mb-8 ${viewMode === 'grid'
-                                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr'
-                                : 'flex flex-col space-y-4'
-                                }`}>
+                            <div
+                                className={`mb-8 gap-6 ${
+                                    viewMode === 'grid' ? 'grid auto-rows-fr grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'flex flex-col space-y-4'
+                                }`}
+                            >
                                 {products.data.map((product: Product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}
                             </div>
 
                             {/* Pagination */}
-                            <div className="flex flex-col items-center space-y-4 mb-8">
+                            <div className="mb-8 flex flex-col items-center space-y-4">
                                 {/* Debug Info */}
                                 <div className="text-sm text-gray-600">
                                     Page {products.current_page} of {products.last_page} | {products.total} total products
                                 </div>
 
                                 {products.last_page > 1 && (
-                                    <div className="flex justify-center items-center space-x-2">
+                                    <div className="flex items-center justify-center space-x-2">
                                         {/* Previous Button */}
                                         <button
                                             onClick={handlePreviousPage}
                                             disabled={products.current_page === 1}
-                                            className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
-                                            <ChevronLeft className="h-4 w-4 mr-1" />
+                                            <ChevronLeft className="mr-1 h-4 w-4" />
                                             Previous
                                         </button>
 
@@ -247,10 +251,11 @@ export default function Products({ products, categories, filters }: ProductsProp
                                                 <button
                                                     key={page}
                                                     onClick={() => handlePageClick(page)}
-                                                    className={`px-3 py-2 text-sm font-medium rounded-md ${page === products.current_page
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
-                                                        }`}
+                                                    className={`rounded-md px-3 py-2 text-sm font-medium ${
+                                                        page === products.current_page
+                                                            ? 'bg-blue-600 text-white'
+                                                            : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                                                    }`}
                                                 >
                                                     {page}
                                                 </button>
@@ -261,10 +266,10 @@ export default function Products({ products, categories, filters }: ProductsProp
                                         <button
                                             onClick={handleNextPage}
                                             disabled={products.current_page === products.last_page}
-                                            className="flex items-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                                         >
                                             Next
-                                            <ChevronRight className="h-4 w-4 ml-1" />
+                                            <ChevronRight className="ml-1 h-4 w-4" />
                                         </button>
                                     </div>
                                 )}
@@ -272,11 +277,10 @@ export default function Products({ products, categories, filters }: ProductsProp
                         </div>
                     </div>
                     {/* Mobile Product Info */}
-                    <div className="lg:hidden mt-8 text-center text-gray-600">
+                    <div className="mt-8 text-center text-gray-600 lg:hidden">
                         <p>
-                            Showing {((products.current_page - 1) * products.per_page) + 1} to{' '}
-                            {Math.min(products.current_page * products.per_page, products.total)} of{' '}
-                            {products.total} products
+                            Showing {(products.current_page - 1) * products.per_page + 1} to{' '}
+                            {Math.min(products.current_page * products.per_page, products.total)} of {products.total} products
                         </p>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { useEditor, EditorContent } from '@tiptap/react';
+import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useEffect } from 'react';
 
 interface TiptapEditorProps {
     content: string;
@@ -26,7 +26,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
     }, [content]);
 
     return (
-        <div className="border rounded p-2 min-h-[200px] bg-white">
+        <div className="min-h-[200px] rounded border bg-white p-2">
             <EditorContent editor={editor} />
         </div>
     );

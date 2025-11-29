@@ -1,20 +1,20 @@
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, Article } from "@/types";
-import { Head, router, useForm } from "@inertiajs/react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import HeadingSmall from "@/components/heading-small";
-import { Textarea } from "@/components/ui/textarea";
-import TiptapEditor from "@/components/TiptapEditor";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import ImageUpload from "@/components/ImageUpload";
+import HeadingSmall from '@/components/heading-small';
+import ImageUpload from '@/components/ImageUpload';
+import TiptapEditor from '@/components/TiptapEditor';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import { Article, BreadcrumbItem } from '@/types';
+import { Head, router, useForm } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Articles",
-        href: "/admin/articles",
+        title: 'Articles',
+        href: '/admin/articles',
     },
 ];
 
@@ -38,33 +38,37 @@ export default function Form({ article }: Props) {
         is_featured: boolean;
         status: string;
     }>({
-        title: article ? article.title : "",
-        slug: article ? article.slug : "",
-        seo_keywords: article ? article.seo_keywords : "",
-        excerpt: article ? article.excerpt : "",
-        content: article ? (article.content || "") : "",
+        title: article ? article.title : '',
+        slug: article ? article.slug : '',
+        seo_keywords: article ? article.seo_keywords : '',
+        excerpt: article ? article.excerpt : '',
+        content: article ? article.content || '' : '',
         featured_image: null,
-        category: article ? article.category : "",
-        tags: article ? article.tags : "",
-        author_name: article ? article.author_name : "",
-        reading_time: article ? article.reading_time : "",
+        category: article ? article.category : '',
+        tags: article ? article.tags : '',
+        author_name: article ? article.author_name : '',
+        reading_time: article ? article.reading_time : '',
         is_featured: article ? article.is_featured : false,
-        status: article ? article.status : "draft",
+        status: article ? article.status : 'draft',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (article) {
-            router.post(`/admin/articles/${article.id}`, {
-                ...data,
-                _method: "put",
-            }, {
-                preserveScroll: true,
-                onSuccess: () => reset(),
-                forceFormData: true,
-            });
+            router.post(
+                `/admin/articles/${article.id}`,
+                {
+                    ...data,
+                    _method: 'put',
+                },
+                {
+                    preserveScroll: true,
+                    onSuccess: () => reset(),
+                    forceFormData: true,
+                },
+            );
         } else {
-            post("/admin/articles", {
+            post('/admin/articles', {
                 preserveScroll: true,
                 onSuccess: () => reset(),
                 forceFormData: true,
@@ -74,12 +78,12 @@ export default function Form({ article }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={article ? "Edit article" : "Create article"} />
+            <Head title={article ? 'Edit article' : 'Create article'} />
 
             <div className="p-6">
                 <HeadingSmall
-                    title={`${article ? "Edit" : "Create"} article`}
-                    description={`Fill out the form below to ${article ? "edit an existing" : "create a new"} article.`}
+                    title={`${article ? 'Edit' : 'Create'} article`}
+                    description={`Fill out the form below to ${article ? 'edit an existing' : 'create a new'} article.`}
                 />
 
                 <Separator className="my-8" />
@@ -91,13 +95,11 @@ export default function Form({ article }: Props) {
                         <Input
                             id="title"
                             value={data.title}
-                            onChange={(e) => setData("title", e.target.value)}
+                            onChange={(e) => setData('title', e.target.value)}
                             disabled={processing}
                             placeholder="Article title"
                         />
-                        {errors.title && (
-                            <p className="text-sm text-red-600">{errors.title}</p>
-                        )}
+                        {errors.title && <p className="text-sm text-red-600">{errors.title}</p>}
                     </div>
 
                     {/* Slug */}
@@ -106,13 +108,11 @@ export default function Form({ article }: Props) {
                         <Input
                             id="slug"
                             value={data.slug}
-                            onChange={(e) => setData("slug", e.target.value)}
+                            onChange={(e) => setData('slug', e.target.value)}
                             disabled={processing}
                             placeholder="article-slug"
                         />
-                        {errors.slug && (
-                            <p className="text-sm text-red-600">{errors.slug}</p>
-                        )}
+                        {errors.slug && <p className="text-sm text-red-600">{errors.slug}</p>}
                     </div>
 
                     {/* Excerpt */}
@@ -121,27 +121,19 @@ export default function Form({ article }: Props) {
                         <Textarea
                             id="excerpt"
                             value={data.excerpt}
-                            onChange={(e) => setData("excerpt", e.target.value)}
+                            onChange={(e) => setData('excerpt', e.target.value)}
                             disabled={processing}
                             placeholder="Brief summary of the article..."
                             rows={3}
                         />
-                        {errors.excerpt && (
-                            <p className="text-sm text-red-600">{errors.excerpt}</p>
-                        )}
+                        {errors.excerpt && <p className="text-sm text-red-600">{errors.excerpt}</p>}
                     </div>
 
                     {/* Content */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="content">Content</Label>
-                        <TiptapEditor
-                            content={data.content}
-                            onChange={(content) => setData("content", content)}
-                            disabled={processing}
-                        />
-                        {errors.content && (
-                            <p className="text-sm text-red-600">{errors.content}</p>
-                        )}
+                        <TiptapEditor content={data.content} onChange={(content) => setData('content', content)} disabled={processing} />
+                        {errors.content && <p className="text-sm text-red-600">{errors.content}</p>}
                     </div>
 
                     {/* Featured Image */}
@@ -149,10 +141,10 @@ export default function Form({ article }: Props) {
                         id="featured_image"
                         label="Featured Image"
                         value={data.featured_image}
-                        onChange={(file) => setData("featured_image", file)}
+                        onChange={(file) => setData('featured_image', file)}
                         disabled={processing}
                         currentImage={article?.featured_image}
-                        currentImageAlt={article?.title || "Article featured image"}
+                        currentImageAlt={article?.title || 'Article featured image'}
                         error={errors.featured_image}
                     />
 
@@ -162,13 +154,11 @@ export default function Form({ article }: Props) {
                         <Input
                             id="category"
                             value={data.category}
-                            onChange={(e) => setData("category", e.target.value)}
+                            onChange={(e) => setData('category', e.target.value)}
                             disabled={processing}
                             placeholder="Article category"
                         />
-                        {errors.category && (
-                            <p className="text-sm text-red-600">{errors.category}</p>
-                        )}
+                        {errors.category && <p className="text-sm text-red-600">{errors.category}</p>}
                     </div>
 
                     {/* Tags */}
@@ -177,13 +167,11 @@ export default function Form({ article }: Props) {
                         <Input
                             id="tags"
                             value={data.tags}
-                            onChange={(e) => setData("tags", e.target.value)}
+                            onChange={(e) => setData('tags', e.target.value)}
                             disabled={processing}
                             placeholder="comma, separated, tags"
                         />
-                        {errors.tags && (
-                            <p className="text-sm text-red-600">{errors.tags}</p>
-                        )}
+                        {errors.tags && <p className="text-sm text-red-600">{errors.tags}</p>}
                     </div>
 
                     {/* Author Name */}
@@ -192,13 +180,11 @@ export default function Form({ article }: Props) {
                         <Input
                             id="author_name"
                             value={data.author_name}
-                            onChange={(e) => setData("author_name", e.target.value)}
+                            onChange={(e) => setData('author_name', e.target.value)}
                             disabled={processing}
                             placeholder="Author name"
                         />
-                        {errors.author_name && (
-                            <p className="text-sm text-red-600">{errors.author_name}</p>
-                        )}
+                        {errors.author_name && <p className="text-sm text-red-600">{errors.author_name}</p>}
                     </div>
 
                     {/* Reading Time */}
@@ -208,13 +194,11 @@ export default function Form({ article }: Props) {
                             id="reading_time"
                             type="number"
                             value={data.reading_time}
-                            onChange={(e) => setData("reading_time", parseInt(e.target.value) || 0)}
+                            onChange={(e) => setData('reading_time', parseInt(e.target.value) || 0)}
                             disabled={processing}
                             placeholder="5"
                         />
-                        {errors.reading_time && (
-                            <p className="text-sm text-red-600">{errors.reading_time}</p>
-                        )}
+                        {errors.reading_time && <p className="text-sm text-red-600">{errors.reading_time}</p>}
                     </div>
 
                     {/* SEO Keywords */}
@@ -223,16 +207,14 @@ export default function Form({ article }: Props) {
                         <Input
                             id="seo_keywords"
                             value={data.seo_keywords}
-                            onChange={(e) => setData("seo_keywords", e.target.value)}
+                            onChange={(e) => setData('seo_keywords', e.target.value)}
                             disabled={processing}
                             placeholder="seo, keywords, for, search"
                         />
-                        {errors.seo_keywords && (
-                            <p className="text-sm text-red-600">{errors.seo_keywords}</p>
-                        )}
+                        {errors.seo_keywords && <p className="text-sm text-red-600">{errors.seo_keywords}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {/* Featured */}
                         <div className="flex flex-col gap-y-2">
                             <div className="flex items-center space-x-2">
@@ -240,25 +222,19 @@ export default function Form({ article }: Props) {
                                     type="checkbox"
                                     id="is_featured"
                                     checked={data.is_featured}
-                                    onChange={(e) => setData("is_featured", e.target.checked)}
+                                    onChange={(e) => setData('is_featured', e.target.checked)}
                                     disabled={processing}
                                     className="h-4 w-4"
                                 />
                                 <Label htmlFor="is_featured">Featured Article</Label>
                             </div>
-                            {errors.is_featured && (
-                                <p className="text-sm text-red-600">{errors.is_featured}</p>
-                            )}
+                            {errors.is_featured && <p className="text-sm text-red-600">{errors.is_featured}</p>}
                         </div>
 
                         {/* Status */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="status">Status</Label>
-                            <Select
-                                value={data.status}
-                                onValueChange={(value) => setData("status", value)}
-                                disabled={processing}
-                            >
+                            <Select value={data.status} onValueChange={(value) => setData('status', value)} disabled={processing}>
                                 <SelectTrigger id="status">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -267,16 +243,14 @@ export default function Form({ article }: Props) {
                                     <SelectItem value="published">Published</SelectItem>
                                 </SelectContent>
                             </Select>
-                            {errors.status && (
-                                <p className="text-sm text-red-600">{errors.status}</p>
-                            )}
+                            {errors.status && <p className="text-sm text-red-600">{errors.status}</p>}
                         </div>
                     </div>
 
                     {/* Submit */}
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={processing}>
-                            {processing ? "Saving..." : (article ? "Update Article" : "Create Article")}
+                            {processing ? 'Saving...' : article ? 'Update Article' : 'Create Article'}
                         </Button>
                     </div>
                 </form>

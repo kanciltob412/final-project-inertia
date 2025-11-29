@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { X, Upload } from 'lucide-react';
+import { Upload, X } from 'lucide-react';
+import { useRef, useState } from 'react';
 
 interface ImageUploadProps {
     id?: string;
@@ -24,7 +24,7 @@ export default function ImageUpload({
     currentImage,
     currentImageAlt = 'Current image',
     error,
-    accept = 'image/*'
+    accept = 'image/*',
 }: ImageUploadProps) {
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,11 +62,7 @@ export default function ImageUpload({
             <div className="flex flex-col gap-4">
                 {displayImage && (
                     <div className="relative inline-block">
-                        <img
-                            src={displayImage}
-                            alt={currentImageAlt}
-                            className="w-32 h-32 object-cover rounded-lg border"
-                        />
+                        <img src={displayImage} alt={currentImageAlt} className="h-32 w-32 rounded-lg border object-cover" />
                         <Button
                             type="button"
                             variant="destructive"
@@ -103,9 +99,7 @@ export default function ImageUpload({
                 </div>
             </div>
 
-            {error && (
-                <p className="text-sm text-red-500">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
         </div>
     );
 }

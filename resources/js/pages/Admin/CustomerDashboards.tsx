@@ -1,9 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ShoppingBag, Heart, DollarSign } from 'lucide-react';
-import { CustomerDataTable } from './CustomerDashboards/CustomerDataTable';
 import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
 import { Order } from '@/types';
+import { DollarSign, Heart, ShoppingBag } from 'lucide-react';
+import { CustomerDataTable } from './CustomerDashboards/CustomerDataTable';
 
 interface Customer {
     id: number;
@@ -29,10 +29,10 @@ export default function CustomerDashboards({ customers }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <div className="space-y-6 p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="mx-auto max-w-7xl space-y-6 p-4 md:p-8">
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Customer Dashboards</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Customer Dashboards</h1>
                     <p className="text-gray-600">View and manage customer accounts and their dashboard information</p>
                 </div>
 
@@ -54,9 +54,7 @@ export default function CustomerDashboards({ customers }: Props) {
                                 <ShoppingBag className="h-4 w-4 text-green-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
-                                    {customers.reduce((sum, c) => sum + c.total_orders, 0)}
-                                </div>
+                                <div className="text-2xl font-bold">{customers.reduce((sum, c) => sum + c.total_orders, 0)}</div>
                             </CardContent>
                         </Card>
                         <Card>
@@ -65,9 +63,7 @@ export default function CustomerDashboards({ customers }: Props) {
                                 <Heart className="h-4 w-4 text-red-500" />
                             </CardHeader>
                             <CardContent>
-                                <div className="text-2xl font-bold">
-                                    {customers.reduce((sum, c) => sum + c.total_wishlist, 0)}
-                                </div>
+                                <div className="text-2xl font-bold">{customers.reduce((sum, c) => sum + c.total_wishlist, 0)}</div>
                             </CardContent>
                         </Card>
                         <Card>

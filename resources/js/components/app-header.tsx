@@ -1,5 +1,4 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
-import { useEffect, useState } from 'react';
 import { Icon } from '@/components/icon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,7 @@ import { dashboard } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import AppLogoIcon from './app-logo-icon';
 
 const mainNavItems: NavItem[] = [
@@ -108,9 +108,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     <Link href={dashboard()} prefetch className="flex items-center space-x-2">
                         {/* Logo changes on scroll: white when static, black when scrolled */}
                         <img
-                            src={isScrolled ? "/LAVANYA_LOGO_BLACK.svg" : "/LAVANYA_LOGO_WHITE.svg"}
+                            src={isScrolled ? '/LAVANYA_LOGO_BLACK.svg' : '/LAVANYA_LOGO_WHITE.svg'}
                             alt="Lavanya Ceramics Logo"
-                            className="h-10 w-auto transition-all duration-300 border border-red-500"
+                            className="h-10 w-auto border border-red-500 transition-all duration-300"
                         />
                     </Link>
 

@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 const slides = [
     [
@@ -19,29 +19,32 @@ export default function InspiringCarouselSection() {
 
     return (
         <section className="w-full bg-white py-8 md:py-12 lg:py-16">
-            <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 text-center">
-                <h2 className="text-2xl md:text-4xl lg:text-5xl font-light mb-6 md:mb-8 lg:mb-10 text-gray-900">Inspiring Products</h2>
-                <Link href="/products" className="inline-block border-2 border-black px-4 md:px-8 py-2 md:py-3 text-sm md:text-base mb-6 md:mb-8 lg:mb-10 hover:bg-black hover:text-white transition-colors text-black">
+            <div className="mx-auto max-w-7xl px-4 text-center md:px-6 lg:px-8">
+                <h2 className="mb-6 text-2xl font-light text-gray-900 md:mb-8 md:text-4xl lg:mb-10 lg:text-5xl">Inspiring Products</h2>
+                <Link
+                    href="/products"
+                    className="mb-6 inline-block border-2 border-black px-4 py-2 text-sm text-black transition-colors hover:bg-black hover:text-white md:mb-8 md:px-8 md:py-3 md:text-base lg:mb-10"
+                >
                     See Collection
                 </Link>
-                <div className="flex flex-col md:flex-row justify-center gap-4 md:gap-6 lg:gap-8 mb-6 md:mb-8 lg:mb-10 mt-6 md:mt-8 lg:mt-10">
+                <div className="mt-6 mb-6 flex flex-col justify-center gap-4 md:mt-8 md:mb-8 md:flex-row md:gap-6 lg:mt-10 lg:mb-10 lg:gap-8">
                     {slides[current].map((img, idx) => (
                         <Link key={idx} href={img.href} className="block">
                             <img
                                 src={img.src}
                                 alt={img.alt}
-                                className="object-cover rounded-md w-full h-40 md:h-[300px] lg:h-[400px] md:w-[250px] lg:w-[400px] bg-gray-100 hover:opacity-80 transition-opacity"
+                                className="h-40 w-full rounded-md bg-gray-100 object-cover transition-opacity hover:opacity-80 md:h-[300px] md:w-[250px] lg:h-[400px] lg:w-[400px]"
                                 style={{ minWidth: '0' }}
                             />
                         </Link>
                     ))}
                 </div>
-                <div className="flex justify-center gap-2 md:gap-3 mt-4 md:mt-6 lg:mt-8">
+                <div className="mt-4 flex justify-center gap-2 md:mt-6 md:gap-3 lg:mt-8">
                     {slides.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => setCurrent(idx)}
-                            className={`h-2 w-2 md:h-3 md:w-3 lg:h-4 lg:w-4 rounded-full border-2 ${current === idx ? 'bg-gray-400 border-gray-400' : 'bg-white border-gray-400'} transition-colors`}
+                            className={`h-2 w-2 rounded-full border-2 md:h-3 md:w-3 lg:h-4 lg:w-4 ${current === idx ? 'border-gray-400 bg-gray-400' : 'border-gray-400 bg-white'} transition-colors`}
                             aria-label={`Go to slide ${idx + 1}`}
                         />
                     ))}

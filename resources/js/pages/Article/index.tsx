@@ -1,12 +1,11 @@
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
-import { Article } from "@/types";
-import { Head, Link } from "@inertiajs/react";
-import { ArticleDataTable } from "./ArticleDataTable";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { columns } from "./column";
-import HeadingSmall from "@/components/heading-small";
+import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
+import { Article, BreadcrumbItem } from '@/types';
+import { Head, Link } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
+import { ArticleDataTable } from './ArticleDataTable';
+import { columns } from './column';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,7 +15,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Props {
-    data: Article[]
+    data: Article[];
 }
 
 export default function Index({ data }: Props) {
@@ -26,10 +25,7 @@ export default function Index({ data }: Props) {
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <HeadingSmall
-                        title="Articles"
-                        description="Manage your articles here"
-                    />
+                    <HeadingSmall title="Articles" description="Manage your articles here" />
                     <Button asChild>
                         <Link href="/admin/articles/create">
                             <Plus className="size-4" />
@@ -40,7 +36,6 @@ export default function Index({ data }: Props) {
 
                 <ArticleDataTable columns={columns} data={data} />
             </div>
-
         </AppLayout>
     );
 }

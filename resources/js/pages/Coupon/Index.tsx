@@ -1,16 +1,16 @@
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, Coupon } from "@/types";
-import { Head, router } from "@inertiajs/react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import HeadingSmall from "@/components/heading-small";
-import { CouponDataTable } from "./CouponDataTable";
-import { Plus } from "lucide-react";
+import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, Coupon } from '@/types';
+import { Head, router } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
+import { CouponDataTable } from './CouponDataTable';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Coupons",
-        href: "/admin/coupons",
+        title: 'Coupons',
+        href: '/admin/coupons',
     },
 ];
 
@@ -25,15 +25,9 @@ export default function CouponIndex({ coupons }: Props) {
 
             <div className="p-6">
                 <div className="flex items-center justify-between">
-                    <HeadingSmall
-                        title="Coupons"
-                        description="Manage promotional coupons and discount codes."
-                    />
-                    <Button
-                        onClick={() => router.visit('/admin/coupons/create')}
-                        className="bg-black hover:bg-gray-800"
-                    >
-                        <Plus className="h-4 w-4 mr-2" />
+                    <HeadingSmall title="Coupons" description="Manage promotional coupons and discount codes." />
+                    <Button onClick={() => router.visit('/admin/coupons/create')} className="bg-black hover:bg-gray-800">
+                        <Plus className="mr-2 h-4 w-4" />
                         Create Coupon
                     </Button>
                 </div>

@@ -1,9 +1,9 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { type BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Edit2, Trash2, Plus, Calendar } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Head, Link, router } from '@inertiajs/react';
+import { Calendar, Edit2, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Promo {
@@ -76,7 +76,7 @@ export default function MemberPromoIndex({ promos }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Member Promos & News</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Member Promos & News</h1>
                         <p className="text-gray-600">Manage promotions and news for members</p>
                     </div>
                     <Link href="/admin/member-promos/create">
@@ -134,7 +134,7 @@ export default function MemberPromoIndex({ promos }: Props) {
                                                             setSelectedItems(
                                                                 e.target.checked
                                                                     ? [...selectedItems, promo.id]
-                                                                    : selectedItems.filter((id) => id !== promo.id)
+                                                                    : selectedItems.filter((id) => id !== promo.id),
                                                             );
                                                         }}
                                                     />
@@ -154,8 +154,9 @@ export default function MemberPromoIndex({ promos }: Props) {
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <span
-                                                        className={`rounded px-2 py-1 text-xs font-medium ${promo.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                                                            }`}
+                                                        className={`rounded px-2 py-1 text-xs font-medium ${
+                                                            promo.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                        }`}
                                                     >
                                                         {promo.is_active ? 'Active' : 'Inactive'}
                                                     </span>

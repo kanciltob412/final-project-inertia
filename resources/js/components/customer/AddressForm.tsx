@@ -1,9 +1,9 @@
-import { router } from '@inertiajs/react';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
+import { router } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface Address {
@@ -118,14 +118,7 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             {/* Phone */}
             <div className="grid gap-2">
                 <Label htmlFor="phone">Phone Number *</Label>
-                <Input
-                    id="phone"
-                    name="phone"
-                    value={data.phone}
-                    onChange={handleChange}
-                    placeholder="+62 812 3456 7890"
-                    required
-                />
+                <Input id="phone" name="phone" value={data.phone} onChange={handleChange} placeholder="+62 812 3456 7890" required />
                 {errors.phone && <InputError message={errors.phone} />}
             </div>
 
@@ -146,68 +139,35 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
             {/* City */}
             <div className="grid gap-2">
                 <Label htmlFor="city">City *</Label>
-                <Input
-                    id="city"
-                    name="city"
-                    value={data.city}
-                    onChange={handleChange}
-                    placeholder="City name"
-                    required
-                />
+                <Input id="city" name="city" value={data.city} onChange={handleChange} placeholder="City name" required />
                 {errors.city && <InputError message={errors.city} />}
             </div>
 
             {/* State */}
             <div className="grid gap-2">
                 <Label htmlFor="state">State / Province</Label>
-                <Input
-                    id="state"
-                    name="state"
-                    value={data.state}
-                    onChange={handleChange}
-                    placeholder="State or province (optional)"
-                />
+                <Input id="state" name="state" value={data.state} onChange={handleChange} placeholder="State or province (optional)" />
                 {errors.state && <InputError message={errors.state} />}
             </div>
 
             {/* Postal Code */}
             <div className="grid gap-2">
                 <Label htmlFor="postal_code">Postal Code *</Label>
-                <Input
-                    id="postal_code"
-                    name="postal_code"
-                    value={data.postal_code}
-                    onChange={handleChange}
-                    placeholder="Postal code"
-                    required
-                />
+                <Input id="postal_code" name="postal_code" value={data.postal_code} onChange={handleChange} placeholder="Postal code" required />
                 {errors.postal_code && <InputError message={errors.postal_code} />}
             </div>
 
             {/* Country */}
             <div className="grid gap-2">
                 <Label htmlFor="country">Country *</Label>
-                <Input
-                    id="country"
-                    name="country"
-                    value={data.country}
-                    onChange={handleChange}
-                    placeholder="Country"
-                    required
-                />
+                <Input id="country" name="country" value={data.country} onChange={handleChange} placeholder="Country" required />
                 {errors.country && <InputError message={errors.country} />}
             </div>
 
             {/* Notes */}
             <div className="grid gap-2">
                 <Label htmlFor="notes">Additional Notes</Label>
-                <Textarea
-                    id="notes"
-                    name="notes"
-                    value={data.notes}
-                    onChange={handleChange}
-                    placeholder="Any special instructions (optional)"
-                />
+                <Textarea id="notes" name="notes" value={data.notes} onChange={handleChange} placeholder="Any special instructions (optional)" />
                 {errors.notes && <InputError message={errors.notes} />}
             </div>
 

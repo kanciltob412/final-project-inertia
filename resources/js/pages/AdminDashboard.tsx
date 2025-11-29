@@ -1,8 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
-import { Users, Package, FolderOpen, FileText, ShoppingCart, TrendingUp } from 'lucide-react';
 import { formatPrice } from '@/utils/helper';
+import { Head } from '@inertiajs/react';
+import { FileText, FolderOpen, Package, ShoppingCart, TrendingUp, Users } from 'lucide-react';
 
 interface DashboardStats {
     totalProducts: number;
@@ -93,12 +93,8 @@ export default function AdminDashboard({ stats }: Props) {
                             >
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                                            {stat.title}
-                                        </p>
-                                        <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                                            {stat.value}
-                                        </p>
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{stat.title}</p>
+                                        <p className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
                                     </div>
                                     <div className={`rounded-full p-3 ${stat.bgColor}`}>
                                         <IconComponent className="h-6 w-6 text-white" />
@@ -111,27 +107,21 @@ export default function AdminDashboard({ stats }: Props) {
 
                 {/* Monthly Stats */}
                 <div className="rounded-xl border border-sidebar-border/70 bg-white p-6 shadow-sm dark:border-sidebar-border dark:bg-gray-800">
-                    <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
                         <TrendingUp className="h-5 w-5" />
                         This Month's Activity
                     </h3>
                     <div className="grid gap-4 md:grid-cols-3">
                         <div className="text-center">
-                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                {stats.monthlyStats.orders}
-                            </p>
+                            <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{stats.monthlyStats.orders}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">New Orders</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                                {stats.monthlyStats.products}
-                            </p>
+                            <p className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.monthlyStats.products}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">New Products</p>
                         </div>
                         <div className="text-center">
-                            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                                {stats.monthlyStats.articles}
-                            </p>
+                            <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.monthlyStats.articles}</p>
                             <p className="text-sm text-gray-600 dark:text-gray-400">New Articles</p>
                         </div>
                     </div>
@@ -140,9 +130,7 @@ export default function AdminDashboard({ stats }: Props) {
                 <div className="grid gap-6 lg:grid-cols-2">
                     {/* Recent Products */}
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-6 shadow-sm dark:border-sidebar-border dark:bg-gray-800">
-                        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                            Recent Products
-                        </h3>
+                        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Recent Products</h3>
                         <div className="space-y-3">
                             {stats.recentProducts.length > 0 ? (
                                 stats.recentProducts.map((product) => (
@@ -151,12 +139,8 @@ export default function AdminDashboard({ stats }: Props) {
                                         className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-b-0 dark:border-gray-700"
                                     >
                                         <div>
-                                            <p className="font-medium text-gray-900 dark:text-white normal-case">
-                                                {product.name}
-                                            </p>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                Category: {product.category?.name || 'N/A'}
-                                            </p>
+                                            <p className="font-medium text-gray-900 normal-case dark:text-white">{product.name}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">Category: {product.category?.name || 'N/A'}</p>
                                         </div>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">
                                             {new Date(product.created_at).toLocaleDateString()}
@@ -171,9 +155,7 @@ export default function AdminDashboard({ stats }: Props) {
 
                     {/* Recent Orders */}
                     <div className="rounded-xl border border-sidebar-border/70 bg-white p-6 shadow-sm dark:border-sidebar-border dark:bg-gray-800">
-                        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                            Recent Orders
-                        </h3>
+                        <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Recent Orders</h3>
                         <div className="space-y-3">
                             {stats.recentOrders.length > 0 ? (
                                 stats.recentOrders.map((order) => (
@@ -182,17 +164,11 @@ export default function AdminDashboard({ stats }: Props) {
                                         className="flex items-center justify-between border-b border-gray-200 pb-3 last:border-b-0 dark:border-gray-700"
                                     >
                                         <div>
-                                            <p className="font-medium text-gray-900 dark:text-white">
-                                                Order #{order.id}
-                                            </p>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                                Customer: {order.user?.name || 'Guest'}
-                                            </p>
+                                            <p className="font-medium text-gray-900 dark:text-white">Order #{order.id}</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">Customer: {order.user?.name || 'Guest'}</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="font-medium text-green-600 dark:text-green-400">
-                                                {formatPrice(order.total || 0)}
-                                            </p>
+                                            <p className="font-medium text-green-600 dark:text-green-400">{formatPrice(order.total || 0)}</p>
                                             <p className="text-xs text-gray-500 dark:text-gray-400">
                                                 {new Date(order.created_at).toLocaleDateString()}
                                             </p>

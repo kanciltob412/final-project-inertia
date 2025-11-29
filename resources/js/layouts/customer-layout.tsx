@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import { Head } from '@inertiajs/react';
+import { ReactNode } from 'react';
 
 interface CustomerLayoutProps {
     children: ReactNode;
@@ -13,9 +13,7 @@ export default function CustomerLayout({ children, title = 'Customer Dashboard' 
         <div>
             <Head title={title} />
             <Navbar forceBlack={true} />
-            <div className="min-h-screen bg-white pt-20">
-                {children}
-            </div>
+            <div className="min-h-screen bg-white pt-20">{children}</div>
             <Footer />
         </div>
     );

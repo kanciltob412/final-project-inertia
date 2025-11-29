@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo, useState } from 'react';
 import { Product } from '@/types';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 export interface PriceRange {
     min: number;
@@ -58,11 +58,7 @@ export function FilterProvider({ children, products }: FilterProviderProps) {
 
         if (searchQuery) {
             const query = searchQuery.toLowerCase();
-            result = result.filter(
-                (v) =>
-                    v.name.toLowerCase().includes(query) ||
-                    v.description?.toLowerCase().includes(query)
-            );
+            result = result.filter((v) => v.name.toLowerCase().includes(query) || v.description?.toLowerCase().includes(query));
         }
 
         if (priceRange.min !== 0) {
@@ -129,11 +125,7 @@ export function FilterProvider({ children, products }: FilterProviderProps) {
         setViewMode,
     };
 
-    return (
-        <FilterContext.Provider value={contextValue}>
-            {children}
-        </FilterContext.Provider>
-    );
+    return <FilterContext.Provider value={contextValue}>{children}</FilterContext.Provider>;
 }
 
 export const useFilter = (): FilterContextType => {

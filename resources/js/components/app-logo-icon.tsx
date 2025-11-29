@@ -10,7 +10,7 @@ export default function AppLogoIcon(props: ImgHTMLAttributes<HTMLImageElement>) 
             style={{
                 width: '130%',
                 height: '130%',
-                ...props.style
+                ...props.style,
             }}
         />
     );

@@ -1,12 +1,12 @@
-import { Head, Form, Link } from '@inertiajs/react';
-import { type BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent } from '@/components/ui/card';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
+import AppLayout from '@/layouts/app-layout';
+import { type BreadcrumbItem } from '@/types';
+import { Form, Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 
 interface Promo {
@@ -172,26 +172,13 @@ export default function Edit({ promo }: Props) {
                             <div className="grid gap-4 md:grid-cols-2">
                                 <div className="grid gap-2">
                                     <Label htmlFor="start_date">Start Date *</Label>
-                                    <Input
-                                        id="start_date"
-                                        name="start_date"
-                                        type="date"
-                                        value={data.start_date}
-                                        onChange={handleChange}
-                                        required
-                                    />
+                                    <Input id="start_date" name="start_date" type="date" value={data.start_date} onChange={handleChange} required />
                                     {errors.start_date && <InputError message={errors.start_date} />}
                                 </div>
 
                                 <div className="grid gap-2">
                                     <Label htmlFor="end_date">End Date</Label>
-                                    <Input
-                                        id="end_date"
-                                        name="end_date"
-                                        type="date"
-                                        value={data.end_date}
-                                        onChange={handleChange}
-                                    />
+                                    <Input id="end_date" name="end_date" type="date" value={data.end_date} onChange={handleChange} />
                                     {errors.end_date && <InputError message={errors.end_date} />}
                                 </div>
                             </div>

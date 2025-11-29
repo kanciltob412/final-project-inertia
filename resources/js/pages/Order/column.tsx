@@ -7,21 +7,16 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { router, Link } from "@inertiajs/react";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { useState } from "react";
-import { Order } from "@/types";
-import orders from "../../routes/orders";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Order } from '@/types';
+import { Link, router } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
+import orders from '../../routes/orders';
 
 function ActionsCell({ order }: { order: Order }) {
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -46,9 +41,7 @@ function ActionsCell({ order }: { order: Order }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                        <Link href={`/admin/orders/${order.id}`}>
-                            View Details
-                        </Link>
+                        <Link href={`/admin/orders/${order.id}`}>View Details</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
                     <DropdownMenuItem
@@ -83,34 +76,27 @@ function ActionsCell({ order }: { order: Order }) {
 
 export const columns: ColumnDef<Order>[] = [
     {
-        id: "select",
+        id: 'select',
         header: ({ table }) => (
             <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
+                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
             />
         ),
         cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
+            <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
         ),
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: "id",
-        header: "ID",
+        accessorKey: 'id',
+        header: 'ID',
     },
     {
-        accessorKey: "user",
-        header: "Customer Details",
+        accessorKey: 'user',
+        header: 'Customer Details',
         cell: ({ row }) => {
             const order = row.original;
             return (
@@ -120,15 +106,17 @@ export const columns: ColumnDef<Order>[] = [
                     <div className="text-sm text-gray-600">{order.phone}</div>
                     <div className="text-sm text-gray-500">
                         <div>{order.address}</div>
-                        <div>{order.city}, {order.country} {order.postal_code}</div>
+                        <div>
+                            {order.city}, {order.country} {order.postal_code}
+                        </div>
                     </div>
                 </div>
             );
         },
     },
     {
-        accessorKey: "items",
-        header: "Products",
+        accessorKey: 'items',
+        header: 'Products',
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -140,18 +128,10 @@ export const columns: ColumnDef<Order>[] = [
                         const itemName = item.product?.name || 'Product';
 
                         return (
-                            <div key={item.id} className="text-sm border-b border-gray-100 pb-1 last:border-0 last:pb-0">
-                                <div className="font-medium text-gray-900 normal-case">
-                                    {itemName}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                    SKU: {item.product?.sku || 'N/A'}
-                                </div>
-                                {item.product?.dimension && (
-                                    <div className="text-xs text-gray-500">
-                                        Dimension: {item.product.dimension}
-                                    </div>
-                                )}
+                            <div key={item.id} className="border-b border-gray-100 pb-1 text-sm last:border-0 last:pb-0">
+                                <div className="font-medium text-gray-900 normal-case">{itemName}</div>
+                                <div className="text-xs text-gray-500">SKU: {item.product?.sku || 'N/A'}</div>
+                                {item.product?.dimension && <div className="text-xs text-gray-500">Dimension: {item.product.dimension}</div>}
                             </div>
                         );
                     })}
@@ -160,8 +140,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "quantity",
-        header: "Quantity",
+        accessorKey: 'quantity',
+        header: 'Quantity',
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -179,8 +159,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "price",
-        header: "Price",
+        accessorKey: 'price',
+        header: 'Price',
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -193,7 +173,7 @@ export const columns: ColumnDef<Order>[] = [
                             {new Intl.NumberFormat('id-ID', {
                                 style: 'currency',
                                 currency: 'IDR',
-                                maximumFractionDigits: 0
+                                maximumFractionDigits: 0,
                             }).format(item.price)}
                         </div>
                     ))}
@@ -202,8 +182,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "discount",
-        header: "Discount",
+        accessorKey: 'discount',
+        header: 'Discount',
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -229,7 +209,7 @@ export const columns: ColumnDef<Order>[] = [
                         const totalDiscountAmount = discountAmount * item.quantity;
 
                         return (
-                            <div key={item.id} className="mb-1 text-sm text-red-600 font-medium">
+                            <div key={item.id} className="mb-1 text-sm font-medium text-red-600">
                                 {totalDiscountAmount > 0
                                     ? `-Rp ${new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(totalDiscountAmount)}`
                                     : '-'}
@@ -241,8 +221,8 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "subtotal",
-        header: "Subtotal",
+        accessorKey: 'subtotal',
+        header: 'Subtotal',
         cell: ({ row }) => {
             const order = row.original;
             if (!order.items || order.items.length === 0) {
@@ -270,7 +250,7 @@ export const columns: ColumnDef<Order>[] = [
                                 {new Intl.NumberFormat('id-ID', {
                                     style: 'currency',
                                     currency: 'IDR',
-                                    maximumFractionDigits: 0
+                                    maximumFractionDigits: 0,
                                 }).format(discountedPrice * item.quantity)}
                             </div>
                         );
@@ -280,49 +260,46 @@ export const columns: ColumnDef<Order>[] = [
         },
     },
     {
-        accessorKey: "coupon_id",
-        header: "Coupon",
+        accessorKey: 'coupon_id',
+        header: 'Coupon',
         cell: ({ row }) => {
             const order = row.original;
 
             if (order.coupon && order.coupon_id) {
                 return (
-                    <div className="text-sm space-y-1">
-                        <div className="font-mono font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                            {order.coupon.code}
-                        </div>
+                    <div className="space-y-1 text-sm">
+                        <div className="rounded bg-blue-50 px-2 py-1 font-mono font-semibold text-blue-600">{order.coupon.code}</div>
                         <div className="text-xs text-gray-500">
                             {order.coupon.discount_type === 'percentage'
                                 ? `${order.coupon.discount_value}% off`
                                 : `Rp ${new Intl.NumberFormat('id-ID', {
-                                    maximumFractionDigits: 0
-                                }).format(order.coupon.discount_value)}`}
+                                      maximumFractionDigits: 0,
+                                  }).format(order.coupon.discount_value)}`}
                         </div>
                     </div>
                 );
             }
-            return <span className="text-gray-400 text-sm">-</span>;
+            return <span className="text-sm text-gray-400">-</span>;
         },
     },
     {
-        accessorKey: "shipping_cost",
-        header: "Shipping",
+        accessorKey: 'shipping_cost',
+        header: 'Shipping',
         cell: ({ row }) => {
             const order = row.original;
             const shippingCost = order.shipping_cost || 0;
 
             if (shippingCost > 0 || order.shipping_courier) {
                 return (
-                    <div className="text-sm space-y-1">
+                    <div className="space-y-1 text-sm">
                         <div className="font-medium text-gray-900">
                             {shippingCost > 0
                                 ? new Intl.NumberFormat('id-ID', {
-                                    style: 'currency',
-                                    currency: 'IDR',
-                                    maximumFractionDigits: 0
-                                }).format(shippingCost)
-                                : 'Free'
-                            }
+                                      style: 'currency',
+                                      currency: 'IDR',
+                                      maximumFractionDigits: 0,
+                                  }).format(shippingCost)
+                                : 'Free'}
                         </div>
                         {order.shipping_courier && (
                             <div className="text-xs text-gray-500">
@@ -330,32 +307,30 @@ export const columns: ColumnDef<Order>[] = [
                             </div>
                         )}
                         {order.tracking_number && (
-                            <div className="text-xs text-gray-600 font-mono bg-gray-50 px-2 py-1 rounded">
-                                Track: {order.tracking_number}
-                            </div>
+                            <div className="rounded bg-gray-50 px-2 py-1 font-mono text-xs text-gray-600">Track: {order.tracking_number}</div>
                         )}
                     </div>
                 );
             }
-            return <span className="text-gray-400 text-sm">Free</span>;
+            return <span className="text-sm text-gray-400">Free</span>;
         },
     },
     {
-        accessorKey: "total",
-        header: "Total",
+        accessorKey: 'total',
+        header: 'Total',
         cell: ({ row }) => (
-            <span className="font-bold text-lg">
+            <span className="text-lg font-bold">
                 {new Intl.NumberFormat('id-ID', {
                     style: 'currency',
                     currency: 'IDR',
-                    maximumFractionDigits: 0
+                    maximumFractionDigits: 0,
                 }).format(row.original.total)}
             </span>
         ),
     },
     {
-        accessorKey: "created_at",
-        header: "Order Date",
+        accessorKey: 'created_at',
+        header: 'Order Date',
         cell: ({ row }) => {
             const createdAt = new Date(row.original.created_at);
             return (
@@ -364,13 +339,13 @@ export const columns: ColumnDef<Order>[] = [
                         {createdAt.toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
-                            day: 'numeric'
+                            day: 'numeric',
                         })}
                     </div>
                     <div className="text-gray-500">
                         {createdAt.toLocaleTimeString('en-US', {
                             hour: '2-digit',
-                            minute: '2-digit'
+                            minute: '2-digit',
                         })}
                     </div>
                 </div>
@@ -379,8 +354,8 @@ export const columns: ColumnDef<Order>[] = [
     },
 
     {
-        accessorKey: "status",
-        header: "Status",
+        accessorKey: 'status',
+        header: 'Status',
         cell: ({ row }) => {
             const status = row.original.status;
             const statusConfig = {
@@ -393,16 +368,12 @@ export const columns: ColumnDef<Order>[] = [
             };
 
             const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
-            return (
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.className}`}>
-                    {config.text}
-                </span>
-            );
+            return <span className={`rounded-full px-2 py-1 text-xs font-medium ${config.className}`}>{config.text}</span>;
         },
     },
     {
-        id: "actions",
-        header: "Actions",
+        id: 'actions',
+        header: 'Actions',
         cell: ({ row }) => <ActionsCell order={row.original} />,
     },
 ];

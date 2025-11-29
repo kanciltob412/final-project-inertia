@@ -7,20 +7,15 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { router } from "@inertiajs/react";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Copy } from "lucide-react";
-import { useState } from "react";
-import { Article } from "../../types";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { router } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Copy, MoreHorizontal } from 'lucide-react';
+import { useState } from 'react';
+import { Article } from '../../types';
 
 function ActionsCell({ article }: { article: Article }) {
     const [open, setOpen] = useState(false);
@@ -30,14 +25,18 @@ function ActionsCell({ article }: { article: Article }) {
     };
 
     const handleDuplicate = () => {
-        router.post('/admin/articles/duplicate', {
-            id: article.id
-        }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                // Optionally show a success message
-            }
-        });
+        router.post(
+            '/admin/articles/duplicate',
+            {
+                id: article.id,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    // Optionally show a success message
+                },
+            },
+        );
     };
 
     const handleDelete = () => {
@@ -57,7 +56,7 @@ function ActionsCell({ article }: { article: Article }) {
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={handleEdit}>Edit</DropdownMenuItem>
                     <DropdownMenuItem onClick={handleDuplicate}>
-                        <Copy className="h-4 w-4 mr-2" />
+                        <Copy className="mr-2 h-4 w-4" />
                         Duplicate
                     </DropdownMenuItem>
                     <DropdownMenuItem
@@ -92,60 +91,51 @@ function ActionsCell({ article }: { article: Article }) {
 
 export const columns: ColumnDef<Article>[] = [
     {
-        id: "select",
+        id: 'select',
         header: ({ table }) => (
             <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
+                checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all"
             />
         ),
         cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-            />
+            <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />
         ),
         enableSorting: false,
         enableHiding: false,
     },
     {
-        accessorKey: "id",
-        header: "ID",
+        accessorKey: 'id',
+        header: 'ID',
     },
     {
-        accessorKey: "title",
-        header: "Title",
+        accessorKey: 'title',
+        header: 'Title',
     },
     {
-        accessorKey: "excerpt",
-        header: "Excerpt",
+        accessorKey: 'excerpt',
+        header: 'Excerpt',
+        cell: ({ row }) => <div className="max-w-xs truncate">{row.original.excerpt}</div>,
+    },
+    {
+        accessorKey: 'keywords',
+        header: 'Keywords',
+    },
+    {
+        accessorKey: 'featured',
+        header: 'Featured',
         cell: ({ row }) => (
-            <div className="max-w-xs truncate">
-                {row.original.excerpt}
-            </div>
-        ),
-    },
-    {
-        accessorKey: "keywords",
-        header: "Keywords",
-    },
-    {
-        accessorKey: "featured",
-        header: "Featured",
-        cell: ({ row }) => (
-            <span className={`px-2 py-1 rounded-full text-xs ${row.original.is_featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+            <span
+                className={`rounded-full px-2 py-1 text-xs ${row.original.is_featured ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+            >
                 {row.original.is_featured ? 'Featured' : 'Regular'}
             </span>
         ),
     },
     {
-        accessorKey: "featured_image",
-        header: "Featured Image",
+        accessorKey: 'featured_image',
+        header: 'Featured Image',
         cell: ({ row }) => {
             const featuredImage = row.getValue('featured_image') as string;
             return (
@@ -154,25 +144,23 @@ export const columns: ColumnDef<Article>[] = [
                         featuredImage?.startsWith('http')
                             ? featuredImage
                             : featuredImage
-                                ? `/storage/${featuredImage}`
-                                : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100'
+                              ? `/storage/${featuredImage}`
+                              : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=100'
                     }
                     alt={row.original.title}
-                    className="h-12 w-12 object-cover rounded"
+                    className="h-12 w-12 rounded object-cover"
                 />
             );
         },
     },
     {
-        accessorKey: "date",
-        header: "Date",
-        cell: ({ row }) => (
-            <span>{new Date(row.original.created_at).toLocaleDateString()}</span>
-        ),
+        accessorKey: 'date',
+        header: 'Date',
+        cell: ({ row }) => <span>{new Date(row.original.created_at).toLocaleDateString()}</span>,
     },
     {
-        id: "actions",
-        header: "Actions",
+        id: 'actions',
+        header: 'Actions',
         cell: ({ row }) => <ActionsCell article={row.original} />,
     },
 ];

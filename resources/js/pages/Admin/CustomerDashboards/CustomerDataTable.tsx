@@ -1,4 +1,18 @@
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { router } from '@inertiajs/react';
+import {
     ColumnFiltersState,
     SortingState,
     VisibilityState,
@@ -8,31 +22,10 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
-import { columns } from "./column";
-import { router } from "@inertiajs/react";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@tanstack/react-table';
+import { ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { columns } from './column';
 
 import { Order } from '@/types';
 
@@ -80,7 +73,7 @@ export function CustomerDataTable({ data }: CustomerDataTableProps) {
 
     const handleBulkDelete = () => {
         const selectedRows = table.getFilteredSelectedRowModel().rows;
-        const ids = selectedRows.map(row => row.original.id);
+        const ids = selectedRows.map((row) => row.original.id);
 
         router.delete('/admin/customer-dashboards/bulk', {
             data: { ids },
@@ -97,37 +90,26 @@ export function CustomerDataTable({ data }: CustomerDataTableProps) {
             <div className="flex items-center justify-between py-4">
                 <Input
                     placeholder="Filter by customer name..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
+                    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+                    onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
                 {table.getFilteredSelectedRowModel().rows.length > 0 && (
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => setShowDeleteDialog(true)}
-                    >
-                        <Trash2 className="h-4 w-4 mr-2" />
+                    <Button variant="destructive" size="sm" onClick={() => setShowDeleteDialog(true)}>
+                        <Trash2 className="mr-2 h-4 w-4" />
                         Delete ({table.getFilteredSelectedRowModel().rows.length})
                     </Button>
                 )}
             </div>
-            <div className="rounded-md border overflow-hidden">
+            <div className="overflow-hidden rounded-md border">
                 <Table>
                     <TableHeader className="bg-gray-50">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="text-black font-semibold">
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
+                                        <TableHead key={header.id} className="font-semibold text-black">
+                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}
@@ -137,27 +119,15 @@ export function CustomerDataTable({ data }: CustomerDataTableProps) {
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                    className="hover:bg-gray-50"
-                                >
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="hover:bg-gray-50">
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center text-gray-500"
-                                >
+                                <TableCell colSpan={columns.length} className="h-24 text-center text-gray-500">
                                     No customers found.
                                 </TableCell>
                             </TableRow>
@@ -167,30 +137,18 @@ export function CustomerDataTable({ data }: CustomerDataTableProps) {
             </div>
             <div className="flex items-center justify-between">
                 <div className="text-sm text-gray-500">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="flex gap-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                         <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <div className="flex items-center gap-2 px-2">
                         <span className="text-sm">
-                            Page {table.getState().pagination.pageIndex + 1} of{" "}
-                            {table.getPageCount()}
+                            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                         </span>
                     </div>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
                         <ChevronRight className="h-4 w-4" />
                     </Button>
                 </div>
@@ -201,8 +159,8 @@ export function CustomerDataTable({ data }: CustomerDataTableProps) {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete {table.getFilteredSelectedRowModel().rows.length} selected customer account(s) and all their associated data.
-                            This action cannot be undone.
+                            This will permanently delete {table.getFilteredSelectedRowModel().rows.length} selected customer account(s) and all their
+                            associated data. This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

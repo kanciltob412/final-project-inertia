@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 interface Props {
     payment_url: string;
@@ -22,17 +22,16 @@ export default function PaymentRedirect() {
     }, [payment_url]);
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex min-h-screen items-center justify-center bg-gray-100">
             <div className="text-center">
                 <div className="mb-4">
-                    <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                    <div className="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Processing Payment</h1>
+                <h1 className="mb-2 text-2xl font-bold text-gray-900">Processing Payment</h1>
                 <p className="text-gray-600">Redirecting to payment gateway...</p>
-                <p className="text-sm text-gray-500 mt-4">Please do not close this window.</p>
-                <p className="text-xs text-gray-400 mt-6">Your session will be preserved when you return.</p>
+                <p className="mt-4 text-sm text-gray-500">Please do not close this window.</p>
+                <p className="mt-6 text-xs text-gray-400">Your session will be preserved when you return.</p>
             </div>
         </div>
     );
 }
-

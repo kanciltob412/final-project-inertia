@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import type { PriceRange } from '../context/FilterContext';
-import { useState, useRef, useEffect } from 'react';
 
 interface FilterSidebarProps {
     searchQuery: string;
@@ -87,7 +87,7 @@ export const FilterSidebar = ({
                         setSearchQuery(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="w-full rounded-lg border bg-white py-2 pr-4 pl-10 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                    className="w-full rounded-lg border bg-white py-2 pr-4 pl-10 text-[#423F3B] focus:ring-2 focus:ring-[#423F3B] focus:outline-none"
                 />
                 <Search className="absolute top-2.5 left-3 h-5 w-5 text-gray-400" />
             </div>
@@ -99,7 +99,7 @@ export const FilterSidebar = ({
                         setSelectedCategory(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 text-[#423F3B] focus:ring-2 focus:ring-[#423F3B] focus:outline-none"
                 >
                     {categories.map((category) => (
                         <option key={category} value={category}>
@@ -116,7 +116,7 @@ export const FilterSidebar = ({
                         placeholder="Min"
                         value={localMinPrice}
                         onChange={(e) => handleMinPriceChange(e.target.value)}
-                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 text-[#423F3B] focus:ring-2 focus:ring-[#423F3B] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
 
                     <input
@@ -124,7 +124,7 @@ export const FilterSidebar = ({
                         placeholder="Max"
                         value={localMaxPrice}
                         onChange={(e) => handleMaxPriceChange(e.target.value)}
-                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 text-[#423F3B] focus:ring-2 focus:ring-[#423F3B] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
                 </div>
             </div>
@@ -136,7 +136,7 @@ export const FilterSidebar = ({
                         setSortBy(e.target.value);
                         setCurrentPage(1);
                     }}
-                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 focus:ring-2 focus:ring-[#423F3B] focus:outline-none text-[#423F3B]"
+                    className="w-full rounded-md border border-[#423F3B] bg-white px-3 py-2 text-[#423F3B] focus:ring-2 focus:ring-[#423F3B] focus:outline-none"
                 >
                     <option value="name">Sort by Name</option>
                     <option value="price_low">Price: Low to High</option>

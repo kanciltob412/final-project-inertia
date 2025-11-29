@@ -1,4 +1,20 @@
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Product } from '@/types';
+import { router } from '@inertiajs/react';
+import {
     ColumnDef,
     ColumnFiltersState,
     SortingState,
@@ -9,56 +25,25 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable,
-} from "@tanstack/react-table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { ChevronDown, Edit, Trash2, Eye, EyeOff } from "lucide-react"
-import { useState } from "react"
-import { router } from "@inertiajs/react"
-import { Product } from "@/types"
+} from '@tanstack/react-table';
+import { ChevronDown, Edit, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface ProductWithId {
     id: string | number;
 }
 
 interface ProductDataTableProps<TData extends ProductWithId, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
 
-export function ProductDataTable<TData extends ProductWithId, TValue>({
-    columns,
-    data,
-}: ProductDataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = useState({})
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+export function ProductDataTable<TData extends ProductWithId, TValue>({ columns, data }: ProductDataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [rowSelection, setRowSelection] = useState({});
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
     const table = useReactTable({
         data,
@@ -79,33 +64,33 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
             columnVisibility,
             rowSelection,
         },
-    })
+    });
 
-    const selectedRows = table.getFilteredSelectedRowModel().rows
-    const selectedIds = selectedRows.map((row) => ((row.original as unknown) as Product).id)
+    const selectedRows = table.getFilteredSelectedRowModel().rows;
+    const selectedIds = selectedRows.map((row) => (row.original as unknown as Product).id);
 
     const handleBulkEdit = () => {
         if (selectedIds.length === 1) {
-            router.visit(`/admin/products/${selectedIds[0]}/edit`)
+            router.visit(`/admin/products/${selectedIds[0]}/edit`);
         } else {
-            alert("Please select only one product to edit")
+            alert('Please select only one product to edit');
         }
-    }
+    };
 
     const handleBulkDelete = () => {
-        setDeleteDialogOpen(true)
-    }
+        setDeleteDialogOpen(true);
+    };
 
     const confirmBulkDelete = () => {
         selectedIds.forEach((id) => {
             router.delete(`/admin/products/${id}`, {
                 preserveScroll: true,
                 preserveState: false,
-            })
-        })
-        setDeleteDialogOpen(false)
-        setRowSelection({})
-    }
+            });
+        });
+        setDeleteDialogOpen(false);
+        setRowSelection({});
+    };
 
     const handleBulkActivate = () => {
         console.log('Bulk activate - Selected IDs:', selectedIds);
@@ -114,21 +99,25 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
             return;
         }
 
-        router.patch('/admin/products/bulk-update', {
-            ids: selectedIds,
-            status: 'active'
-        }, {
-            preserveScroll: true,
-            preserveState: false,
-            onSuccess: () => {
-                console.log('Bulk activate success');
-                setRowSelection({})
+        router.patch(
+            '/admin/products/bulk-update',
+            {
+                ids: selectedIds,
+                status: 'active',
             },
-            onError: (errors) => {
-                console.error('Bulk activate errors:', errors);
-            }
-        })
-    }
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    console.log('Bulk activate success');
+                    setRowSelection({});
+                },
+                onError: (errors) => {
+                    console.error('Bulk activate errors:', errors);
+                },
+            },
+        );
+    };
 
     const handleBulkDeactivate = () => {
         console.log('Bulk deactivate - Selected IDs:', selectedIds);
@@ -137,31 +126,33 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
             return;
         }
 
-        router.patch('/admin/products/bulk-update', {
-            ids: selectedIds,
-            status: 'inactive'
-        }, {
-            preserveScroll: true,
-            preserveState: false,
-            onSuccess: () => {
-                console.log('Bulk deactivate success');
-                setRowSelection({})
+        router.patch(
+            '/admin/products/bulk-update',
+            {
+                ids: selectedIds,
+                status: 'inactive',
             },
-            onError: (errors) => {
-                console.error('Bulk deactivate errors:', errors);
-            }
-        })
-    }
+            {
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: () => {
+                    console.log('Bulk deactivate success');
+                    setRowSelection({});
+                },
+                onError: (errors) => {
+                    console.error('Bulk deactivate errors:', errors);
+                },
+            },
+        );
+    };
 
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter products..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
+                    value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+                    onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
                 <DropdownMenu>
@@ -180,13 +171,11 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
                                         key={column.id}
                                         className="capitalize"
                                         checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
+                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
                                     >
                                         {column.id}
                                     </DropdownMenuCheckboxItem>
-                                )
+                                );
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -194,45 +183,27 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
 
             {/* Bulk Actions Toolbar */}
             {selectedRows.length > 0 && (
-                <div className="flex items-center justify-between rounded-md border bg-muted p-4 mb-4">
+                <div className="mb-4 flex items-center justify-between rounded-md border bg-muted p-4">
                     <div className="flex items-center space-x-2">
                         <span className="text-sm text-muted-foreground">
-                            {selectedRows.length} of{" "}
-                            {table.getFilteredRowModel().rows.length} row(s) selected
+                            {selectedRows.length} of {table.getFilteredRowModel().rows.length} row(s) selected
                         </span>
                     </div>
                     <div className="flex items-center space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleBulkEdit}
-                            disabled={selectedIds.length !== 1}
-                        >
-                            <Edit className="h-4 w-4 mr-1" />
+                        <Button variant="outline" size="sm" onClick={handleBulkEdit} disabled={selectedIds.length !== 1}>
+                            <Edit className="mr-1 h-4 w-4" />
                             Edit
                         </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleBulkActivate}
-                        >
-                            <Eye className="h-4 w-4 mr-1" />
+                        <Button variant="outline" size="sm" onClick={handleBulkActivate}>
+                            <Eye className="mr-1 h-4 w-4" />
                             Activate
                         </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleBulkDeactivate}
-                        >
-                            <EyeOff className="h-4 w-4 mr-1" />
+                        <Button variant="outline" size="sm" onClick={handleBulkDeactivate}>
+                            <EyeOff className="mr-1 h-4 w-4" />
                             Deactivate
                         </Button>
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={handleBulkDelete}
-                        >
-                            <Trash2 className="h-4 w-4 mr-1" />
+                        <Button variant="destructive" size="sm" onClick={handleBulkDelete}>
+                            <Trash2 className="mr-1 h-4 w-4" />
                             Delete
                         </Button>
                     </div>
@@ -247,14 +218,9 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
                                 {headerGroup.headers.map((header) => {
                                     return (
                                         <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
+                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
-                                    )
+                                    );
                                 })}
                             </TableRow>
                         ))}
@@ -262,26 +228,15 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
+                                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -291,24 +246,13 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
                 </div>
                 <div className="space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                         Previous
                     </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
                         Next
                     </Button>
                 </div>
@@ -320,18 +264,15 @@ export function ProductDataTable<TData extends ProductWithId, TValue>({
                     <AlertDialogHeader>
                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This will permanently delete {selectedIds.length} product(s).
-                            This action cannot be undone.
+                            This will permanently delete {selectedIds.length} product(s). This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={confirmBulkDelete}>
-                            Delete
-                        </AlertDialogAction>
+                        <AlertDialogAction onClick={confirmBulkDelete}>Delete</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
         </div>
-    )
+    );
 }

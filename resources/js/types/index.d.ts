@@ -74,7 +74,7 @@ export interface Product {
     is_active: boolean;
     created_at: string;
     updated_at: string;
-    
+
     // Relation to Category
     category: Category;
     // Relation to Gallery Images
@@ -83,7 +83,7 @@ export interface Product {
 
 export interface Article {
     id: number;
-    title: string;  
+    title: string;
     slug: string;
     seo_keywords: string;
     excerpt: string;
@@ -125,14 +125,12 @@ export interface Order {
     created_at: string;
     updated_at: string;
 
-    
     // Relation to User
     user: User;
     // Relation to Order Items
     items: OrderItem[];
     // Relation to Coupon
     coupon?: Coupon;
-
 }
 export interface OrderItem {
     id: number;
@@ -142,7 +140,7 @@ export interface OrderItem {
     price: number;
     created_at: string;
     updated_at: string;
-    
+
     // Relations
     product: Product;
 }

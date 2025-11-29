@@ -1,11 +1,11 @@
-import { Link, router } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Edit2, Trash2, Plus, MapPin, Check } from 'lucide-react';
-import { useState } from 'react';
 import AddressForm from '@/components/customer/AddressForm';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import CustomerLayout from '@/layouts/customer-layout';
+import { Link, router } from '@inertiajs/react';
+import { Check, Edit2, MapPin, Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 
 interface Address {
     id: number;
@@ -46,10 +46,12 @@ export default function Addresses({ addresses }: Props) {
 
     return (
         <CustomerLayout title="My Addresses">
-
-            <div className="space-y-6 p-4 md:p-8 max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
@@ -57,7 +59,7 @@ export default function Addresses({ addresses }: Props) {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">My Addresses</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">My Addresses</h1>
                         <p className="text-gray-600">Manage your shipping and billing addresses</p>
                     </div>
                     {!isFormOpen && (
@@ -71,11 +73,7 @@ export default function Addresses({ addresses }: Props) {
                 {/* Add/Edit Address Form */}
                 {isFormOpen && (
                     <div className="rounded-lg border border-gray-200 p-6">
-                        <AddressForm
-                            address={editingAddress}
-                            onSuccess={handleFormClose}
-                            onCancel={handleFormClose}
-                        />
+                        <AddressForm address={editingAddress} onSuccess={handleFormClose} onCancel={handleFormClose} />
                     </div>
                 )}
 
@@ -83,11 +81,13 @@ export default function Addresses({ addresses }: Props) {
                 {addresses.length > 0 ? (
                     <div className="grid gap-4 md:grid-cols-2">
                         {addresses.map((address) => (
-                            <Card key={address.id} className={address.is_default ? 'border-gray-500 border-2' : ''}>
+                            <Card key={address.id} className={address.is_default ? 'border-2 border-gray-500' : ''}>
                                 <CardHeader>
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-2">
-                                            <CardTitle>{address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)} Address</CardTitle>
+                                            <CardTitle>
+                                                {address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)} Address
+                                            </CardTitle>
                                             {address.is_default && (
                                                 <Badge variant="default" className="flex items-center gap-1">
                                                     <Check className="h-3 w-3" />
@@ -106,7 +106,9 @@ export default function Addresses({ addresses }: Props) {
                                             {address.city}
                                             {address.state && `, ${address.state}`}
                                         </p>
-                                        <p>{address.postal_code}, {address.country}</p>
+                                        <p>
+                                            {address.postal_code}, {address.country}
+                                        </p>
                                         <p className="font-medium text-gray-600">📞 {address.phone}</p>
                                         {address.notes && (
                                             <div className="mt-3 rounded-md bg-gray-50 p-2">
@@ -129,12 +131,7 @@ export default function Addresses({ addresses }: Props) {
                                             <Edit2 className="h-4 w-4" />
                                             Edit
                                         </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="flex-1 gap-2"
-                                            onClick={() => handleDelete(address.id)}
-                                        >
+                                        <Button variant="outline" size="sm" className="flex-1 gap-2" onClick={() => handleDelete(address.id)}>
                                             <Trash2 className="h-4 w-4" />
                                             Delete
                                         </Button>
@@ -142,12 +139,7 @@ export default function Addresses({ addresses }: Props) {
 
                                     {/* Set Default Button */}
                                     {!address.is_default && (
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            className="w-full"
-                                            onClick={() => handleSetDefault(address.id)}
-                                        >
+                                        <Button variant="secondary" size="sm" className="w-full" onClick={() => handleSetDefault(address.id)}>
                                             Set as Default
                                         </Button>
                                     )}

@@ -1,7 +1,7 @@
-import { Link } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import CustomerLayout from '@/layouts/customer-layout';
+import { Link } from '@inertiajs/react';
 import { Bell, Calendar } from 'lucide-react';
 
 interface Promo {
@@ -50,17 +50,19 @@ export default function MemberPromo({ promos }: Props) {
 
     return (
         <CustomerLayout title="Member Promos & News">
-
-            <div className="space-y-6 p-4 md:p-8 max-w-6xl mx-auto">
+            <div className="mx-auto max-w-6xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
 
                 {/* Header */}
                 <div className="rounded-lg bg-linear-to-r from-orange-500 to-red-600 p-8 text-white">
-                    <h1 className="flex items-center gap-3 text-3xl md:text-4xl lg:text-5xl font-bold">
+                    <h1 className="flex items-center gap-3 text-3xl font-bold md:text-4xl lg:text-5xl">
                         <Bell className="h-10 w-10" />
                         Member Promos & News
                     </h1>
@@ -69,9 +71,7 @@ export default function MemberPromo({ promos }: Props) {
 
                 {/* Filter/Info */}
                 <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                    <p className="text-sm text-blue-900">
-                        💡 Stay updated with the latest promotions, news, and exclusive member offers!
-                    </p>
+                    <p className="text-sm text-blue-900">💡 Stay updated with the latest promotions, news, and exclusive member offers!</p>
                 </div>
 
                 {/* Promos Grid */}
@@ -82,12 +82,10 @@ export default function MemberPromo({ promos }: Props) {
                                 {/* Image */}
                                 {promo.image_url && (
                                     <div className="relative h-48 overflow-hidden bg-gray-200">
-                                        <img
-                                            src={promo.image_url}
-                                            alt={promo.title}
-                                            className="h-full w-full object-cover"
-                                        />
-                                        <div className={`absolute right-2 top-2 rounded-full px-3 py-1 text-xs font-semibold ${getTypeColor(promo.type)}`}>
+                                        <img src={promo.image_url} alt={promo.title} className="h-full w-full object-cover" />
+                                        <div
+                                            className={`absolute top-2 right-2 rounded-full px-3 py-1 text-xs font-semibold ${getTypeColor(promo.type)}`}
+                                        >
                                             {getTypeIcon(promo.type)} {promo.type.charAt(0).toUpperCase() + promo.type.slice(1)}
                                         </div>
                                     </div>

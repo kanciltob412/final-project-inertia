@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
 import { ProductImage } from '@/types';
+import { ChevronLeft, ChevronRight, X, ZoomIn } from 'lucide-react';
+import { useState } from 'react';
 
 interface ProductGalleryProps {
     mainImage: string;
@@ -21,9 +21,9 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
             image_path: mainImage,
             alt_text: productName,
             sort_order: 0,
-            is_primary: true
+            is_primary: true,
         },
-        ...images.filter(img => !img.is_primary)
+        ...images.filter((img) => !img.is_primary),
     ];
 
     const currentImage = allImages[currentImageIndex];
@@ -51,32 +51,29 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
         <div className="space-y-4">
             {/* Zoom Modal */}
             {isZoomed && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
-                    <div className="relative max-w-6xl max-h-screen p-4">
-                        <button
-                            onClick={toggleZoom}
-                            className="absolute top-2 right-2 z-10 rounded-full bg-white p-2 text-black hover:bg-gray-100"
-                        >
+                <div className="bg-opacity-90 fixed inset-0 z-50 flex items-center justify-center bg-black">
+                    <div className="relative max-h-screen max-w-6xl p-4">
+                        <button onClick={toggleZoom} className="absolute top-2 right-2 z-10 rounded-full bg-white p-2 text-black hover:bg-gray-100">
                             <X className="h-6 w-6" />
                         </button>
                         <img
                             src={`/storage/${currentImage.image_path}`}
                             alt={currentImage.alt_text || productName}
-                            className="max-w-full max-h-full object-contain"
+                            className="max-h-full max-w-full object-contain"
                         />
-                        
+
                         {/* Navigation arrows in zoom modal */}
                         {allImages.length > 1 && (
                             <>
                                 <button
                                     onClick={prevImage}
-                                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white"
+                                    className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white"
                                 >
                                     <ChevronLeft className="h-6 w-6" />
                                 </button>
                                 <button
                                     onClick={nextImage}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white"
+                                    className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white"
                                 >
                                     <ChevronRight className="h-6 w-6" />
                                 </button>
@@ -89,7 +86,7 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
             {/* Main Image Display */}
             <div className="relative">
                 <div
-                    className="relative aspect-square overflow-hidden rounded-lg cursor-zoom-in"
+                    className="relative aspect-square cursor-zoom-in overflow-hidden rounded-lg"
                     onClick={toggleZoom}
                     onMouseMove={handleMouseMove}
                     onMouseEnter={() => setIsHovering(true)}
@@ -101,17 +98,15 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
                     <img
                         src={`/storage/${currentImage.image_path}`}
                         alt={currentImage.alt_text || productName}
-                        className={`h-full w-full object-cover transition-all duration-200 ease-out ${
-                            isHovering ? 'scale-150' : 'scale-100'
-                        }`}
+                        className={`h-full w-full object-cover transition-all duration-200 ease-out ${isHovering ? 'scale-150' : 'scale-100'}`}
                         style={{
-                            transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`
+                            transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
                         }}
                     />
 
                     {/* Click to zoom indicator */}
                     <div className="absolute top-4 right-4 opacity-70">
-                        <div className="rounded-full bg-black bg-opacity-50 p-2 text-white">
+                        <div className="bg-opacity-50 rounded-full bg-black p-2 text-white">
                             <ZoomIn className="h-5 w-5" />
                         </div>
                     </div>
@@ -124,7 +119,7 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
                                     e.stopPropagation();
                                     prevImage();
                                 }}
-                                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute top-1/2 left-4 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black opacity-0 shadow-md transition-opacity group-hover:opacity-100 hover:bg-white"
                             >
                                 <ChevronLeft className="h-5 w-5" />
                             </button>
@@ -133,7 +128,7 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
                                     e.stopPropagation();
                                     nextImage();
                                 }}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black hover:bg-white shadow-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="absolute top-1/2 right-4 -translate-y-1/2 rounded-full bg-white/80 p-2 text-black opacity-0 shadow-md transition-opacity group-hover:opacity-100 hover:bg-white"
                             >
                                 <ChevronRight className="h-5 w-5" />
                             </button>
@@ -151,7 +146,7 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
                                             e.stopPropagation();
                                             setCurrentImageIndex(index);
                                         }}
-                                        className={`w-2 h-2 rounded-full transition-colors ${
+                                        className={`h-2 w-2 rounded-full transition-colors ${
                                             index === currentImageIndex ? 'bg-white' : 'bg-white/50'
                                         }`}
                                     />
@@ -170,15 +165,13 @@ export default function ProductGallery({ mainImage, images, productName }: Produ
                             key={index}
                             onClick={() => setCurrentImageIndex(index)}
                             className={`aspect-square overflow-hidden rounded-lg border-2 transition-all ${
-                                index === currentImageIndex
-                                    ? 'border-black shadow-md'
-                                    : 'border-gray-300 hover:border-gray-400'
+                                index === currentImageIndex ? 'border-black shadow-md' : 'border-gray-300 hover:border-gray-400'
                             }`}
                         >
                             <img
                                 src={`/storage/${image.image_path}`}
                                 alt={image.alt_text || `${productName} - Image ${index + 1}`}
-                                className="h-full w-full object-cover hover:scale-105 transition-transform"
+                                className="h-full w-full object-cover transition-transform hover:scale-105"
                             />
                         </button>
                     ))}

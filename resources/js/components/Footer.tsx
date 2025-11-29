@@ -5,12 +5,12 @@ export default function Footer() {
     return (
         <footer className="bg-[#423F3B] text-white">
             <div className="mx-auto max-w-7xl px-4 py-16">
-                <div className="grid grid-cols-1 gap-12 md:gap-8 lg:gap-12 md:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-8 lg:grid-cols-4 lg:gap-12">
                     {/* About Section */}
                     <div className="md:pr-4 lg:pr-0">
                         <h3 className="mb-4 flex items-center gap-2 text-left text-xl font-bold">
                             {/* Logo before the brand name. Adjust src/alt/size as needed. */}
-                            <Link href="/" className="hover:opacity-80 transition-opacity">
+                            <Link href="/" className="transition-opacity hover:opacity-80">
                                 <img src="/LAVANYA_LOGO_WHITE.svg" alt="Lavanya Ceramics White Logo" className="h-10 w-auto" />
                             </Link>
                         </h3>
@@ -94,26 +94,20 @@ export default function Footer() {
                                     href="https://maps.google.com/?q=Jl.+Sunset+road+No.22,+Seminyak,+Bali+80361"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="text-white hover:text-gray-400 transition-colors"
+                                    className="text-white transition-colors hover:text-gray-400"
                                 >
                                     Jl. Sunset road No.22, Seminyak, Bali 80361
                                 </a>
                             </li>
                             <li className="flex items-center">
                                 <Phone className="mr-2 h-5 w-5" />
-                                <a
-                                    href="tel:+6208111129775"
-                                    className="text-white hover:text-gray-400 transition-colors"
-                                >
+                                <a href="tel:+6208111129775" className="text-white transition-colors hover:text-gray-400">
                                     +62 0811-129-775
                                 </a>
                             </li>
                             <li className="flex items-center">
                                 <Mail className="mr-2 h-5 w-5" />
-                                <a
-                                    href="mailto:info@lavanyaceramics.com"
-                                    className="text-white hover:text-gray-400 transition-colors"
-                                >
+                                <a href="mailto:info@lavanyaceramics.com" className="text-white transition-colors hover:text-gray-400">
                                     info@lavanyaceramics.com
                                 </a>
                             </li>
@@ -123,7 +117,13 @@ export default function Footer() {
 
                 <div className="mt-12 border-t border-white pt-8">
                     <div className="flex flex-col items-center justify-between md:flex-row">
-                        <p className="text-sm text-white">© 2025 <Link href="/" className="hover:text-gray-400 transition-colors">LAVANYA CERAMICS</Link>. All rights reserved.</p>
+                        <p className="text-sm text-white">
+                            © 2025{' '}
+                            <Link href="/" className="transition-colors hover:text-gray-400">
+                                LAVANYA CERAMICS
+                            </Link>
+                            . All rights reserved.
+                        </p>
                         <div className="mt-4 flex space-x-6 md:mt-0">
                             <Link href="/privacy-policy" className="text-sm text-white hover:text-gray-400">
                                 Privacy Policy

@@ -1,20 +1,19 @@
-import React from "react";
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, Order, Product, User } from "@/types";
-import { Head, useForm } from "@inertiajs/react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import HeadingSmall from "@/components/heading-small";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
+import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, Order, Product, User } from '@/types';
+import { Head, useForm } from '@inertiajs/react';
+import React from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Orders",
-        href: "/admin/orders",
+        title: 'Orders',
+        href: '/admin/orders',
     },
 ];
 
@@ -41,40 +40,43 @@ export default function Form({ order, users, products }: Props) {
         tracking_number?: string;
         coupon_id?: number | string;
         coupon_discount?: number | string;
-        items?: {
-            product_id: number | string;
-            quantity: number | string;
-            price: number | string;
-        }[] | undefined;
+        items?:
+            | {
+                  product_id: number | string;
+                  quantity: number | string;
+                  price: number | string;
+              }[]
+            | undefined;
     }>({
-        user_id: order ? order.user_id.toString() : "",
-        phone: order ? order.phone : "",
-        address: order ? order.address : "",
-        city: order ? order.city : "",
-        country: order ? order.country : "",
-        postal_code: order ? order.postal_code : "",
-        status: order ? order.status : "PENDING",
-        total: order ? order.total : "",
-        payment_method: order ? order.payment_method || "" : "",
-        payment_channel: order ? order.payment_channel || "" : "",
-        url: order ? order.url || "" : "",
-        courier_name: order ? order.courier_name || "" : "",
-        tracking_number: order ? order.tracking_number || "" : "",
-        coupon_id: order ? order.coupon_id || "" : "",
-        coupon_discount: order ? order.coupon_discount || "" : "",
-        items: order && order.items ? order.items.map(item => ({
-            product_id: item.product_id,
-            quantity: item.quantity,
-            price: item.price
-        })) : undefined,
+        user_id: order ? order.user_id.toString() : '',
+        phone: order ? order.phone : '',
+        address: order ? order.address : '',
+        city: order ? order.city : '',
+        country: order ? order.country : '',
+        postal_code: order ? order.postal_code : '',
+        status: order ? order.status : 'PENDING',
+        total: order ? order.total : '',
+        payment_method: order ? order.payment_method || '' : '',
+        payment_channel: order ? order.payment_channel || '' : '',
+        url: order ? order.url || '' : '',
+        courier_name: order ? order.courier_name || '' : '',
+        tracking_number: order ? order.tracking_number || '' : '',
+        coupon_id: order ? order.coupon_id || '' : '',
+        coupon_discount: order ? order.coupon_discount || '' : '',
+        items:
+            order && order.items
+                ? order.items.map((item) => ({
+                      product_id: item.product_id,
+                      quantity: item.quantity,
+                      price: item.price,
+                  }))
+                : undefined,
     });
 
     // Auto-calculate total when items change
     React.useEffect(() => {
         if (data.items && data.items.length > 0) {
-            const newTotal = data.items.reduce((sum, item) =>
-                sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
-            );
+            const newTotal = data.items.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0), 0);
             if (newTotal !== Number(data.total)) {
                 setData('total', newTotal);
             }
@@ -98,7 +100,7 @@ export default function Form({ order, users, products }: Props) {
                 },
             });
         } else {
-            post("/admin/orders", {
+            post('/admin/orders', {
                 preserveScroll: true,
                 onSuccess: (page) => {
                     console.log('Order created successfully:', page);
@@ -113,12 +115,12 @@ export default function Form({ order, users, products }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={order ? "Edit Order" : "Create Order"} />
+            <Head title={order ? 'Edit Order' : 'Create Order'} />
 
             <div className="p-6">
                 <HeadingSmall
-                    title={`${order ? "Edit" : "Create"} Order`}
-                    description={`Fill out the form below to ${order ? "edit an existing" : "create a new"} order.`}
+                    title={`${order ? 'Edit' : 'Create'} Order`}
+                    description={`Fill out the form below to ${order ? 'edit an existing' : 'create a new'} order.`}
                 />
 
                 <Separator className="my-8" />
@@ -127,11 +129,7 @@ export default function Form({ order, users, products }: Props) {
                     {/* Customer Selection */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="user_id">Customer</Label>
-                        <Select
-                            value={data.user_id.toString()}
-                            onValueChange={(value) => setData("user_id", parseInt(value))}
-                            disabled={processing}
-                        >
+                        <Select value={data.user_id.toString()} onValueChange={(value) => setData('user_id', parseInt(value))} disabled={processing}>
                             <SelectTrigger id="user_id">
                                 <SelectValue placeholder="Select customer" />
                             </SelectTrigger>
@@ -143,12 +141,10 @@ export default function Form({ order, users, products }: Props) {
                                 ))}
                             </SelectContent>
                         </Select>
-                        {errors.user_id && (
-                            <p className="text-sm text-red-600">{errors.user_id}</p>
-                        )}
+                        {errors.user_id && <p className="text-sm text-red-600">{errors.user_id}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {/* Phone */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="phone">Phone</Label>
@@ -156,13 +152,11 @@ export default function Form({ order, users, products }: Props) {
                                 id="phone"
                                 type="tel"
                                 value={data.phone}
-                                onChange={(e) => setData("phone", e.target.value)}
+                                onChange={(e) => setData('phone', e.target.value)}
                                 disabled={processing}
                                 placeholder="+1234567890"
                             />
-                            {errors.phone && (
-                                <p className="text-sm text-red-600">{errors.phone}</p>
-                            )}
+                            {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
                         </div>
 
                         {/* City */}
@@ -171,13 +165,11 @@ export default function Form({ order, users, products }: Props) {
                             <Input
                                 id="city"
                                 value={data.city}
-                                onChange={(e) => setData("city", e.target.value)}
+                                onChange={(e) => setData('city', e.target.value)}
                                 disabled={processing}
                                 placeholder="City"
                             />
-                            {errors.city && (
-                                <p className="text-sm text-red-600">{errors.city}</p>
-                            )}
+                            {errors.city && <p className="text-sm text-red-600">{errors.city}</p>}
                         </div>
                     </div>
 
@@ -187,30 +179,26 @@ export default function Form({ order, users, products }: Props) {
                         <Textarea
                             id="address"
                             value={data.address}
-                            onChange={(e) => setData("address", e.target.value)}
+                            onChange={(e) => setData('address', e.target.value)}
                             disabled={processing}
                             placeholder="Full address..."
                             rows={3}
                         />
-                        {errors.address && (
-                            <p className="text-sm text-red-600">{errors.address}</p>
-                        )}
+                        {errors.address && <p className="text-sm text-red-600">{errors.address}</p>}
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {/* Country */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="country">Country</Label>
                             <Input
                                 id="country"
                                 value={data.country}
-                                onChange={(e) => setData("country", e.target.value)}
+                                onChange={(e) => setData('country', e.target.value)}
                                 disabled={processing}
                                 placeholder="Country"
                             />
-                            {errors.country && (
-                                <p className="text-sm text-red-600">{errors.country}</p>
-                            )}
+                            {errors.country && <p className="text-sm text-red-600">{errors.country}</p>}
                         </div>
 
                         {/* Postal Code */}
@@ -219,17 +207,15 @@ export default function Form({ order, users, products }: Props) {
                             <Input
                                 id="postal_code"
                                 value={data.postal_code}
-                                onChange={(e) => setData("postal_code", e.target.value)}
+                                onChange={(e) => setData('postal_code', e.target.value)}
                                 disabled={processing}
                                 placeholder="12345"
                             />
-                            {errors.postal_code && (
-                                <p className="text-sm text-red-600">{errors.postal_code}</p>
-                            )}
+                            {errors.postal_code && <p className="text-sm text-red-600">{errors.postal_code}</p>}
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {/* Total */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="total">Total Amount (Rp)</Label>
@@ -238,13 +224,11 @@ export default function Form({ order, users, products }: Props) {
                                 type="number"
                                 step="0.01"
                                 value={data.total}
-                                onChange={(e) => setData("total", parseFloat(e.target.value) || 0)}
+                                onChange={(e) => setData('total', parseFloat(e.target.value) || 0)}
                                 disabled={processing}
                                 placeholder="0"
                             />
-                            {errors.total && (
-                                <p className="text-sm text-red-600">{errors.total}</p>
-                            )}
+                            {errors.total && <p className="text-sm text-red-600">{errors.total}</p>}
                         </div>
 
                         {/* Coupon Discount */}
@@ -255,23 +239,17 @@ export default function Form({ order, users, products }: Props) {
                                 type="number"
                                 step="0.01"
                                 value={data.coupon_discount}
-                                onChange={(e) => setData("coupon_discount", parseFloat(e.target.value) || 0)}
+                                onChange={(e) => setData('coupon_discount', parseFloat(e.target.value) || 0)}
                                 disabled={processing}
                                 placeholder="0"
                             />
-                            {errors.coupon_discount && (
-                                <p className="text-sm text-red-600">{errors.coupon_discount}</p>
-                            )}
+                            {errors.coupon_discount && <p className="text-sm text-red-600">{errors.coupon_discount}</p>}
                         </div>
 
                         {/* Status */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="status">Order Status</Label>
-                            <Select
-                                value={data.status}
-                                onValueChange={(value) => setData("status", value)}
-                                disabled={processing}
-                            >
+                            <Select value={data.status} onValueChange={(value) => setData('status', value)} disabled={processing}>
                                 <SelectTrigger id="status">
                                     <SelectValue placeholder="Select status" />
                                 </SelectTrigger>
@@ -284,32 +262,28 @@ export default function Form({ order, users, products }: Props) {
                                     <SelectItem value="CANCELLED">Cancelled</SelectItem>
                                 </SelectContent>
                             </Select>
-                            {errors.status && (
-                                <p className="text-sm text-red-600">{errors.status}</p>
-                            )}
+                            {errors.status && <p className="text-sm text-red-600">{errors.status}</p>}
                         </div>
                     </div>
 
                     {/* Shipping Information - Show when status is shipped */}
-                    {data.status === "SHIPPED" && (
+                    {data.status === 'SHIPPED' && (
                         <>
                             <Separator className="my-6" />
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold">Shipping Information</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                                     {/* Courier Name */}
                                     <div className="flex flex-col gap-y-2">
                                         <Label htmlFor="courier_name">Courier Name</Label>
                                         <Input
                                             id="courier_name"
-                                            value={data.courier_name || ""}
-                                            onChange={(e) => setData("courier_name", e.target.value)}
+                                            value={data.courier_name || ''}
+                                            onChange={(e) => setData('courier_name', e.target.value)}
                                             disabled={processing}
                                             placeholder="e.g., DHL, FedEx, UPS"
                                         />
-                                        {errors.courier_name && (
-                                            <p className="text-sm text-red-600">{errors.courier_name}</p>
-                                        )}
+                                        {errors.courier_name && <p className="text-sm text-red-600">{errors.courier_name}</p>}
                                     </div>
 
                                     {/* Tracking Number */}
@@ -317,34 +291,30 @@ export default function Form({ order, users, products }: Props) {
                                         <Label htmlFor="tracking_number">Tracking Number</Label>
                                         <Input
                                             id="tracking_number"
-                                            value={data.tracking_number || ""}
-                                            onChange={(e) => setData("tracking_number", e.target.value)}
+                                            value={data.tracking_number || ''}
+                                            onChange={(e) => setData('tracking_number', e.target.value)}
                                             disabled={processing}
                                             placeholder="Enter tracking number"
                                         />
-                                        {errors.tracking_number && (
-                                            <p className="text-sm text-red-600">{errors.tracking_number}</p>
-                                        )}
+                                        {errors.tracking_number && <p className="text-sm text-red-600">{errors.tracking_number}</p>}
                                     </div>
                                 </div>
                             </div>
                         </>
                     )}
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                         {/* Payment Method */}
                         <div className="flex flex-col gap-y-2">
                             <Label htmlFor="payment_method">Payment Method</Label>
                             <Input
                                 id="payment_method"
                                 value={data.payment_method}
-                                onChange={(e) => setData("payment_method", e.target.value)}
+                                onChange={(e) => setData('payment_method', e.target.value)}
                                 disabled={processing}
                                 placeholder="Credit Card, Bank Transfer, etc."
                             />
-                            {errors.payment_method && (
-                                <p className="text-sm text-red-600">{errors.payment_method}</p>
-                            )}
+                            {errors.payment_method && <p className="text-sm text-red-600">{errors.payment_method}</p>}
                         </div>
 
                         {/* Payment Channel */}
@@ -353,13 +323,11 @@ export default function Form({ order, users, products }: Props) {
                             <Input
                                 id="payment_channel"
                                 value={data.payment_channel}
-                                onChange={(e) => setData("payment_channel", e.target.value)}
+                                onChange={(e) => setData('payment_channel', e.target.value)}
                                 disabled={processing}
                                 placeholder="Stripe, PayPal, etc."
                             />
-                            {errors.payment_channel && (
-                                <p className="text-sm text-red-600">{errors.payment_channel}</p>
-                            )}
+                            {errors.payment_channel && <p className="text-sm text-red-600">{errors.payment_channel}</p>}
                         </div>
                     </div>
 
@@ -370,35 +338,33 @@ export default function Form({ order, users, products }: Props) {
                             id="url"
                             type="url"
                             value={data.url}
-                            onChange={(e) => setData("url", e.target.value)}
+                            onChange={(e) => setData('url', e.target.value)}
                             disabled={processing}
                             placeholder="https://payment-gateway.com/order/123"
                         />
-                        {errors.url && (
-                            <p className="text-sm text-red-600">{errors.url}</p>
-                        )}
+                        {errors.url && <p className="text-sm text-red-600">{errors.url}</p>}
                     </div>
 
                     {/* Order Items */}
                     <div className="flex flex-col gap-y-2">
                         <Label>Order Items</Label>
                         {data.items && data.items.length > 0 ? (
-                            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                            <div className="space-y-3 rounded-lg bg-gray-50 p-4">
                                 {data.items.map((item, index) => {
                                     const itemSubtotal = (Number(item.price) || 0) * (Number(item.quantity) || 0);
 
                                     return (
-                                        <div key={index} className="flex items-center gap-4 bg-white p-3 rounded border">
+                                        <div key={index} className="flex items-center gap-4 rounded border bg-white p-3">
                                             <div className="flex-1">
                                                 <Select
                                                     value={item.product_id.toString()}
                                                     onValueChange={(value) => {
-                                                        const selectedProduct = products?.find(p => p.id === Number(value));
+                                                        const selectedProduct = products?.find((p) => p.id === Number(value));
                                                         const newItems = [...(data.items || [])];
                                                         newItems[index] = {
                                                             ...item,
                                                             product_id: Number(value),
-                                                            price: selectedProduct?.price || 0
+                                                            price: selectedProduct?.price || 0,
                                                         };
                                                         setData('items', newItems);
                                                     }}
@@ -411,8 +377,8 @@ export default function Form({ order, users, products }: Props) {
                                                         {products?.map((product) => (
                                                             <SelectItem key={product.id} value={product.id.toString()}>
                                                                 {product.name}
-                                                                {product.dimension && ` - Dimension: ${product.dimension}`}
-                                                                - Rp {product.price.toLocaleString('id-ID')}
+                                                                {product.dimension && ` - Dimension: ${product.dimension}`}- Rp{' '}
+                                                                {product.price.toLocaleString('id-ID')}
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>
@@ -420,7 +386,9 @@ export default function Form({ order, users, products }: Props) {
                                             </div>
 
                                             <div className="flex items-center gap-2">
-                                                <Label htmlFor={`quantity-${index}`} className="text-sm whitespace-nowrap">Qty:</Label>
+                                                <Label htmlFor={`quantity-${index}`} className="text-sm whitespace-nowrap">
+                                                    Qty:
+                                                </Label>
                                                 <Input
                                                     id={`quantity-${index}`}
                                                     type="number"
@@ -430,7 +398,7 @@ export default function Form({ order, users, products }: Props) {
                                                         const newItems = [...(data.items || [])];
                                                         newItems[index] = {
                                                             ...item,
-                                                            quantity: Number(e.target.value) || 1
+                                                            quantity: Number(e.target.value) || 1,
                                                         };
                                                         setData('items', newItems);
                                                     }}
@@ -440,7 +408,9 @@ export default function Form({ order, users, products }: Props) {
                                             </div>
 
                                             <div className="flex items-center gap-2">
-                                                <Label htmlFor={`price-${index}`} className="text-sm whitespace-nowrap">Price:</Label>
+                                                <Label htmlFor={`price-${index}`} className="text-sm whitespace-nowrap">
+                                                    Price:
+                                                </Label>
                                                 <Input
                                                     id={`price-${index}`}
                                                     type="number"
@@ -450,7 +420,7 @@ export default function Form({ order, users, products }: Props) {
                                                         const newItems = [...(data.items || [])];
                                                         newItems[index] = {
                                                             ...item,
-                                                            price: Number(e.target.value) || 0
+                                                            price: Number(e.target.value) || 0,
                                                         };
                                                         setData('items', newItems);
                                                     }}
@@ -459,9 +429,7 @@ export default function Form({ order, users, products }: Props) {
                                                 />
                                             </div>
 
-                                            <div className="text-sm font-medium whitespace-nowrap">
-                                                Rp {itemSubtotal.toLocaleString('id-ID')}
-                                            </div>
+                                            <div className="text-sm font-medium whitespace-nowrap">Rp {itemSubtotal.toLocaleString('id-ID')}</div>
 
                                             <Button
                                                 type="button"
@@ -480,7 +448,7 @@ export default function Form({ order, users, products }: Props) {
                                 })}
 
                                 {/* Add New Item Button */}
-                                <div className="flex justify-between items-center border-t pt-3">
+                                <div className="flex items-center justify-between border-t pt-3">
                                     <Button
                                         type="button"
                                         variant="outline"
@@ -489,7 +457,7 @@ export default function Form({ order, users, products }: Props) {
                                             newItems.push({
                                                 product_id: products?.[0]?.id || 1,
                                                 quantity: 1,
-                                                price: products?.[0]?.price || 0
+                                                price: products?.[0]?.price || 0,
                                             });
                                             setData('items', newItems);
                                         }}
@@ -498,26 +466,29 @@ export default function Form({ order, users, products }: Props) {
                                         Add Item
                                     </Button>
 
-                                    <p className="font-semibold text-lg">
-                                        Total: Rp {((data.items || []).reduce((sum, item) =>
-                                            sum + ((Number(item.price) || 0) * (Number(item.quantity) || 0)), 0
-                                        )).toLocaleString('id-ID')}
+                                    <p className="text-lg font-semibold">
+                                        Total: Rp{' '}
+                                        {(data.items || [])
+                                            .reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 0), 0)
+                                            .toLocaleString('id-ID')}
                                     </p>
                                 </div>
                             </div>
                         ) : (
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="text-center text-gray-600 mb-4">No items in this order</p>
+                            <div className="rounded-lg bg-gray-50 p-4">
+                                <p className="mb-4 text-center text-gray-600">No items in this order</p>
                                 <div className="flex justify-center">
                                     <Button
                                         type="button"
                                         variant="outline"
                                         onClick={() => {
-                                            setData('items', [{
-                                                product_id: products?.[0]?.id || 1,
-                                                quantity: 1,
-                                                price: products?.[0]?.price || 0
-                                            }]);
+                                            setData('items', [
+                                                {
+                                                    product_id: products?.[0]?.id || 1,
+                                                    quantity: 1,
+                                                    price: products?.[0]?.price || 0,
+                                                },
+                                            ]);
                                         }}
                                         disabled={processing || !products?.length}
                                     >
@@ -537,11 +508,11 @@ export default function Form({ order, users, products }: Props) {
                                 console.log('Update button clicked', {
                                     processing,
                                     order: !!order,
-                                    data: data
+                                    data: data,
                                 });
                             }}
                         >
-                            {processing ? "Saving..." : (order ? "Update Order" : "Create Order")}
+                            {processing ? 'Saving...' : order ? 'Update Order' : 'Create Order'}
                         </Button>
                     </div>
                 </form>

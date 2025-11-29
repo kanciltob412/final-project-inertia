@@ -1,11 +1,11 @@
-import { Head, Link, useForm } from '@inertiajs/react';
-import CustomerLayout from '@/layouts/customer-layout';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import InputError from '@/components/input-error';
-import { Lock, Eye, EyeOff } from 'lucide-react';
+import CustomerLayout from '@/layouts/customer-layout';
+import { Head, Link, useForm } from '@inertiajs/react';
+import { Eye, EyeOff, Lock } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ChangePassword() {
@@ -32,16 +32,19 @@ export default function ChangePassword() {
     return (
         <CustomerLayout title="Change Password">
             <Head title="Change Password" />
-            <div className="space-y-6 p-4 md:p-8 max-w-2xl mx-auto">
+            <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-8">
                 {/* Back Link */}
-                <Link href="/customer/dashboard" className="inline-flex items-center gap-2 px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors mb-6">
+                <Link
+                    href="/customer/dashboard"
+                    className="mb-6 inline-flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-white transition-colors hover:bg-gray-800"
+                >
                     <span>←</span>
                     <span>Back to Dashboard</span>
                 </Link>
 
                 {/* Header */}
                 <div>
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 flex items-center gap-2 mb-2">
+                    <h1 className="mb-2 flex items-center gap-2 text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">
                         <Lock className="h-8 w-8" />
                         Change Password
                     </h1>
@@ -73,7 +76,7 @@ export default function ChangePassword() {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+                                        className="absolute top-2.5 right-3 text-gray-500 hover:text-gray-700"
                                     >
                                         {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -99,7 +102,7 @@ export default function ChangePassword() {
                                     <button
                                         type="button"
                                         onClick={() => setShowNewPassword(!showNewPassword)}
-                                        className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+                                        className="absolute top-2.5 right-3 text-gray-500 hover:text-gray-700"
                                     >
                                         {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -128,7 +131,7 @@ export default function ChangePassword() {
                                     <button
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-700"
+                                        className="absolute top-2.5 right-3 text-gray-500 hover:text-gray-700"
                                     >
                                         {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                                     </button>
@@ -141,16 +144,14 @@ export default function ChangePassword() {
                                 <Button type="submit" disabled={processing}>
                                     {processing ? 'Updating...' : 'Update Password'}
                                 </Button>
-                                {recentlySuccessful && (
-                                    <p className="text-sm font-medium text-green-600">✓ Password updated successfully!</p>
-                                )}
+                                {recentlySuccessful && <p className="text-sm font-medium text-green-600">✓ Password updated successfully!</p>}
                             </div>
                         </form>
                     </CardContent>
                 </Card>
 
                 {/* Security Tips */}
-                <Card className="bg-blue-50 border-blue-200">
+                <Card className="border-blue-200 bg-blue-50">
                     <CardHeader>
                         <CardTitle className="text-base">Password Security Tips</CardTitle>
                     </CardHeader>

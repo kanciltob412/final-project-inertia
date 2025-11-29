@@ -1,20 +1,19 @@
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, Category, Product } from "@/types";
-import { Head, router } from "@inertiajs/react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import HeadingSmall from "@/components/heading-small";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import TiptapEditor from "@/components/TiptapEditor";
-import MultiImageUpload from "@/components/MultiImageUpload";
-import { useForm } from "@inertiajs/react";
+import HeadingSmall from '@/components/heading-small';
+import MultiImageUpload from '@/components/MultiImageUpload';
+import TiptapEditor from '@/components/TiptapEditor';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, Category, Product } from '@/types';
+import { Head, router, useForm } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: "Products",
-        href: "/admin/products",
+        title: 'Products',
+        href: '/admin/products',
     },
 ];
 
@@ -28,15 +27,15 @@ export default function Form({ categories, product }: Props) {
     const initialGalleryFiles: File[] = [];
 
     const { data, setData, processing, errors } = useForm({
-        sku: product?.sku || "",
-        category_id: product?.category_id?.toString() || "",
-        name: product?.name || "",
-        description: product?.description || "",
-        stock: product?.stock?.toString() || "",
-        dimension: product?.dimension || "",
-        price: product?.price?.toString() || "",
-        discount: product?.discount ? Math.round(Number(product.discount)).toString() : "",
-        discount_type: product?.discount_type || "fixed",
+        sku: product?.sku || '',
+        category_id: product?.category_id?.toString() || '',
+        name: product?.name || '',
+        description: product?.description || '',
+        stock: product?.stock?.toString() || '',
+        dimension: product?.dimension || '',
+        price: product?.price?.toString() || '',
+        discount: product?.discount ? Math.round(Number(product.discount)).toString() : '',
+        discount_type: product?.discount_type || 'fixed',
         gallery_images: initialGalleryFiles,
     });
 
@@ -103,7 +102,7 @@ export default function Form({ categories, product }: Props) {
                     setTimeout(() => {
                         window.location.href = '/admin/products';
                     }, 500);
-                }
+                },
             });
         } else {
             // Creating new product
@@ -113,15 +112,14 @@ export default function Form({ categories, product }: Props) {
         }
     };
 
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={product ? "Edit Product" : "Create Product"} />
+            <Head title={product ? 'Edit Product' : 'Create Product'} />
 
             <div className="p-6">
                 <HeadingSmall
-                    title={`${product ? "Edit" : "Create"} Product`}
-                    description={`Fill out the form below to ${product ? "edit an existing" : "create a new"} product.`}
+                    title={`${product ? 'Edit' : 'Create'} Product`}
+                    description={`Fill out the form below to ${product ? 'edit an existing' : 'create a new'} product.`}
                 />
 
                 <Separator className="my-8" />
@@ -130,11 +128,7 @@ export default function Form({ categories, product }: Props) {
                     {/* Category */}
                     <div className="flex flex-col gap-y-4">
                         <Label htmlFor="category_id">Category</Label>
-                        <Select
-                            value={data.category_id}
-                            onValueChange={(value) => setData("category_id", value)}
-                            disabled={processing}
-                        >
+                        <Select value={data.category_id} onValueChange={(value) => setData('category_id', value)} disabled={processing}>
                             <SelectTrigger id="category_id">
                                 <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
@@ -146,9 +140,7 @@ export default function Form({ categories, product }: Props) {
                                 ))}
                             </SelectContent>
                         </Select>
-                        {errors.category_id && (
-                            <p className="text-sm text-red-600">{errors.category_id}</p>
-                        )}
+                        {errors.category_id && <p className="text-sm text-red-600">{errors.category_id}</p>}
                     </div>
 
                     {/* SKU */}
@@ -157,13 +149,11 @@ export default function Form({ categories, product }: Props) {
                         <Input
                             id="sku"
                             value={data.sku}
-                            onChange={(e) => setData("sku", e.target.value)}
+                            onChange={(e) => setData('sku', e.target.value)}
                             disabled={processing}
                             placeholder="e.g., PRD-ABC123"
                         />
-                        {errors.sku && (
-                            <p className="text-sm text-red-600">{errors.sku}</p>
-                        )}
+                        {errors.sku && <p className="text-sm text-red-600">{errors.sku}</p>}
                     </div>
 
                     {/* Dimension */}
@@ -173,27 +163,18 @@ export default function Form({ categories, product }: Props) {
                             id="dimension"
                             type="text"
                             value={data.dimension}
-                            onChange={(e) => setData("dimension", e.target.value)}
+                            onChange={(e) => setData('dimension', e.target.value)}
                             disabled={processing}
                             placeholder="e.g., 10cm x 10cm x 5cm"
                         />
-                        {errors.dimension && (
-                            <p className="text-sm text-red-600">{errors.dimension}</p>
-                        )}
+                        {errors.dimension && <p className="text-sm text-red-600">{errors.dimension}</p>}
                     </div>
 
                     {/* Name */}
                     <div className="flex flex-col gap-y-2">
                         <Label htmlFor="name">Name</Label>
-                        <Input
-                            id="name"
-                            value={data.name}
-                            onChange={(e) => setData("name", e.target.value)}
-                            disabled={processing}
-                        />
-                        {errors.name && (
-                            <p className="text-sm text-red-600">{errors.name}</p>
-                        )}
+                        <Input id="name" value={data.name} onChange={(e) => setData('name', e.target.value)} disabled={processing} />
+                        {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
                     </div>
 
                     {/* Description */}
@@ -201,23 +182,21 @@ export default function Form({ categories, product }: Props) {
                         <Label htmlFor="description">Description</Label>
                         <TiptapEditor
                             content={data.description}
-                            onChange={(content: string) => setData("description", content)}
+                            onChange={(content: string) => setData('description', content)}
                             disabled={processing}
                         />
-                        {errors.description && (
-                            <p className="text-sm text-red-600">{errors.description}</p>
-                        )}
+                        {errors.description && <p className="text-sm text-red-600">{errors.description}</p>}
                     </div>
 
                     {/* Product Details Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                         {/* Left Column - Gallery Images */}
                         <div className="space-y-6">
                             {/* Gallery Images - Featured image becomes main product image */}
                             <MultiImageUpload
                                 label="Product Gallery (First image will be featured as main product image)"
                                 value={data.gallery_images}
-                                onChange={(images) => setData("gallery_images", images)}
+                                onChange={(images) => setData('gallery_images', images)}
                                 maxImages={8}
                                 disabled={processing}
                                 error={errors.gallery_images}
@@ -233,14 +212,12 @@ export default function Form({ categories, product }: Props) {
                                     id="stock"
                                     type="number"
                                     value={data.stock}
-                                    onChange={(e) => setData("stock", e.target.value)}
+                                    onChange={(e) => setData('stock', e.target.value)}
                                     disabled={processing}
                                     placeholder="e.g., 100"
                                     min="0"
                                 />
-                                {errors.stock && (
-                                    <p className="text-sm text-red-600">{errors.stock}</p>
-                                )}
+                                {errors.stock && <p className="text-sm text-red-600">{errors.stock}</p>}
                             </div>
 
                             {/* Price */}
@@ -251,14 +228,12 @@ export default function Form({ categories, product }: Props) {
                                     type="number"
                                     step="0.01"
                                     value={data.price}
-                                    onChange={(e) => setData("price", e.target.value)}
+                                    onChange={(e) => setData('price', e.target.value)}
                                     disabled={processing}
                                     placeholder="e.g., 99.99"
                                     min="0"
                                 />
-                                {errors.price && (
-                                    <p className="text-sm text-red-600">{errors.price}</p>
-                                )}
+                                {errors.price && <p className="text-sm text-red-600">{errors.price}</p>}
                             </div>
 
                             {/* Discount Type */}
@@ -266,7 +241,7 @@ export default function Form({ categories, product }: Props) {
                                 <Label htmlFor="discount_type">Discount Type</Label>
                                 <Select
                                     value={data.discount_type}
-                                    onValueChange={(value) => setData("discount_type", value as "fixed" | "percentage")}
+                                    onValueChange={(value) => setData('discount_type', value as 'fixed' | 'percentage')}
                                     disabled={processing}
                                 >
                                     <SelectTrigger id="discount_type">
@@ -277,9 +252,7 @@ export default function Form({ categories, product }: Props) {
                                         <SelectItem value="percentage">Percentage</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                {errors.discount_type && (
-                                    <p className="text-sm text-red-600">{errors.discount_type}</p>
-                                )}
+                                {errors.discount_type && <p className="text-sm text-red-600">{errors.discount_type}</p>}
                             </div>
 
                             {/* Discount */}
@@ -290,14 +263,12 @@ export default function Form({ categories, product }: Props) {
                                     type="number"
                                     step="1"
                                     value={data.discount}
-                                    onChange={(e) => setData("discount", e.target.value)}
+                                    onChange={(e) => setData('discount', e.target.value)}
                                     disabled={processing}
                                     placeholder={data.discount_type === 'percentage' ? 'e.g., 10' : 'e.g., 10000'}
                                     min="0"
                                 />
-                                {errors.discount && (
-                                    <p className="text-sm text-red-600">{errors.discount}</p>
-                                )}
+                                {errors.discount && <p className="text-sm text-red-600">{errors.discount}</p>}
                             </div>
                         </div>
                     </div>
@@ -305,7 +276,7 @@ export default function Form({ categories, product }: Props) {
                     {/* Submit */}
                     <div className="flex items-center justify-end">
                         <Button type="submit" disabled={processing}>
-                            {product ? "Update" : "Create"}
+                            {product ? 'Update' : 'Create'}
                         </Button>
                     </div>
                 </form>

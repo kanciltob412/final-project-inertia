@@ -1,12 +1,12 @@
-import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem, Product } from "@/types";
-import { Head, Link } from "@inertiajs/react";
-import { ProductDataTable } from "./ProductDataTable";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { columns } from "./column";
-import HeadingSmall from "@/components/heading-small";
-import products from "../../routes/products";
+import HeadingSmall from '@/components/heading-small';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
+import { BreadcrumbItem, Product } from '@/types';
+import { Head, Link } from '@inertiajs/react';
+import { Plus } from 'lucide-react';
+import products from '../../routes/products';
+import { columns } from './column';
+import { ProductDataTable } from './ProductDataTable';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,7 +16,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 interface Props {
-    data: Product[]
+    data: Product[];
 }
 
 export default function Index({ data }: Props) {
@@ -26,10 +26,7 @@ export default function Index({ data }: Props) {
 
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
-                    <HeadingSmall
-                        title="Products List"
-                        description="Manage your products here"
-                    />
+                    <HeadingSmall title="Products List" description="Manage your products here" />
                     <Button asChild>
                         <Link href={products.create().url}>
                             <Plus className="size-4" />
@@ -40,7 +37,6 @@ export default function Index({ data }: Props) {
 
                 <ProductDataTable columns={columns} data={data} />
             </div>
-
         </AppLayout>
     );
 }

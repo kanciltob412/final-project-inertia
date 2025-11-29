@@ -7,11 +7,7 @@ import { Coupon } from '@/types';
  * @param amount - The amount to apply discount to
  * @returns The discount amount in rupiah
  */
-export function calculateCouponDiscount(
-    discountValue: number,
-    discountType: 'fixed' | 'percentage',
-    amount: number
-): number {
+export function calculateCouponDiscount(discountValue: number, discountType: 'fixed' | 'percentage', amount: number): number {
     if (discountType === 'percentage') {
         return (amount * discountValue) / 100;
     }

@@ -1,8 +1,8 @@
-import { useForm, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trash2, Edit, Plus } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
+import { router, useForm } from '@inertiajs/react';
+import { Edit, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 interface Content {
@@ -32,7 +32,13 @@ export default function DashboardContent({ content }: Props) {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
 
-    const { data, setData, delete: deleteItem, processing, reset } = useForm({
+    const {
+        data,
+        setData,
+        delete: deleteItem,
+        processing,
+        reset,
+    } = useForm({
         type: 'banner' as 'banner' | 'news' | 'promotion' | 'info',
         title: '',
         description: '',
@@ -134,19 +140,22 @@ export default function DashboardContent({ content }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <div className="space-y-6 p-4 md:p-8 max-w-4xl mx-auto">
+            <div className="mx-auto max-w-4xl space-y-6 p-4 md:p-8">
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">Slider & Announcements</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Slider & Announcements</h1>
                         <p className="text-sm text-gray-600">Create banners, news, promotions, or announcements</p>
                     </div>
-                    <Button onClick={() => {
-                        reset();
-                        setEditingId(null);
-                        setShowForm(!showForm);
-                    }} size="sm">
-                        <Plus className="h-4 w-4 mr-2" />
+                    <Button
+                        onClick={() => {
+                            reset();
+                            setEditingId(null);
+                            setShowForm(!showForm);
+                        }}
+                        size="sm"
+                    >
+                        <Plus className="mr-2 h-4 w-4" />
                         New Content
                     </Button>
                 </div>
@@ -161,11 +170,11 @@ export default function DashboardContent({ content }: Props) {
                             <form onSubmit={handleSubmit} className="space-y-3">
                                 <div className="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Type</label>
+                                        <label className="mb-1 block text-xs font-semibold">Type</label>
                                         <select
                                             value={data.type}
                                             onChange={(e) => setData('type', e.target.value as 'banner' | 'news' | 'promotion' | 'info')}
-                                            className="w-full px-2 py-1.5 border rounded text-sm"
+                                            className="w-full rounded border px-2 py-1.5 text-sm"
                                         >
                                             <option value="banner">🖼️ Banner</option>
                                             <option value="news">📰 News</option>
@@ -174,44 +183,44 @@ export default function DashboardContent({ content }: Props) {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Order (1-99)</label>
+                                        <label className="mb-1 block text-xs font-semibold">Order (1-99)</label>
                                         <input
                                             type="number"
                                             min="1"
                                             max="99"
                                             value={data.display_order}
                                             onChange={(e) => setData('display_order', parseInt(e.target.value))}
-                                            className="w-full px-2 py-1.5 border rounded text-sm"
+                                            className="w-full rounded border px-2 py-1.5 text-sm"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold mb-1">Title *</label>
+                                    <label className="mb-1 block text-xs font-semibold">Title *</label>
                                     <input
                                         type="text"
                                         placeholder="Enter title"
                                         value={data.title}
                                         onChange={(e) => setData('title', e.target.value)}
-                                        className="w-full px-2 py-1.5 border rounded text-sm"
+                                        className="w-full rounded border px-2 py-1.5 text-sm"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold mb-1">Description / Subtitle</label>
+                                    <label className="mb-1 block text-xs font-semibold">Description / Subtitle</label>
                                     <textarea
                                         placeholder="Short description"
                                         value={data.description}
                                         onChange={(e) => setData('description', e.target.value)}
                                         rows={2}
-                                        className="w-full px-2 py-1.5 border rounded text-sm"
+                                        className="w-full rounded border px-2 py-1.5 text-sm"
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-3">
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Image URL</label>
+                                        <label className="mb-1 block text-xs font-semibold">Image URL</label>
                                         <input
                                             type="file"
                                             accept="image/*"
@@ -221,52 +230,50 @@ export default function DashboardContent({ content }: Props) {
                                                     setData('image', file);
                                                 }
                                             }}
-                                            className="w-full px-2 py-1.5 border rounded text-sm file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                                            className="w-full rounded border px-2 py-1.5 text-sm file:mr-4 file:rounded file:border-0 file:bg-gray-100 file:px-3 file:py-1 file:text-sm file:font-semibold file:text-gray-700 hover:file:bg-gray-200"
                                         />
-                                        {data.image_url && (
-                                            <p className="text-xs text-gray-500 mt-1">Current: {data.image_url}</p>
-                                        )}
+                                        {data.image_url && <p className="mt-1 text-xs text-gray-500">Current: {data.image_url}</p>}
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Link URL (optional)</label>
+                                        <label className="mb-1 block text-xs font-semibold">Link URL (optional)</label>
                                         <input
                                             type="text"
                                             placeholder="/products"
                                             value={data.link_url}
                                             onChange={(e) => setData('link_url', e.target.value)}
-                                            className="w-full px-2 py-1.5 border rounded text-sm"
+                                            className="w-full rounded border px-2 py-1.5 text-sm"
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold mb-1">Full Content (optional)</label>
+                                    <label className="mb-1 block text-xs font-semibold">Full Content (optional)</label>
                                     <textarea
                                         placeholder="Detailed content"
                                         value={data.content}
                                         onChange={(e) => setData('content', e.target.value)}
                                         rows={2}
-                                        className="w-full px-2 py-1.5 border rounded text-sm"
+                                        className="w-full rounded border px-2 py-1.5 text-sm"
                                     />
                                 </div>
 
                                 <div className="grid grid-cols-3 gap-3">
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">Start Date</label>
+                                        <label className="mb-1 block text-xs font-semibold">Start Date</label>
                                         <input
                                             type="date"
                                             value={data.start_date}
                                             onChange={(e) => setData('start_date', e.target.value)}
-                                            className="w-full px-2 py-1.5 border rounded text-sm"
+                                            className="w-full rounded border px-2 py-1.5 text-sm"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold mb-1">End Date</label>
+                                        <label className="mb-1 block text-xs font-semibold">End Date</label>
                                         <input
                                             type="date"
                                             value={data.end_date}
                                             onChange={(e) => setData('end_date', e.target.value)}
-                                            className="w-full px-2 py-1.5 border rounded text-sm"
+                                            className="w-full rounded border px-2 py-1.5 text-sm"
                                         />
                                     </div>
                                     <div className="flex items-end">
@@ -282,13 +289,8 @@ export default function DashboardContent({ content }: Props) {
                                     </div>
                                 </div>
 
-                                <div className="flex gap-2 pt-3 border-t">
-                                    <Button
-                                        type="submit"
-                                        size="sm"
-                                        disabled={processing}
-                                        className="cursor-pointer"
-                                    >
+                                <div className="flex gap-2 border-t pt-3">
+                                    <Button type="submit" size="sm" disabled={processing} className="cursor-pointer">
                                         {editingId ? 'Update' : 'Create'}
                                     </Button>
                                     <Button
@@ -313,49 +315,38 @@ export default function DashboardContent({ content }: Props) {
                 <div className="space-y-3">
                     {content.length > 0 ? (
                         content.map((item) => (
-                            <Card key={item.id} className="hover:shadow-md transition-shadow">
+                            <Card key={item.id} className="transition-shadow hover:shadow-md">
                                 <CardContent className="p-4">
                                     <div className="flex items-start justify-between gap-4">
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${typeColors[item.type]}`}>
+                                        <div className="min-w-0 flex-1">
+                                            <div className="mb-2 flex flex-wrap items-center gap-2">
+                                                <span className={`rounded px-2 py-1 text-xs font-medium ${typeColors[item.type]}`}>
                                                     {typeIcons[item.type]} {item.type}
                                                 </span>
-                                                <span className={`px-2 py-1 rounded text-xs font-medium ${item.is_active
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-gray-100 text-gray-800'
-                                                    }`}>
+                                                <span
+                                                    className={`rounded px-2 py-1 text-xs font-medium ${
+                                                        item.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                                    }`}
+                                                >
                                                     {item.is_active ? '✓ Active' : '○ Inactive'}
                                                 </span>
                                                 <span className="text-xs text-gray-500">Order: {item.display_order}</span>
                                             </div>
-                                            <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
-                                            {item.description && (
-                                                <p className="text-xs text-gray-600 line-clamp-2">{item.description}</p>
-                                            )}
+                                            <h3 className="mb-1 text-sm font-semibold">{item.title}</h3>
+                                            {item.description && <p className="line-clamp-2 text-xs text-gray-600">{item.description}</p>}
                                             {(item.start_date || item.end_date) && (
-                                                <p className="text-xs text-gray-500 mt-1">
+                                                <p className="mt-1 text-xs text-gray-500">
                                                     {item.start_date && new Date(item.start_date).toLocaleDateString()}
                                                     {item.start_date && item.end_date && ' → '}
                                                     {item.end_date && new Date(item.end_date).toLocaleDateString()}
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="flex gap-1 shrink-0">
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                onClick={() => handleEdit(item)}
-                                                className="h-8 w-8 p-0"
-                                            >
+                                        <div className="flex shrink-0 gap-1">
+                                            <Button size="sm" variant="outline" onClick={() => handleEdit(item)} className="h-8 w-8 p-0">
                                                 <Edit className="h-3.5 w-3.5" />
                                             </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="destructive"
-                                                onClick={() => handleDelete(item.id)}
-                                                className="h-8 w-8 p-0"
-                                            >
+                                            <Button size="sm" variant="destructive" onClick={() => handleDelete(item.id)} className="h-8 w-8 p-0">
                                                 <Trash2 className="h-3.5 w-3.5" />
                                             </Button>
                                         </div>
@@ -366,7 +357,7 @@ export default function DashboardContent({ content }: Props) {
                     ) : (
                         <Card className="border-dashed">
                             <CardContent className="py-12 text-center">
-                                <p className="text-gray-500 text-sm">No content yet. Create your first slider or announcement!</p>
+                                <p className="text-sm text-gray-500">No content yet. Create your first slider or announcement!</p>
                             </CardContent>
                         </Card>
                     )}
