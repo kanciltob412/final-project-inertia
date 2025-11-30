@@ -30,6 +30,16 @@ interface Carousel {
     subtitle: string;
     description: string;
     image_path: string;
+    fallback_image_path?: string | null;
+    button_1_text?: string | null;
+    button_1_url?: string | null;
+    button_2_text?: string | null;
+    button_2_url?: string | null;
+    media_type?: 'image' | 'video';
+    video_path?: string | null;
+    youtube_url?: string | null;
+    autoplay_video?: boolean;
+    mute_video?: boolean;
     sort_order: number;
     is_active: boolean;
 }
