@@ -207,14 +207,16 @@ function HeroIndex({ carousels = [] }: Props) {
                             </motion.p>
                         )}
                         {heroSlides[currentSlide].title && (
-                            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.8 }}>
+                            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.8 }} className="relative">
                                 {heroSlides[currentSlide].title_link_url?.trim() ? (
-                                    <Link
+                                    <a
                                         href={heroSlides[currentSlide].title_link_url}
-                                        className="mb-4 inline-block text-3xl font-bold md:text-5xl lg:text-6xl transition-colors hover:opacity-80"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mb-4 inline-block text-3xl font-bold md:text-5xl lg:text-6xl transition-colors hover:opacity-80 cursor-pointer"
                                     >
                                         {heroSlides[currentSlide].title}
-                                    </Link>
+                                    </a>
                                 ) : (
                                     <h1 className="mb-4 text-3xl font-bold md:text-5xl lg:text-6xl">
                                         {heroSlides[currentSlide].title}
