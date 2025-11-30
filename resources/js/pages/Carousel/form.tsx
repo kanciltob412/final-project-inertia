@@ -179,11 +179,11 @@ export default function Form({ carousel }: Props) {
                         <Label htmlFor="title_link_url">Title Link URL (Optional)</Label>
                         <Input
                             id="title_link_url"
-                            type="url"
+                            type="text"
                             value={data.title_link_url}
                             onChange={(e) => setData('title_link_url', e.target.value)}
                             disabled={processing}
-                            placeholder="e.g., https://example.com/products"
+                            placeholder="e.g., /products or https://example.com/products"
                         />
                         {errors.title_link_url && <p className="text-sm text-red-600">{errors.title_link_url}</p>}
                     </div>
