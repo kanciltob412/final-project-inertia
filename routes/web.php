@@ -31,7 +31,6 @@ Route::get('/products/{id}', [PageController::class, 'productDetail'])->name('pr
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::get('/about', [PageController::class, 'about'])->name('about');
 Route::get('/cart', [PageController::class, 'cart'])->name('cart');
-Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
 Route::get('/articles', [PageController::class, 'articles'])->name('articles');
 Route::get('/articles/{id}', [PageController::class, 'articleDetail'])->name('article.detail');
 Route::get('/craftsmanship', [PageController::class, 'craftsmanship'])->name('craftsmanship');
@@ -42,6 +41,11 @@ Route::get('/privacy-policy', [PageController::class, 'privacyPolicy'])->name('p
 Route::get('/terms-of-service', [PageController::class, 'termsOfService'])->name('terms-of-service');
 Route::get('/cookies-policy', [PageController::class, 'cookiesPolicy'])->name('cookies-policy');
 Route::get('/shipping-test', fn() => inertia('ShippingTest'))->name('shipping-test');
+
+// Authenticated routes - require login
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
+});
 
 Route::prefix('admin')->middleware(['auth', 'verified', 'checkAdmin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
