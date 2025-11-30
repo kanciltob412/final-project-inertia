@@ -37,6 +37,10 @@ class CarouselController extends Controller
             'subtitle' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048',
+            'button_1_text' => 'nullable|string|max:100',
+            'button_1_url' => 'nullable|string|max:255',
+            'button_2_text' => 'nullable|string|max:100',
+            'button_2_url' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
@@ -48,6 +52,10 @@ class CarouselController extends Controller
             'subtitle' => $validated['subtitle'],
             'description' => $validated['description'],
             'image_path' => $imagePath,
+            'button_1_text' => $validated['button_1_text'] ?? null,
+            'button_1_url' => $validated['button_1_url'] ?? null,
+            'button_2_text' => $validated['button_2_text'] ?? null,
+            'button_2_url' => $validated['button_2_url'] ?? null,
             'sort_order' => $validated['sort_order'] ?? 0,
             'is_active' => $validated['is_active'] ?? true,
         ]);
@@ -75,6 +83,10 @@ class CarouselController extends Controller
             'subtitle' => 'required|string|max:255',
             'description' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048',
+            'button_1_text' => 'nullable|string|max:100',
+            'button_1_url' => 'nullable|string|max:255',
+            'button_2_text' => 'nullable|string|max:100',
+            'button_2_url' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
@@ -92,6 +104,10 @@ class CarouselController extends Controller
             'subtitle' => $validated['subtitle'],
             'description' => $validated['description'],
             'image_path' => $validated['image_path'] ?? $carousel->image_path,
+            'button_1_text' => $validated['button_1_text'] ?? $carousel->button_1_text,
+            'button_1_url' => $validated['button_1_url'] ?? $carousel->button_1_url,
+            'button_2_text' => $validated['button_2_text'] ?? $carousel->button_2_text,
+            'button_2_url' => $validated['button_2_url'] ?? $carousel->button_2_url,
             'sort_order' => $validated['sort_order'] ?? $carousel->sort_order,
             'is_active' => $validated['is_active'] ?? $carousel->is_active,
         ]);

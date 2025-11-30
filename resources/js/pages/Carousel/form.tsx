@@ -16,6 +16,10 @@ interface Carousel {
     subtitle: string;
     description: string;
     image_path: string;
+    button_1_text: string | null;
+    button_1_url: string | null;
+    button_2_text: string | null;
+    button_2_url: string | null;
     sort_order: number;
     is_active: boolean;
 }
@@ -40,6 +44,10 @@ export default function Form({ carousel }: Props) {
         title: carousel?.title || '',
         subtitle: carousel?.subtitle || '',
         description: carousel?.description || '',
+        button_1_text: carousel?.button_1_text || '',
+        button_1_url: carousel?.button_1_url || '',
+        button_2_text: carousel?.button_2_text || '',
+        button_2_url: carousel?.button_2_url || '',
         sort_order: carousel?.sort_order?.toString() || '0',
         is_active: carousel?.is_active ?? true,
         image: null as File | null,
@@ -58,6 +66,10 @@ export default function Form({ carousel }: Props) {
         formData.append('title', data.title);
         formData.append('subtitle', data.subtitle);
         formData.append('description', data.description);
+        formData.append('button_1_text', data.button_1_text);
+        formData.append('button_1_url', data.button_1_url);
+        formData.append('button_2_text', data.button_2_text);
+        formData.append('button_2_url', data.button_2_url);
         formData.append('sort_order', data.sort_order);
         formData.append('is_active', data.is_active ? '1' : '0');
         if (data.image) {
@@ -157,6 +169,58 @@ export default function Form({ carousel }: Props) {
                             disabled={processing}
                         />
                         {errors.image && <p className="text-sm text-red-600">{errors.image}</p>}
+                    </div>
+
+                    {/* Button 1 */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="button_1_text">Button 1 Text</Label>
+                            <Input
+                                id="button_1_text"
+                                value={data.button_1_text}
+                                onChange={(e) => setData('button_1_text', e.target.value)}
+                                disabled={processing}
+                                placeholder="e.g., Shop Now"
+                            />
+                            {errors.button_1_text && <p className="text-sm text-red-600">{errors.button_1_text}</p>}
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="button_1_url">Button 1 URL</Label>
+                            <Input
+                                id="button_1_url"
+                                value={data.button_1_url}
+                                onChange={(e) => setData('button_1_url', e.target.value)}
+                                disabled={processing}
+                                placeholder="e.g., /products"
+                            />
+                            {errors.button_1_url && <p className="text-sm text-red-600">{errors.button_1_url}</p>}
+                        </div>
+                    </div>
+
+                    {/* Button 2 */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="button_2_text">Button 2 Text</Label>
+                            <Input
+                                id="button_2_text"
+                                value={data.button_2_text}
+                                onChange={(e) => setData('button_2_text', e.target.value)}
+                                disabled={processing}
+                                placeholder="e.g., Learn More"
+                            />
+                            {errors.button_2_text && <p className="text-sm text-red-600">{errors.button_2_text}</p>}
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="button_2_url">Button 2 URL</Label>
+                            <Input
+                                id="button_2_url"
+                                value={data.button_2_url}
+                                onChange={(e) => setData('button_2_url', e.target.value)}
+                                disabled={processing}
+                                placeholder="e.g., /about"
+                            />
+                            {errors.button_2_url && <p className="text-sm text-red-600">{errors.button_2_url}</p>}
+                        </div>
                     </div>
 
                     {/* Sort Order */}

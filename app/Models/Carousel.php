@@ -11,6 +11,10 @@ class Carousel extends Model
         'subtitle',
         'description',
         'image_path',
+        'button_1_text',
+        'button_1_url',
+        'button_2_text',
+        'button_2_url',
         'sort_order',
         'is_active',
     ];

@@ -10,6 +10,10 @@ interface HeroSlide {
     title: string;
     subtitle: string;
     description: string;
+    button_1_text?: string | null;
+    button_1_url?: string | null;
+    button_2_text?: string | null;
+    button_2_url?: string | null;
 }
 
 interface Props {
@@ -136,12 +140,12 @@ function HeroIndex({ carousels = [] }: Props) {
                     src={heroSlides[currentSlide].image}
                     alt={heroSlides[currentSlide].title}
                     className={`absolute h-full w-full object-cover ${currentSlide % 4 === 0
-                            ? 'kenburns-top'
-                            : currentSlide % 4 === 1
-                                ? 'kenburns-bottom'
-                                : currentSlide % 4 === 2
-                                    ? 'kenburns-left'
-                                    : 'kenburns-right'
+                        ? 'kenburns-top'
+                        : currentSlide % 4 === 1
+                            ? 'kenburns-bottom'
+                            : currentSlide % 4 === 2
+                                ? 'kenburns-left'
+                                : 'kenburns-right'
                         }`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -221,19 +225,41 @@ function HeroIndex({ carousels = [] }: Props) {
                             transition={{ delay: 0.6, duration: 0.8 }}
                             className="flex flex-col items-center justify-center gap-4 md:flex-row"
                         >
-                            <Link
-                                href="/products"
-                                className="mx-auto inline-flex w-auto max-w-[220px] min-w-[140px] items-center justify-center rounded-md bg-white px-4 py-2 text-sm text-black transition-colors hover:bg-gray-100 md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
-                            >
-                                Shop Now
-                                <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
-                            </Link>
-                            <Link
-                                href="/about"
-                                className="mx-auto w-auto max-w-[220px] min-w-[140px] rounded-md border-2 border-white px-4 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
-                            >
-                                Learn More
-                            </Link>
+                            {/* Button 1 */}
+                            {(heroSlides[currentSlide].button_1_text && heroSlides[currentSlide].button_1_url) ? (
+                                <Link
+                                    href={heroSlides[currentSlide].button_1_url!}
+                                    className="mx-auto inline-flex w-auto max-w-[220px] min-w-[140px] items-center justify-center rounded-md bg-white px-4 py-2 text-sm text-black transition-colors hover:bg-gray-100 md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
+                                >
+                                    {heroSlides[currentSlide].button_1_text}
+                                    <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/products"
+                                    className="mx-auto inline-flex w-auto max-w-[220px] min-w-[140px] items-center justify-center rounded-md bg-white px-4 py-2 text-sm text-black transition-colors hover:bg-gray-100 md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
+                                >
+                                    Shop Now
+                                    <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
+                                </Link>
+                            )}
+
+                            {/* Button 2 */}
+                            {(heroSlides[currentSlide].button_2_text && heroSlides[currentSlide].button_2_url) ? (
+                                <Link
+                                    href={heroSlides[currentSlide].button_2_url!}
+                                    className="mx-auto w-auto max-w-[220px] min-w-[140px] rounded-md border-2 border-white px-4 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
+                                >
+                                    {heroSlides[currentSlide].button_2_text}
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/about"
+                                    className="mx-auto w-auto max-w-[220px] min-w-[140px] rounded-md border-2 border-white px-4 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black md:mx-0 md:max-w-none md:min-w-0 md:px-8 md:py-3 md:text-base"
+                                >
+                                    Learn More
+                                </Link>
+                            )}
                         </motion.div>
                     </div>
                 </motion.div>
