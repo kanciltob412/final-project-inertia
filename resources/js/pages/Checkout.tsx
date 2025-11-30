@@ -463,32 +463,6 @@ export default function Checkout() {
 
                     <div className="mb-8">
                         <h2 className="mb-6 text-xl font-semibold text-gray-900 md:text-2xl lg:text-3xl">Shipping Details</h2>
-
-                        {/* Login/Register Options for Guest Users */}
-                        {!auth.user && (
-                            <div className="mb-6 rounded-lg border border-gray-300 bg-gray-100 p-4">
-                                <p className="mb-3 text-sm text-gray-800">Already have an account? Login for faster checkout or continue as guest.</p>
-                                <div className="flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => router.visit('/login')}
-                                        className="flex-1 rounded-md bg-black px-4 py-2 text-sm text-white transition-colors hover:bg-gray-900"
-                                    >
-                                        Login
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => router.visit('/register')}
-                                        className="flex-1 rounded-md border border-black px-4 py-2 text-sm text-black transition-colors hover:bg-gray-50"
-                                    >
-                                        Register
-                                    </button>
-                                </div>
-                                <div className="mt-3 text-center">
-                                    <span className="text-xs text-gray-500">or continue as guest below</span>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     <div>
