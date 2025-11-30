@@ -13,6 +13,7 @@ import { ChangeEvent } from 'react';
 interface Carousel {
     id: number;
     title: string;
+    title_link_url: string | null;
     subtitle: string;
     description: string;
     image_path: string;
@@ -48,6 +49,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Form({ carousel }: Props) {
     const { data, setData, processing, errors } = useForm({
         title: carousel?.title || '',
+        title_link_url: carousel?.title_link_url || '',
         subtitle: carousel?.subtitle || '',
         description: carousel?.description || '',
         button_1_text: carousel?.button_1_text || '',
@@ -88,6 +90,7 @@ export default function Form({ carousel }: Props) {
 
         const formData = new FormData();
         formData.append('title', data.title);
+        formData.append('title_link_url', data.title_link_url || '');
         formData.append('subtitle', data.subtitle);
         formData.append('description', data.description);
         formData.append('button_1_text', data.button_1_text || '');
@@ -169,6 +172,20 @@ export default function Form({ carousel }: Props) {
                             placeholder="e.g., Elevate Your Spaces"
                         />
                         {errors.title && <p className="text-sm text-red-600">{errors.title}</p>}
+                    </div>
+
+                    {/* Title Link URL */}
+                    <div className="flex flex-col gap-y-2">
+                        <Label htmlFor="title_link_url">Title Link URL (Optional)</Label>
+                        <Input
+                            id="title_link_url"
+                            type="url"
+                            value={data.title_link_url}
+                            onChange={(e) => setData('title_link_url', e.target.value)}
+                            disabled={processing}
+                            placeholder="e.g., https://example.com/products"
+                        />
+                        {errors.title_link_url && <p className="text-sm text-red-600">{errors.title_link_url}</p>}
                     </div>
 
                     {/* Subtitle */}

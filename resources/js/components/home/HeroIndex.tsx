@@ -8,6 +8,7 @@ interface HeroSlide {
     image_path?: string;
     image?: string;
     title: string;
+    title_link_url?: string | null;
     subtitle: string;
     description: string;
     button_1_text?: string | null;
@@ -206,9 +207,20 @@ function HeroIndex({ carousels = [] }: Props) {
                             </motion.p>
                         )}
                         {heroSlides[currentSlide].title && (
-                            <motion.h1 initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.8 }} className="mb-4 text-3xl font-bold md:text-5xl lg:text-6xl">
-                                {heroSlides[currentSlide].title}
-                            </motion.h1>
+                            <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2, duration: 0.8 }}>
+                                {heroSlides[currentSlide].title_link_url?.trim() ? (
+                                    <Link
+                                        href={heroSlides[currentSlide].title_link_url}
+                                        className="mb-4 inline-block text-3xl font-bold md:text-5xl lg:text-6xl transition-colors hover:opacity-80"
+                                    >
+                                        {heroSlides[currentSlide].title}
+                                    </Link>
+                                ) : (
+                                    <h1 className="mb-4 text-3xl font-bold md:text-5xl lg:text-6xl">
+                                        {heroSlides[currentSlide].title}
+                                    </h1>
+                                )}
+                            </motion.div>
                         )}
                         {heroSlides[currentSlide].description && (
                             <motion.p initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4, duration: 0.8 }} className="mb-6 text-sm opacity-90 md:text-base lg:text-lg">

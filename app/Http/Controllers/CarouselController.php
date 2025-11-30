@@ -34,6 +34,7 @@ class CarouselController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
+            'title_link_url' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048',
@@ -53,6 +54,7 @@ class CarouselController extends Controller
 
         // Convert empty strings to null
         $validated['title'] = empty($validated['title']) ? null : $validated['title'];
+        $validated['title_link_url'] = empty($validated['title_link_url']) ? null : $validated['title_link_url'];
         $validated['subtitle'] = empty($validated['subtitle']) ? null : $validated['subtitle'];
         $validated['description'] = empty($validated['description']) ? null : $validated['description'];
         $validated['button_1_text'] = empty($validated['button_1_text']) ? null : $validated['button_1_text'];
@@ -75,6 +77,7 @@ class CarouselController extends Controller
 
         Carousel::create([
             'title' => $validated['title'],
+            'title_link_url' => $validated['title_link_url'],
             'subtitle' => $validated['subtitle'],
             'description' => $validated['description'],
             'image_path' => $imagePath,
@@ -112,6 +115,7 @@ class CarouselController extends Controller
     {
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
+            'title_link_url' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp,bmp,tiff,ico|max:2048',
@@ -131,6 +135,7 @@ class CarouselController extends Controller
 
         // Convert empty strings to null
         $validated['title'] = empty($validated['title']) ? null : $validated['title'];
+        $validated['title_link_url'] = empty($validated['title_link_url']) ? null : $validated['title_link_url'];
         $validated['subtitle'] = empty($validated['subtitle']) ? null : $validated['subtitle'];
         $validated['description'] = empty($validated['description']) ? null : $validated['description'];
         $validated['button_1_text'] = empty($validated['button_1_text']) ? null : $validated['button_1_text'];
@@ -168,6 +173,7 @@ class CarouselController extends Controller
 
         $carousel->update([
             'title' => $validated['title'],
+            'title_link_url' => $validated['title_link_url'],
             'subtitle' => $validated['subtitle'],
             'description' => $validated['description'],
             'image_path' => $imagePath,

@@ -27,6 +27,7 @@ interface Product {
 interface Carousel {
     id: number;
     title: string;
+    title_link_url?: string | null;
     subtitle: string;
     description: string;
     image_path: string;
