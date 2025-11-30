@@ -302,6 +302,13 @@ export default function Checkout() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Check if user is authenticated - guests must register/login to complete order
+        if (!auth.user) {
+            alert('Please register or login to complete your order.');
+            router.visit('/login', { method: 'get' });
+            return;
+        }
+
         // Build products array
         const products = items.map((item) => ({
             id: parseInt(item.id.includes('-') ? item.id.split('-')[0] : item.id, 10), // Base product ID as integer
@@ -411,6 +418,21 @@ export default function Checkout() {
             <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 md:grid-cols-2 md:px-6 md:py-12 lg:px-8 lg:py-16">
                 {/* Checkout Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Alert for guests - must register to complete order */}
+                    {!auth.user && (
+                        <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+                            <div className="flex gap-3">
+                                <AlertCircle className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-semibold text-orange-900">Login Required</p>
+                                    <p className="text-sm text-orange-800 mt-1">
+                                        You must <a href="/login" className="font-semibold underline hover:text-orange-900">login</a> or <a href="/register" className="font-semibold underline hover:text-orange-900">register</a> to complete your order.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Show saved addresses if user is logged in */}
                     {auth.user && addresses.length > 0 && !useNewAddress && (
                         <div>
@@ -725,12 +747,11 @@ export default function Checkout() {
                                                                 onClick={() =>
                                                                     selectShippingOption(courier, cost.service, cost.cost?.[0]?.value || 0)
                                                                 }
-                                                                className={`w-full rounded-md border-2 p-3 text-left transition-colors ${
-                                                                    selectedShippingService?.courier === courier &&
+                                                                className={`w-full rounded-md border-2 p-3 text-left transition-colors ${selectedShippingService?.courier === courier &&
                                                                     selectedShippingService?.service === cost.service
-                                                                        ? 'border-black bg-gray-100'
-                                                                        : 'border-gray-200 hover:border-gray-300'
-                                                                }`}
+                                                                    ? 'border-black bg-gray-100'
+                                                                    : 'border-gray-200 hover:border-gray-300'
+                                                                    }`}
                                                             >
                                                                 <div className="flex items-start justify-between">
                                                                     <div className="text-left">
@@ -822,9 +843,9 @@ export default function Checkout() {
 
                     <button
                         type="submit"
-                        disabled={processing || !selectedShippingCost}
+                        disabled={processing || !selectedShippingCost || !auth.user}
                         className="mt-8 w-full rounded-md bg-black py-3 text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
-                        title={!selectedShippingCost ? 'Please select a shipping method' : ''}
+                        title={!auth.user ? 'Please login to complete your order' : !selectedShippingCost ? 'Please select a shipping method' : ''}
                     >
                         {processing ? 'Processing...' : 'Place Order'}
                     </button>
