@@ -168,15 +168,20 @@ export const columns: ColumnDef<Order>[] = [
             }
             return (
                 <div>
-                    {order.items.map((item) => (
-                        <div key={item.id} className="mb-1 text-sm">
-                            {new Intl.NumberFormat('id-ID', {
-                                style: 'currency',
-                                currency: 'IDR',
-                                maximumFractionDigits: 0,
-                            }).format(item.price)}
-                        </div>
-                    ))}
+                    {order.items.map((item) => {
+                        // item.price is the discounted price per unit
+                        // item.discount is the discount amount per unit
+                        const originalPricePerUnit = (item.price || 0) + (item.discount || 0);
+                        return (
+                            <div key={item.id} className="mb-1 text-sm">
+                                {new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0,
+                                }).format(originalPricePerUnit)}
+                            </div>
+                        );
+                    })}
                 </div>
             );
         },
@@ -192,21 +197,9 @@ export const columns: ColumnDef<Order>[] = [
             return (
                 <div>
                     {order.items.map((item) => {
-                        const product = item.product || {};
-                        const discount = product.discount || 0;
-                        const discountType = product.discount_type || 'fixed';
-                        let discountAmount = 0;
-
-                        if (discount > 0) {
-                            if (discountType === 'percentage') {
-                                discountAmount = item.price * (discount / 100);
-                            } else {
-                                discountAmount = discount;
-                            }
-                        }
-
-                        // Multiply discount by quantity to get total discount for this item
-                        const totalDiscountAmount = discountAmount * item.quantity;
+                        // item.discount is the discount amount per unit
+                        // Multiply by quantity to get total discount for this item
+                        const totalDiscountAmount = (item.discount || 0) * (item.quantity || 1);
 
                         return (
                             <div key={item.id} className="mb-1 text-sm font-medium text-red-600">
@@ -231,27 +224,15 @@ export const columns: ColumnDef<Order>[] = [
             return (
                 <div>
                     {order.items.map((item) => {
-                        const product = item.product || {};
-                        const discount = product.discount || 0;
-                        const discountType = product.discount_type || 'fixed';
-                        let discountAmount = 0;
-
-                        if (discount > 0) {
-                            if (discountType === 'percentage') {
-                                discountAmount = item.price * (discount / 100);
-                            } else {
-                                discountAmount = discount;
-                            }
-                        }
-
-                        const discountedPrice = item.price - discountAmount;
+                        // item.price is the line total (price × quantity), item.discount is already applied
+                        // So subtotal is simply item.price
                         return (
                             <div key={item.id} className="mb-1 text-sm font-semibold">
                                 {new Intl.NumberFormat('id-ID', {
                                     style: 'currency',
                                     currency: 'IDR',
                                     maximumFractionDigits: 0,
-                                }).format(discountedPrice * item.quantity)}
+                                }).format(item.price)}
                             </div>
                         );
                     })}
@@ -273,8 +254,8 @@ export const columns: ColumnDef<Order>[] = [
                             {order.coupon.discount_type === 'percentage'
                                 ? `${order.coupon.discount_value}% off`
                                 : `Rp ${new Intl.NumberFormat('id-ID', {
-                                      maximumFractionDigits: 0,
-                                  }).format(order.coupon.discount_value)}`}
+                                    maximumFractionDigits: 0,
+                                }).format(order.coupon.discount_value)}`}
                         </div>
                     </div>
                 );
@@ -295,10 +276,10 @@ export const columns: ColumnDef<Order>[] = [
                         <div className="font-medium text-gray-900">
                             {shippingCost > 0
                                 ? new Intl.NumberFormat('id-ID', {
-                                      style: 'currency',
-                                      currency: 'IDR',
-                                      maximumFractionDigits: 0,
-                                  }).format(shippingCost)
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    maximumFractionDigits: 0,
+                                }).format(shippingCost)
                                 : 'Free'}
                         </div>
                         {order.shipping_courier && (
