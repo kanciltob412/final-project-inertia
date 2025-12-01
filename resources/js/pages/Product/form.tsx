@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem, Category, Product } from '@/types';
 import { Head, router, useForm } from '@inertiajs/react';
+import React from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -26,6 +27,10 @@ interface Props {
 export default function Form({ categories, product }: Props) {
     // Initialize gallery files array for image uploads
     const initialGalleryFiles: File[] = [];
+    // Track existing images when editing
+    const [existingImages, setExistingImages] = React.useState<string[]>(
+        product?.images?.map((img: any) => img.image_path) || []
+    );
 
     const { data, setData, processing, errors } = useForm({
         sku: product?.sku || '',
@@ -205,6 +210,12 @@ export default function Form({ categories, product }: Props) {
                                 maxImages={8}
                                 disabled={processing}
                                 error={errors.gallery_images}
+                                existingImages={existingImages}
+                                onRemoveExisting={(imagePath) => {
+                                    // If removing existing image, we'll set an empty gallery_images to trigger update
+                                    // Note: User should upload new images if they remove existing ones
+                                    setExistingImages(existingImages.filter(img => img !== imagePath));
+                                }}
                             />
                         </div>
 

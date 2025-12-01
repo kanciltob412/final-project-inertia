@@ -12,6 +12,8 @@ interface MultiImageUploadProps {
     disabled?: boolean;
     error?: string;
     accept?: string;
+    existingImages?: string[];
+    onRemoveExisting?: (path: string) => void;
 }
 
 export default function MultiImageUpload({
@@ -22,6 +24,8 @@ export default function MultiImageUpload({
     disabled = false,
     error,
     accept = 'image/*',
+    existingImages = [],
+    onRemoveExisting,
 }: MultiImageUploadProps) {
     const [previews, setPreviews] = useState<string[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -92,29 +96,65 @@ export default function MultiImageUpload({
                     </span>
                 </div>
 
-                {/* Image previews */}
-                {value.length > 0 && (
-                    <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
-                        {value.map((file, index) => (
-                            <div key={index} className="group relative">
-                                <img
-                                    src={previews[index] || URL.createObjectURL(file)}
-                                    alt={`Preview ${index + 1}`}
-                                    className="h-32 w-full rounded-lg border object-cover"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100"
-                                    onClick={() => removeImage(index)}
-                                    disabled={disabled}
-                                >
-                                    <X className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        ))}
+                {/* Existing images */}
+                {existingImages.length > 0 && (
+                    <div>
+                        <p className="mb-2 text-sm font-medium text-gray-600">Current Images</p>
+                        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                            {existingImages.map((imagePath, index) => (
+                                <div key={`existing-${index}`} className="group relative">
+                                    <img
+                                        src={`/storage/${imagePath}`}
+                                        alt={`Existing ${index + 1}`}
+                                        className="h-32 w-full rounded-lg border object-cover"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100"
+                                        onClick={() => onRemoveExisting?.(imagePath)}
+                                        disabled={disabled}
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
+                )}
+
+                {/* New image previews */}
+                {value.length > 0 && (
+                    <div>
+                        <p className="mb-2 text-sm font-medium text-gray-600">New Images</p>
+                        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                            {value.map((file, index) => (
+                                <div key={index} className="group relative">
+                                    <img
+                                        src={previews[index] || URL.createObjectURL(file)}
+                                        alt={`Preview ${index + 1}`}
+                                        className="h-32 w-full rounded-lg border object-cover"
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="sm"
+                                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100"
+                                        onClick={() => removeImage(index)}
+                                        disabled={disabled}
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* Show message when no images */}
+                {value.length === 0 && existingImages.length === 0 && (
+                    <p className="text-sm text-gray-500">No images yet. Click "Add Images" to upload.</p>
                 )}
             </div>
 

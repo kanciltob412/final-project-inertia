@@ -128,6 +128,7 @@ class ProductController extends Controller
             "name" => "required|string|max:255",
             "description" => "required|string",
             "stock" => "nullable|integer|min:0",
+            "dimension" => "nullable|string|max:255",
             "price" => "required|numeric|min:0",
             "discount" => "nullable|numeric|min:0",
             "discount_type" => "nullable|in:fixed,percentage",
@@ -145,6 +146,7 @@ class ProductController extends Controller
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'stock' => $validated['stock'] ?? 0,
+                'dimension' => $validated['dimension'] ?? null,
                 'price' => $validated['price'],
                 'discount' => $validated['discount'] ?? 0,
                 'discount_type' => $validated['discount_type'] ?? 'fixed',
@@ -162,7 +164,7 @@ class ProductController extends Controller
 
             $product->update($productData);
 
-            // Handle gallery images
+            // Handle gallery images - only update if new gallery images are provided
             if ($request->hasFile('gallery_images')) {
                 // Delete existing gallery images
                 $existingImages = $product->images;
