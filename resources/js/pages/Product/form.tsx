@@ -29,7 +29,7 @@ export default function Form({ categories, product }: Props) {
     const initialGalleryFiles: File[] = [];
     // Track existing images when editing
     const [existingImages, setExistingImages] = React.useState<string[]>(
-        product?.images?.map((img: any) => img.image_path) || []
+        product?.images?.map((img: { image_path: string }) => img.image_path) || []
     );
 
     const { data, setData, processing, errors } = useForm({
