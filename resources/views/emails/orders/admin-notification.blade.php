@@ -24,7 +24,7 @@
         
         .header {
             text-align: center;
-            border-bottom: 3px solid {{ $type === 'success' ? '#28a745' : '#dc3545' }};
+            border-bottom: 3px solid #2c1810;
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
@@ -47,7 +47,7 @@
         }
         
         .title {
-            color: {{ $type === 'success' ? '#28a745' : '#dc3545' }};
+            color: #2c3e50;
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 20px;
@@ -58,12 +58,12 @@
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border-left: 4px solid {{ $type === 'success' ? '#28a745' : '#dc3545' }};
+            border-left: 4px solid #2c1810;
         }
         
         .order-info h3 {
             margin-top: 0;
-            color: {{ $type === 'success' ? '#28a745' : '#dc3545' }};
+            color: #2c1810;
         }
         
         .info-row {
@@ -83,11 +83,16 @@
         }
         
         .customer-info {
-            background-color: #e9ecef;
+            background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
-            border-left: 4px solid #6c757d;
+            border-left: 4px solid #2c1810;
+        }
+        
+        .customer-info h3 {
+            margin-top: 0;
+            color: #2c1810;
         }
         
         .order-items {
@@ -95,7 +100,7 @@
         }
         
         .item {
-            padding: 10px;
+            padding: 15px;
             border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
@@ -103,6 +108,24 @@
         
         .item:last-child {
             border-bottom: none;
+        }
+        
+        .admin-action-box {
+            background-color: {{ $type === 'success' ? '#d4edda' : '#f8d7da' }};
+            border: 1px solid {{ $type === 'success' ? '#c3e6cb' : '#f5c6cb' }};
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .admin-action-box h4 {
+            margin-top: 0;
+            color: {{ $type === 'success' ? '#155724' : '#721c24' }};
+        }
+        
+        .admin-action-box ul {
+            color: {{ $type === 'success' ? '#155724' : '#721c24' }};
+            margin: 0;
         }
         
         .cta-button {
@@ -153,18 +176,14 @@
         </p>
         
         <div class="order-info">
-            <h3>Order Summary</h3>
+            <h3>Order Details</h3>
             <div class="info-row">
-                <span class="label">Order ID:</span>
+                <span class="label">Order Number:</span>
                 <span class="value">#{{ $order->id }}</span>
             </div>
             <div class="info-row">
                 <span class="label">Order Date:</span>
                 <span class="value">{{ $order->created_at->format('F j, Y \a\t g:i A') }}</span>
-            </div>
-            <div class="info-row">
-                <span class="label">Total Amount:</span>
-                <span class="value" style="font-weight: bold;">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
             </div>
             <div class="info-row">
                 <span class="label">Payment Status:</span>
@@ -181,7 +200,7 @@
         </div>
 
         <div class="customer-info">
-            <h3 style="margin-top: 0; color: #6c757d;">Customer Information</h3>
+            <h3>Customer Information</h3>
             <div class="info-row">
                 <span class="label">Name:</span>
                 <span class="value">{{ $order->user->name }}</span>
@@ -201,7 +220,7 @@
         </div>
 
         <div class="order-items">
-            <h3>Ordered Items</h3>
+            <h3>Items Ordered</h3>
             @foreach($order->items as $item)
             <div class="item">
                 <div style="flex: 1;">
@@ -210,7 +229,7 @@
                     <br><small>Dimension: {{ $item->product->dimension }}</small>
                     @endif
                     <br><small>Unit Price: Rp {{ number_format($item->price / $item->quantity, 0, ',', '.') }}</small>
-                    <br><small>Qty: {{ $item->quantity }}</small>
+                    <br><small>Quantity: {{ $item->quantity }}</small>
                     @if($item->discount && $item->discount > 0)
                     <br><small style="color: #28a745;"><strong>Discount: 
                         @if($item->discount_type === 'percentage')
@@ -271,12 +290,16 @@
                 <span style="color: #28a745; font-weight: bold;">-Rp {{ number_format($order->coupon_discount, 0, ',', '.') }}</span>
             </div>
             @endif
+            <div style="border-top: 2px solid #2c1810; padding-top: 10px; display: flex; justify-content: space-between;">
+                <span style="font-weight: bold; color: #2c1810;">Total Amount:</span>
+                <span style="font-weight: bold; color: #2c1810; font-size: 1.2em;">Rp {{ number_format($order->total, 0, ',', '.') }}</span>
+            </div>
         </div>
 
         @if($type === 'success')
-        <div style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h4 style="margin-top: 0; color: #155724;">✅ Next Steps</h4>
-            <ul style="color: #155724; margin: 0;">
+        <div class="admin-action-box">
+            <h4>✅ Next Steps</h4>
+            <ul>
                 <li>Process the order for fulfillment</li>
                 <li>Prepare items for shipment</li>
                 <li>Update customer with tracking information</li>
@@ -284,9 +307,9 @@
             </ul>
         </div>
         @else
-        <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h4 style="margin-top: 0; color: #721c24;">⚠ Required Actions</h4>
-            <ul style="color: #721c24; margin: 0;">
+        <div class="admin-action-box">
+            <h4>⚠ Required Actions</h4>
+            <ul>
                 <li>Follow up with customer about payment failure</li>
                 <li>Check if customer needs payment assistance</li>
                 <li>Monitor for retry attempts</li>
@@ -296,8 +319,8 @@
         @endif
 
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ config('app.url') }}/admin/orders" class="cta-button">View All Orders</a>
-            <a href="{{ config('app.url') }}/admin" class="cta-button">Admin Dashboard</a>
+            <a href="{{ config('app.url') }}/admin/orders" class="cta-button" style="color: white;">View All Orders</a>
+            <a href="{{ config('app.url') }}/admin" class="cta-button" style="color: white;">Admin Dashboard</a>
         </div>
 
         <div class="footer">

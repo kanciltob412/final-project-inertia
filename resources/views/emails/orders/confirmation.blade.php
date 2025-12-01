@@ -282,8 +282,8 @@
         </div>
 
         <div style="text-align: center; margin: 30px 0;">
-            <a href="{{ config('app.url') }}" class="cta-button">Continue Shopping</a>
-            <a href="{{ config('app.url') }}/contact" class="cta-button">Contact Support</a>
+            <a href="{{ config('app.url') }}" class="cta-button" style="color: white;">Continue Shopping</a>
+            <a href="{{ config('app.url') }}/contact" class="cta-button" style="color: white;">Contact Support</a>
         </div>
 
         <div class="footer">
