@@ -116,8 +116,15 @@ export default function Craftsmanship() {
             </div>
 
             <main className="mx-auto max-w-6xl px-4 py-8 md:px-6 md:py-12 lg:px-8 lg:py-16">
-                <section className="match-height grid grid-cols-1 items-stretch gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
-                    <div className="match-text flex h-full flex-col justify-start">
+                <section className="grid grid-cols-1 gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
+                    <div className="order-first md:order-2 overflow-hidden rounded-lg">
+                        <img
+                            src="/images/craftmanship/craftmanship_01.jpg"
+                            alt="Giving form"
+                            className="h-full w-full rounded-lg object-cover"
+                        />
+                    </div>
+                    <div className="order-last md:order-1 flex flex-col justify-start">
                         <h2 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Giving Form to An Idea</h2>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
                             At Lavanya Ceramics we are fascinated by the possibility of being able to represent an idea with our own hands. The origin
@@ -130,25 +137,17 @@ export default function Craftsmanship() {
                             and care for detail.
                         </p>
                     </div>
-
-                    <div className="match-image h-full overflow-hidden rounded-lg">
-                        <img
-                            src="/images/craftmanship/craftmanship_01.jpg"
-                            alt="Giving form"
-                            className="block h-full w-full rounded-lg object-cover"
-                        />
-                    </div>
                 </section>
 
-                <section className="match-height grid grid-cols-1 items-stretch gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
-                    <div className="match-image h-full overflow-hidden rounded-lg">
+                <section className="grid grid-cols-1 gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
+                    <div className="order-first md:order-first overflow-hidden rounded-lg">
                         <img
                             src="/images/craftmanship/craftmanship_02.jpg"
                             alt="Noble Material"
-                            className="block h-full w-full rounded-lg object-cover"
+                            className="h-full w-full rounded-lg object-cover"
                         />
                     </div>
-                    <div className="match-text flex h-full flex-col justify-start">
+                    <div className="flex flex-col justify-start">
                         <h3 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Noble Materials</h3>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
                             Porcelain is composed by the raw materials kaolin, feldspar and quartz. It has a high level of resistance and high
@@ -164,8 +163,11 @@ export default function Craftsmanship() {
                     </div>
                 </section>
 
-                <section className="match-height grid grid-cols-1 items-stretch gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
-                    <div className="match-text flex h-full flex-col justify-start">
+                <section className="grid grid-cols-1 gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
+                    <div className="order-first md:order-2 overflow-hidden rounded-lg">
+                        <img src="/images/craftmanship/craftmanship_03.jpg" alt="Handmade" className="h-full w-full rounded-lg object-cover" />
+                    </div>
+                    <div className="order-last md:order-1 flex flex-col justify-start">
                         <h3 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Handmade Process</h3>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
                             Our designers and modellers work together in close cooperation to construct the models. Once they have been shaped to
@@ -176,16 +178,13 @@ export default function Craftsmanship() {
                             All our fine porcelain and glass creations are crafted, fired and polished by hand with an emphasis on detail and quality.
                         </p>
                     </div>
-                    <div className="match-image h-full overflow-hidden rounded-lg">
-                        <img src="/images/craftmanship/craftmanship_03.jpg" alt="Handmade" className="block h-full w-full rounded-lg object-cover" />
-                    </div>
                 </section>
 
-                <section className="match-height grid grid-cols-1 items-stretch gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
-                    <div className="match-image h-full overflow-hidden rounded-lg">
-                        <img src="/images/craftmanship/craftmanship_04.jpg" alt="Handmade" className="block h-full w-full rounded-lg object-cover" />
+                <section className="grid grid-cols-1 gap-6 py-8 md:grid-cols-2 md:gap-8 md:py-10 lg:gap-12 lg:py-12">
+                    <div className="order-first md:order-first overflow-hidden rounded-lg">
+                        <img src="/images/craftmanship/craftmanship_04.jpg" alt="Handmade" className="h-full w-full rounded-lg object-cover" />
                     </div>
-                    <div className="match-text flex h-full flex-col justify-start">
+                    <div className="flex flex-col justify-start">
                         <h3 className="mb-4 text-lg font-semibold text-gray-900 md:mb-6 md:text-xl lg:text-2xl">Finishing</h3>
                         <p className="mb-4 text-sm leading-relaxed text-gray-700 md:text-base">
                             In the porcelain manufacturing process, the biscuit fired pieces are glazed. The glaze is a mixture of quartz, feldspar,
