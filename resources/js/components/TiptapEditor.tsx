@@ -38,7 +38,16 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
         content: content || '<p>Start typing...</p>',
         editable: !disabled,
         onUpdate: ({ editor }) => {
-            onChange(editor.getHTML());
+            let html = editor.getHTML();
+
+            // Remove empty list items
+            html = html.replace(/<li><\/li>/g, '');
+            html = html.replace(/<li>\s*<\/li>/g, '');
+
+            // Remove lists with no items
+            html = html.replace(/<[ou]l>\s*<\/[ou]l>/g, '');
+
+            onChange(html);
         },
     });
 
@@ -245,6 +254,10 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     .tiptap li {
                         margin: 0.25em 0;
                         line-height: 1.5;
+                        min-height: 1.5em;
+                    }
+                    .tiptap li:empty {
+                        display: none;
                     }
                     .tiptap ul li::marker {
                         content: '• ';
