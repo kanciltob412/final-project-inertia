@@ -2,6 +2,7 @@ import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import { Link, usePage } from '@inertiajs/react';
 import { ArrowLeft, Clock, CreditCard, Mail, MapPin, Package, Phone, Truck } from 'lucide-react';
+import { formatPrice } from '@/utils/helper';
 
 interface OrderItem {
     id: number;
@@ -24,6 +25,7 @@ interface OrderItem {
 interface OrderData {
     id: number;
     user_id: number;
+    full_name?: string;
     status: string;
     total: number;
     address: string;
@@ -126,7 +128,7 @@ export default function OrderShow() {
                                 <MapPin className="h-5 w-5" />
                                 Shipping Address
                             </h3>
-                            <p className="font-semibold">{order.user?.name || 'Guest'}</p>
+                            <p className="font-semibold">{order.full_name || order.user?.name || 'Guest'}</p>
                             <p className="text-gray-600">{order.address}</p>
                             <p className="text-gray-600">
                                 {order.city}, {order.postal_code}
@@ -249,8 +251,8 @@ export default function OrderShow() {
                                 </div>
                                 {couponDiscount > 0 && (
                                     <div className="flex justify-between text-red-600">
-                                        <span>Coupon Discount ({order.coupon?.code}):</span>
-                                        <span className="font-semibold">-Rp {couponDiscount.toLocaleString('id-ID')}</span>
+                                        <span>Coupon ({order.coupon?.code}):</span>
+                                        <span className="font-semibold">- {formatPrice(couponDiscount)}</span>
                                     </div>
                                 )}
                                 <div className="mt-3 border-t pt-3">

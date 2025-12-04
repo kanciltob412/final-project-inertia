@@ -599,7 +599,7 @@ export default function Checkout() {
 
                         <div className="mb-6 space-y-4">
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Destination Province</label>
+                                <label className="mb-2 block text-sm font-medium text-gray-700">Province</label>
                                 <select
                                     value={destProvince}
                                     onChange={(e) => {
@@ -619,7 +619,7 @@ export default function Checkout() {
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-gray-700">Destination City</label>
+                                <label className="mb-2 block text-sm font-medium text-gray-700">City</label>
                                 <select
                                     value={destCity}
                                     onChange={(e) => {
@@ -775,9 +775,9 @@ export default function Checkout() {
                                     <span className="font-semibold">Discount:</span>{' '}
                                     {appliedCoupon.discount_type === 'percentage'
                                         ? `${Math.round(appliedCoupon.discount_value)}%`
-                                        : `Rp ${Math.round(appliedCoupon.discount_value).toLocaleString('id-ID')}`}
+                                        : formatPrice(Math.round(appliedCoupon.discount_value))}
                                     <br />
-                                    <span className="font-semibold">You save:</span> Rp {discountAmount.toLocaleString('id-ID')}
+                                    <span className="font-semibold">You save:</span> {formatPrice(discountAmount)}
                                 </p>
                                 <button
                                     type="button"
@@ -895,7 +895,7 @@ export default function Checkout() {
                                         {appliedCoupon && discountAmount > 0 && (
                                             <div className="flex justify-between">
                                                 <span className="text-green-600">Coupon ({appliedCoupon.code})</span>
-                                                <span className="font-semibold text-green-600">-Rp {discountAmount.toLocaleString('id-ID')}</span>
+                                                <span className="font-semibold text-green-600">-{formatPrice(discountAmount)}</span>
                                             </div>
                                         )}
                                         <hr className="my-4" />

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomerLayout from '@/layouts/customer-layout';
 import { Order } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Heart, MapPin, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 
 interface ContentItem {
     id: number;
@@ -29,7 +29,6 @@ interface DashboardProps {
     stats: {
         totalOrders: number;
         totalWishlist: number;
-        totalAddresses: number;
     };
     recentOrders: Array<Order>;
     dashboardContent?: ContentItem[];
@@ -52,14 +51,14 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                 {/* Header */}
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 md:text-3xl lg:text-4xl">Welcome back, {user.name}!</h1>
-                    <p className="text-gray-600">Manage your orders, addresses, and wishlist all in one place</p>
+                    <p className="text-gray-600">Manage your orders and wishlist all in one place</p>
                 </div>
 
                 {/* Content Carousel Slider */}
                 {dashboardContent && dashboardContent.length > 0 && <ContentCarousel items={dashboardContent} />}
 
                 {/* Quick Stats */}
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="grid gap-4 md:grid-cols-2">
                     <Link href="/customer/orders">
                         <Card className="cursor-pointer transition-shadow hover:shadow-lg">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -82,19 +81,6 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                             <CardContent>
                                 <div className="text-2xl font-bold">{stats.totalWishlist}</div>
                                 <p className="text-xs text-gray-500">Saved items</p>
-                            </CardContent>
-                        </Card>
-                    </Link>
-
-                    <Link href="/customer/addresses">
-                        <Card className="cursor-pointer transition-shadow hover:shadow-lg">
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">Addresses</CardTitle>
-                                <MapPin className="h-4 w-4 text-green-500" />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{stats.totalAddresses}</div>
-                                <p className="text-xs text-gray-500">Saved addresses</p>
                             </CardContent>
                         </Card>
                     </Link>
@@ -135,15 +121,14 @@ export default function Dashboard({ user, stats, recentOrders, dashboardContent 
                                                 {/* Status & Action */}
                                                 <div className="flex flex-col items-end justify-between">
                                                     <span
-                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${
-                                                            order.status === 'DELIVERED'
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : order.status === 'PENDING'
-                                                                  ? 'bg-yellow-100 text-yellow-800'
-                                                                  : order.status === 'SHIPPED'
+                                                        className={`inline-block rounded px-2 py-1 text-xs font-medium ${order.status === 'DELIVERED'
+                                                            ? 'bg-green-100 text-green-800'
+                                                            : order.status === 'PENDING'
+                                                                ? 'bg-yellow-100 text-yellow-800'
+                                                                : order.status === 'SHIPPED'
                                                                     ? 'bg-blue-100 text-blue-800'
                                                                     : 'bg-gray-100 text-gray-800'
-                                                        }`}
+                                                            }`}
                                                     >
                                                         {order.status?.charAt(0).toUpperCase() + order.status?.slice(1).toLowerCase()}
                                                     </span>

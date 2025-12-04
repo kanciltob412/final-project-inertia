@@ -307,6 +307,7 @@ class OrderController extends Controller
 
             $order = Order::create([
                 'user_id' => $user->id,
+                'full_name' => $request->full_name,
                 'address' => $request->address,
                 'phone' => $request->phone,
                 'city' => $request->city,

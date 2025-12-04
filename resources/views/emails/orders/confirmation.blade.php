@@ -154,7 +154,7 @@
         
         <div class="title">Order Confirmation</div>
         
-        <p>Dear {{ $order->user->name }},</p>
+        <p>Dear {{ $order->full_name ?? $order->user->name }},</p>
         
         <p>Thank you for your order! We're excited to confirm that your payment has been successfully processed and your handcrafted ceramics are being prepared with care.</p>
         

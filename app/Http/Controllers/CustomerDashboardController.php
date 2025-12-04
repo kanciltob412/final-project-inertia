@@ -25,7 +25,6 @@ class CustomerDashboardController extends Controller
             'stats' => [
                 'totalOrders' => $user->orders()->count(),
                 'totalWishlist' => $user->wishlists()->count(),
-                'totalAddresses' => $user->addresses()->count(),
             ],
             'recentOrders' => $user->orders()
                 ->with('items.product')

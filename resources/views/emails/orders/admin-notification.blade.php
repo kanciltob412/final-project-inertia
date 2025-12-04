@@ -203,7 +203,7 @@
             <h3>Customer Information</h3>
             <div class="info-row">
                 <span class="label">Name:</span>
-                <span class="value">{{ $order->user->name }}</span>
+                <span class="value">{{ $order->full_name ?? $order->user->name }}</span>
             </div>
             <div class="info-row">
                 <span class="label">Email:</span>
