@@ -448,7 +448,6 @@ class OrderController extends Controller
                 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             } finally {
                 if (is_resource($ch)) {
-                    // @noinspection PhpDeprecatedFunctionUsageInspection
                     curl_close($ch); // Resource cleanup
                 }
             }

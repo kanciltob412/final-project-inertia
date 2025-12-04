@@ -93,7 +93,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
     };
 
     return (
-        <div className="rounded border border-gray-300 bg-white shadow-sm overflow-hidden">
+        <div className="rounded border border-gray-300 bg-white shadow-sm overflow-hidden max-w-none">
             {/* Main Toolbar */}
             <div className="border-b border-gray-200 bg-gray-50 p-2 flex flex-wrap gap-1">
                 {/* Text Formatting */}
@@ -297,7 +297,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
             </div>
 
             {/* Editor Content */}
-            <div className="min-h-[300px] max-w-none overflow-auto p-4 prose prose-sm max-w-none">
+            <div className="min-h-[300px] max-w-none overflow-auto p-4 prose prose-sm">
                 <style>{`
                     .tiptap {
                         outline: none;
