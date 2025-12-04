@@ -52,20 +52,21 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
     });
 
     useEffect(() => {
-        if (editor && content !== editor.getHTML()) {
+        if (editor && content && content !== editor.getHTML()) {
             editor.commands.setContent(content);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [content]);
+    }, [content, editor]);
 
-    const handleLinkClick = () => {
+    const handleLinkClick = (e: React.MouseEvent) => {
+        e.preventDefault();
         const url = window.prompt('Enter URL:');
         if (url && editor) {
             editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
         }
     };
 
-    const handleImageClick = () => {
+    const handleImageClick = (e: React.MouseEvent) => {
+        e.preventDefault();
         const url = window.prompt('Enter image URL:');
         if (url && editor) {
             editor.chain().focus().setImage({ src: url }).run();
