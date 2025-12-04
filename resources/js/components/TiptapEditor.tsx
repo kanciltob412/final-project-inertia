@@ -81,6 +81,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
             {/* Toolbar */}
             <div className="flex flex-wrap gap-1 border-b bg-gray-50 p-2">
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('bold') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleBold().run()}
@@ -90,6 +91,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     <Bold className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('italic') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleItalic().run()}
@@ -99,6 +101,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     <Italic className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('code') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleCode().run()}
@@ -111,6 +114,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                 <div className="mx-1 border-r"></div>
 
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('heading', { level: 1 }) ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
@@ -120,6 +124,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     H1
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('heading', { level: 2 }) ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
@@ -129,6 +134,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     H2
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('heading', { level: 3 }) ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
@@ -141,6 +147,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                 <div className="mx-1 border-r"></div>
 
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('bulletList') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -150,6 +157,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     <List className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('orderedList') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleOrderedList().run()}
@@ -159,6 +167,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     <ListOrdered className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('codeBlock') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleCodeBlock().run()}
@@ -168,6 +177,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     Code
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('blockquote') ? 'default' : 'outline'}
                     onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -180,6 +190,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                 <div className="mx-1 border-r"></div>
 
                 <Button
+                    type="button"
                     size="sm"
                     variant={editor.isActive('link') ? 'default' : 'outline'}
                     onClick={handleLinkClick}
@@ -189,6 +200,7 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     <LinkIcon className="h-4 w-4" />
                 </Button>
                 <Button
+                    type="button"
                     size="sm"
                     variant="outline"
                     onClick={handleImageClick}
