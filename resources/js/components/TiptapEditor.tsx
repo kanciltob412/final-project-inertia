@@ -156,10 +156,12 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     variant={editor.isActive('bulletList') ? 'default' : 'outline'}
                     onClick={(e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         editor.chain().focus().toggleBulletList().run();
                     }}
                     disabled={disabled}
                     className="h-8 w-8 p-0"
+                    title="Bullet List"
                 >
                     <List className="h-4 w-4" />
                 </Button>
@@ -169,10 +171,12 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     variant={editor.isActive('orderedList') ? 'default' : 'outline'}
                     onClick={(e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         editor.chain().focus().toggleOrderedList().run();
                     }}
                     disabled={disabled}
                     className="h-8 w-8 p-0"
+                    title="Numbered List"
                 >
                     <ListOrdered className="h-4 w-4" />
                 </Button>
@@ -245,9 +249,17 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     .tiptap ul, .tiptap ol {
                         padding-left: 1.5em;
                         margin: 1em 0;
+                        list-style: inherit;
                     }
                     .tiptap li {
-                        margin: 0.5em 0;
+                        margin: 0.25em 0;
+                        line-height: 1.5;
+                    }
+                    .tiptap ul li::marker {
+                        content: '• ';
+                    }
+                    .tiptap ol li::marker {
+                        content: attr(data-list-marker) '. ';
                     }
                     .tiptap blockquote {
                         border-left: 4px solid #ddd;
