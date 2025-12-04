@@ -49,13 +49,13 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
         },
-    }, [content]);
+    });
 
     useEffect(() => {
-        if (!editor || !content) return;
+        if (!editor) return;
 
-        const currentContent = editor.getHTML();
-        if (content && content !== currentContent) {
+        // Only update if content has changed externally (not from user typing)
+        if (content && content !== editor.getHTML()) {
             editor.commands.setContent(content, false);
         }
     }, [content, editor]);
@@ -216,7 +216,68 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
             </div>
 
             {/* Editor */}
-            <div className="min-h-[300px] prose prose-sm max-w-none p-4 overflow-auto">
+            <div className="min-h-[300px] max-w-none overflow-auto p-4">
+                <style>{`
+                    .tiptap {
+                        outline: none;
+                    }
+                    .tiptap h1 {
+                        font-size: 2em;
+                        font-weight: bold;
+                        margin: 0.67em 0;
+                    }
+                    .tiptap h2 {
+                        font-size: 1.5em;
+                        font-weight: bold;
+                        margin: 0.75em 0;
+                    }
+                    .tiptap h3 {
+                        font-size: 1.17em;
+                        font-weight: bold;
+                        margin: 0.83em 0;
+                    }
+                    .tiptap ul, .tiptap ol {
+                        padding-left: 1.5em;
+                        margin: 1em 0;
+                    }
+                    .tiptap li {
+                        margin: 0.5em 0;
+                    }
+                    .tiptap blockquote {
+                        border-left: 4px solid #ddd;
+                        padding-left: 1em;
+                        margin: 1em 0;
+                        color: #666;
+                        font-style: italic;
+                    }
+                    .tiptap code {
+                        background: #f0f0f0;
+                        padding: 0.2em 0.4em;
+                        border-radius: 3px;
+                        font-family: monospace;
+                    }
+                    .tiptap pre {
+                        background: #f5f5f5;
+                        border-radius: 5px;
+                        padding: 1em;
+                        overflow-x: auto;
+                        margin: 1em 0;
+                    }
+                    .tiptap pre code {
+                        background: transparent;
+                        padding: 0;
+                    }
+                    .tiptap a {
+                        color: #0066cc;
+                        text-decoration: underline;
+                    }
+                    .tiptap img {
+                        max-width: 100%;
+                        height: auto;
+                        border-radius: 5px;
+                        margin: 1em 0;
+                    }
+                `}</style>
                 <EditorContent editor={editor} />
             </div>
         </div>
