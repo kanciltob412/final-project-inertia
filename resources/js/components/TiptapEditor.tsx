@@ -44,16 +44,19 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                 lowlight,
             }),
         ],
-        content,
+        content: content || '',
         editable: !disabled,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
         },
-    });
+    }, [content]);
 
     useEffect(() => {
-        if (editor && content && content !== editor.getHTML()) {
-            editor.commands.setContent(content);
+        if (!editor || !content) return;
+
+        const currentContent = editor.getHTML();
+        if (content && content !== currentContent) {
+            editor.commands.setContent(content, false);
         }
     }, [content, editor]);
 
