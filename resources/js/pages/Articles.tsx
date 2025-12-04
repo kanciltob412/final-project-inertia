@@ -112,25 +112,25 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                     {featuredArticle && (
                         <div className="mb-16">
                             <h2 className="mb-6 text-xl font-semibold text-gray-900 md:text-2xl lg:text-3xl">Featured Article</h2>
-                            <div className="grid gap-8 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2">
+                            <div className="grid gap-6 overflow-hidden rounded-lg bg-white shadow-lg md:grid-cols-2" style={{ height: '440px' }}>
                                 <Link
                                     href={`/articles/${featuredArticle.id}`}
-                                    className="relative block h-[400px] transition-opacity hover:opacity-90 md:h-auto"
+                                    className="relative block h-32 transition-opacity hover:opacity-90 md:h-full"
                                 >
                                     <img
                                         src={
                                             featuredArticle.featured_image?.startsWith('http')
                                                 ? featuredArticle.featured_image
                                                 : featuredArticle.featured_image
-                                                  ? `/storage/${featuredArticle.featured_image}`
-                                                  : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
+                                                    ? `/storage/${featuredArticle.featured_image}`
+                                                    : 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800'
                                         }
                                         alt={featuredArticle.title}
                                         className="relative inset-0 h-full w-full object-cover"
                                     />
                                 </Link>
-                                <div className="flex flex-col justify-between p-8">
-                                    <div>
+                                <div className="flex flex-col justify-start p-6 pr-10">
+                                    <div className="mb-6">
                                         <div className="mb-4 flex items-center gap-4 text-sm text-gray-500">
                                             <div className="flex items-center">
                                                 <Calendar className="mr-2 h-4 w-4" />
@@ -141,17 +141,17 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                                 {featuredArticle.reading_time ? `${featuredArticle.reading_time} min read` : '5 min read'}
                                             </div>
                                         </div>
-                                        <Link href={`/articles/${featuredArticle.id}`} className="mb-4 block">
+                                        <Link href={`/articles/${featuredArticle.id}`} className="mb-3 block">
                                             <h3 className="text-2xl font-bold transition-colors hover:text-gray-600 md:text-3xl lg:text-4xl">
                                                 {featuredArticle.title}
                                             </h3>
                                         </Link>
-                                        <p className="mb-4 text-gray-600">{featuredArticle.excerpt}</p>
-                                        <p className="text-gray-500">By {featuredArticle.author_name || 'Admin'}</p>
+                                        <p className="mb-3 text-gray-600">{featuredArticle.excerpt}</p>
+                                        <p className="text-sm text-gray-500">By {featuredArticle.author_name || 'Admin'}</p>
                                     </div>
                                     <Link
                                         href={`/articles/${featuredArticle.id}`}
-                                        className="mt-6 inline-flex items-center font-semibold text-black hover:underline"
+                                        className="inline-flex items-center font-semibold text-black hover:underline"
                                     >
                                         Read Article
                                         <ChevronRight className="ml-1 h-4 w-4" />
@@ -173,8 +173,8 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                                 article.featured_image?.startsWith('http')
                                                     ? article.featured_image
                                                     : article.featured_image
-                                                      ? `/storage/${article.featured_image}`
-                                                      : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500'
+                                                        ? `/storage/${article.featured_image}`
+                                                        : 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500'
                                             }
                                             alt={article.title}
                                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -237,11 +237,10 @@ export default function Articles({ articles, filters }: ArticlesProps) {
                                             <button
                                                 key={page}
                                                 onClick={() => handlePageClick(page)}
-                                                className={`rounded-md px-3 py-2 text-sm font-medium ${
-                                                    page === articles.current_page
-                                                        ? 'bg-blue-600 text-white'
-                                                        : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-                                                }`}
+                                                className={`rounded-md px-3 py-2 text-sm font-medium ${page === articles.current_page
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                                                    }`}
                                             >
                                                 {page}
                                             </button>

@@ -54,6 +54,16 @@ class ArticleController extends Controller
         if ($request->hasFile('featured_image')) {
             $validated['featured_image'] = $request->file('featured_image')->store('articles', 'public');
         }
+
+        // Auto-generate excerpt from content if not provided
+        if (empty($validated['excerpt']) && !empty($validated['content'])) {
+            $plainText = strip_tags($validated['content']);
+            $validated['excerpt'] = substr($plainText, 0, 150);
+            if (strlen($plainText) > 150) {
+                $validated['excerpt'] = substr($validated['excerpt'], 0, strrpos($validated['excerpt'], ' ')) . '...';
+            }
+        }
+
         Article::create($validated);
         return redirect()->route('articles.index')->with('success', 'Article created successfully.');
     }
@@ -83,7 +93,7 @@ class ArticleController extends Controller
     public function update(Request $request, string $id)
     {
         $article = Article::findOrFail($id);
-        
+
         // Check if it's a bulk status update (only status field)
         if ($request->has('status') && count($request->all()) === 1) {
             $validated = $request->validate([
@@ -92,7 +102,7 @@ class ArticleController extends Controller
             $article->update($validated);
             return redirect()->route('articles.index')->with('success', 'Article status updated successfully.');
         }
-        
+
         // Full form update
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -118,6 +128,16 @@ class ArticleController extends Controller
         } else {
             $validated['featured_image'] = $article->featured_image;
         }
+
+        // Auto-generate excerpt from content if not provided
+        if (empty($validated['excerpt']) && !empty($validated['content'])) {
+            $plainText = strip_tags($validated['content']);
+            $validated['excerpt'] = substr($plainText, 0, 150);
+            if (strlen($plainText) > 150) {
+                $validated['excerpt'] = substr($validated['excerpt'], 0, strrpos($validated['excerpt'], ' ')) . '...';
+            }
+        }
+
         $article->update($validated);
         return redirect()->route('articles.index')->with('success', 'Article updated successfully.');
     }
@@ -148,7 +168,7 @@ class ArticleController extends Controller
             ->update(['status' => $validated['status']]);
 
         $message = "Articles status updated to {$validated['status']} successfully.";
-        
+
         return back()->with('success', $message);
     }
 
@@ -162,7 +182,7 @@ class ArticleController extends Controller
         ]);
 
         $originalArticle = Article::findOrFail($validated['id']);
-        
+
         Article::create([
             'title' => $originalArticle->title . ' (Copy)',
             'slug' => $originalArticle->slug . '-copy-' . time(),
