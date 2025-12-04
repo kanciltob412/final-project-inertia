@@ -154,7 +154,10 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     type="button"
                     size="sm"
                     variant={editor.isActive('bulletList') ? 'default' : 'outline'}
-                    onClick={() => editor.chain().focus().toggleBulletList().run()}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        editor.chain().focus().toggleBulletList().run();
+                    }}
                     disabled={disabled}
                     className="h-8 w-8 p-0"
                 >
@@ -164,7 +167,10 @@ export default function TiptapEditor({ content, onChange, disabled = false }: Ti
                     type="button"
                     size="sm"
                     variant={editor.isActive('orderedList') ? 'default' : 'outline'}
-                    onClick={() => editor.chain().focus().toggleOrderedList().run()}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        editor.chain().focus().toggleOrderedList().run();
+                    }}
                     disabled={disabled}
                     className="h-8 w-8 p-0"
                 >
