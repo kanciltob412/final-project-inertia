@@ -262,7 +262,7 @@
         <div class="shipping-info">
             <h4 style="margin-top: 0; color: #856404;">📦 Shipping Information</h4>
             <p style="margin-bottom: 10px; color: #856404;">
-                <strong>Recipient Name:</strong> {{ $order->user->name }}<br>
+                <strong>Recipient Name:</strong> {{ $order->full_name ?? $order->user->name }}<br>
                 <strong>Shipping Address:</strong><br>
                 {{ $order->address }}<br>
                 {{ $order->city }}, {{ $order->postal_code }}<br>

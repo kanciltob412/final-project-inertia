@@ -83,9 +83,9 @@ export default function PaymentSuccess() {
                             {order_id && (
                                 <Link
                                     href={`/orders/${order_id}`}
-                                    className="inline-flex items-center rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+                                    className="no-underline inline-flex items-center rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800"
                                 >
-                                    <Receipt className="mr-2 h-4 w-4" />
+                                    <span className="mr-2 font-semibold">Rp</span>
                                     View Order
                                 </Link>
                             )}
@@ -101,7 +101,7 @@ export default function PaymentSuccess() {
                             </p>
                             <Link
                                 href="/contact"
-                                className="inline-flex items-center rounded-lg bg-gray-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black"
+                                className="no-underline inline-flex items-center rounded-lg bg-gray-800 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-black"
                             >
                                 <Mail className="mr-2 h-4 w-4" />
                                 Contact Support
@@ -112,7 +112,7 @@ export default function PaymentSuccess() {
                     <div className="mt-8 flex flex-col gap-4 border-t border-gray-800 pt-6 sm:flex-row">
                         <Link
                             href="/"
-                            className="flex items-center justify-center rounded-lg bg-black px-6 py-3 text-white transition-colors hover:bg-gray-800"
+                            className="no-underline flex items-center justify-center rounded-lg bg-black px-6 py-3 text-white transition-colors hover:bg-gray-800"
                         >
                             <ArrowLeft className="mr-2 h-4 w-4" />
                             Back to Home

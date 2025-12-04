@@ -101,7 +101,7 @@ export const columns: ColumnDef<Order>[] = [
             const order = row.original;
             return (
                 <div className="max-w-xs space-y-1">
-                    <div className="font-medium text-gray-900">{order.user?.name || 'Guest'}</div>
+                    <div className="font-medium text-gray-900">{order.full_name || order.user?.name || 'Guest'}</div>
                     <div className="text-sm text-gray-600">{order.user?.email}</div>
                     <div className="text-sm text-gray-600">{order.phone}</div>
                     <div className="text-sm text-gray-500">

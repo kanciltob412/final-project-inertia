@@ -103,6 +103,7 @@ export interface Article {
 export interface Order {
     id: number;
     user_id: number;
+    full_name?: string;
     phone: string;
     address: string;
     city: string;
