@@ -2,8 +2,6 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { createLowlight } from 'lowlight';
 import { useEffect } from 'react';
 import {
     Bold,
@@ -26,25 +24,18 @@ interface TiptapEditorProps {
     disabled?: boolean;
 }
 
-const lowlight = createLowlight();
-
 export default function TiptapEditor({ content, onChange, disabled = false }: TiptapEditorProps) {
     const editor = useEditor({
         extensions: [
-            StarterKit.configure({
-                codeBlock: false,
-            }),
+            StarterKit,
             Link.configure({
                 openOnClick: false,
             }),
             Image.configure({
                 allowBase64: true,
             }),
-            CodeBlockLowlight.configure({
-                lowlight,
-            }),
         ],
-        content: content || '',
+        content: content || '<p>Start typing...</p>',
         editable: !disabled,
         onUpdate: ({ editor }) => {
             onChange(editor.getHTML());
