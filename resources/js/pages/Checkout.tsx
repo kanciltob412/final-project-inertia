@@ -417,7 +417,7 @@ export default function Checkout() {
 
             <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-8 md:grid-cols-2 md:px-6 md:py-12 lg:px-8 lg:py-16">
                 {/* Checkout Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
                     {/* Alert for guests - must register to complete order */}
                     {!auth.user && (
                         <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
@@ -818,7 +818,7 @@ export default function Checkout() {
                     <button
                         type="submit"
                         disabled={processing || !selectedShippingCost || !auth.user}
-                        className="mt-8 w-full rounded-md bg-black py-3 text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="mt-8 hidden w-full rounded-md bg-black py-3 text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 md:block"
                         title={!auth.user ? 'Please login to complete your order' : !selectedShippingCost ? 'Please select a shipping method' : ''}
                     >
                         {processing ? 'Processing...' : 'Place Order'}
@@ -837,79 +837,93 @@ export default function Checkout() {
                     )}
                 </form>
 
-                {/* Cart Summary */}
-                <div className="h-fit rounded-lg border p-6 shadow-sm">
-                    <h2 className="mb-4 text-lg font-semibold text-gray-900 md:text-xl lg:text-2xl">Order Summary</h2>
-                    <div className="space-y-4">
-                        {items.map((item) => (
-                            <div key={item.id}>
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="font-medium">{item.name}</p>
-                                        {item.sku && <p className="text-sm text-gray-500">SKU: {item.sku}</p>}
-                                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
-                                        {item.discount && item.discount > 0 && (
-                                            <p className="mt-1 text-xs font-semibold text-green-600">
-                                                {item.discount_type === 'percentage'
-                                                    ? `Save Rp ${Math.round(item.price * (item.quantity || 1) * (item.discount / (100 - item.discount))).toLocaleString('id-ID')}`
-                                                    : `Save Rp ${Math.round(item.discount * (item.quantity || 1)).toLocaleString('id-ID')}`}
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="text-right">
-                                        {item.discount && item.discount > 0 ? (
-                                            <div className="space-y-1">
-                                                <p className="text-sm text-gray-500 line-through">
-                                                    {formatPrice(
-                                                        item.discount_type === 'percentage'
-                                                            ? (item.price * (item.quantity || 1)) / (1 - item.discount / 100)
-                                                            : item.price * (item.quantity || 1) + item.discount * (item.quantity || 1),
-                                                    )}
+                {/* Cart Summary and Mobile Button Container */}
+                <div className="flex flex-col gap-6">
+                    {/* Cart Summary */}
+                    <div className="h-fit rounded-lg border p-6 shadow-sm">
+                        <h2 className="mb-4 text-lg font-semibold text-gray-900 md:text-xl lg:text-2xl">Order Summary</h2>
+                        <div className="space-y-4">
+                            {items.map((item) => (
+                                <div key={item.id}>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="font-medium">{item.name}</p>
+                                            {item.sku && <p className="text-sm text-gray-500">SKU: {item.sku}</p>}
+                                            <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                                            {item.discount && item.discount > 0 && (
+                                                <p className="mt-1 text-xs font-semibold text-green-600">
+                                                    {item.discount_type === 'percentage'
+                                                        ? `Save Rp ${Math.round(item.price * (item.quantity || 1) * (item.discount / (100 - item.discount))).toLocaleString('id-ID')}`
+                                                        : `Save Rp ${Math.round(item.discount * (item.quantity || 1)).toLocaleString('id-ID')}`}
                                                 </p>
-                                                <p className="font-semibold text-green-600">{formatPrice(item.itemTotal || 0)}</p>
-                                            </div>
-                                        ) : (
-                                            <span className="font-semibold">{formatPrice(item.itemTotal || 0)}</span>
-                                        )}
+                                            )}
+                                        </div>
+                                        <div className="text-right">
+                                            {item.discount && item.discount > 0 ? (
+                                                <div className="space-y-1">
+                                                    <p className="text-sm text-gray-500 line-through">
+                                                        {formatPrice(
+                                                            item.discount_type === 'percentage'
+                                                                ? (item.price * (item.quantity || 1)) / (1 - item.discount / 100)
+                                                                : item.price * (item.quantity || 1) + item.discount * (item.quantity || 1),
+                                                        )}
+                                                    </p>
+                                                    <p className="font-semibold text-green-600">{formatPrice(item.itemTotal || 0)}</p>
+                                                </div>
+                                            ) : (
+                                                <span className="font-semibold">{formatPrice(item.itemTotal || 0)}</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                        <hr className="my-4" />
-                        <div className="space-y-2">
-                            {(() => {
-                                // Calculate subtotal with product discounts included
-                                const subtotalWithDiscounts = items.reduce((sum, item) => sum + (item.itemTotal || 0), 0);
-                                return (
-                                    <>
-                                        <div className="flex justify-between">
-                                            <span>Subtotal</span>
-                                            <span>{formatPrice(subtotalWithDiscounts)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span>Shipping</span>
-                                            <span className={selectedShippingCost ? 'font-semibold text-black' : 'text-gray-500'}>
-                                                {selectedShippingCost ? formatPrice(selectedShippingCost) : '-'}
-                                            </span>
-                                        </div>
-                                        {appliedCoupon && discountAmount > 0 && (
+                            ))}
+                            <hr className="my-4" />
+                            <div className="space-y-2">
+                                {(() => {
+                                    // Calculate subtotal with product discounts included
+                                    const subtotalWithDiscounts = items.reduce((sum, item) => sum + (item.itemTotal || 0), 0);
+                                    return (
+                                        <>
                                             <div className="flex justify-between">
-                                                <span className="text-green-600">Coupon ({appliedCoupon.code})</span>
-                                                <span className="font-semibold text-green-600">-{formatPrice(discountAmount)}</span>
+                                                <span>Subtotal</span>
+                                                <span>{formatPrice(subtotalWithDiscounts)}</span>
                                             </div>
-                                        )}
-                                        <hr className="my-4" />
-                                        <div className="flex justify-between text-lg font-semibold">
-                                            <span>Total</span>
-                                            <span className="text-black">
-                                                {formatPrice(subtotalWithDiscounts + (selectedShippingCost || 0) - discountAmount)}
-                                            </span>
-                                        </div>
-                                    </>
-                                );
-                            })()}
+                                            <div className="flex justify-between">
+                                                <span>Shipping</span>
+                                                <span className={selectedShippingCost ? 'font-semibold text-black' : 'text-gray-500'}>
+                                                    {selectedShippingCost ? formatPrice(selectedShippingCost) : '-'}
+                                                </span>
+                                            </div>
+                                            {appliedCoupon && discountAmount > 0 && (
+                                                <div className="flex justify-between">
+                                                    <span className="text-green-600">Coupon ({appliedCoupon.code})</span>
+                                                    <span className="font-semibold text-green-600">-{formatPrice(discountAmount)}</span>
+                                                </div>
+                                            )}
+                                            <hr className="my-4" />
+                                            <div className="flex justify-between text-lg font-semibold">
+                                                <span>Total</span>
+                                                <span className="text-black">
+                                                    {formatPrice(subtotalWithDiscounts + (selectedShippingCost || 0) - discountAmount)}
+                                                </span>
+                                            </div>
+                                        </>
+                                    );
+                                })()}
+                            </div>
                         </div>
                     </div>
+
+                    {/* Mobile Place Order Button - Only visible on mobile */}
+                    <button
+                        form="checkout-form"
+                        type="submit"
+                        disabled={processing || !selectedShippingCost || !auth.user}
+                        className="md:hidden w-full rounded-md bg-black py-3 text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
+                        title={!auth.user ? 'Please login to complete your order' : !selectedShippingCost ? 'Please select a shipping method' : ''}
+                    >
+                        {processing ? 'Processing...' : 'Place Order'}
+                    </button>
                 </div>
             </div>
 
